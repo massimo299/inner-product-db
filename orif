@@ -1,0 +1,252 @@
+#include "pairing_3.h"
+#include "ipdb.h"
+
+void
+Ipdb::GenPar(PFC *pp, miracl *mp)
+{
+	mip=mp;
+	pfc=pp;
+
+	order=pfc->order();
+	printf("GenParam: \n");
+/*
+	mip->IOBASE=16;
+	ccc<<order;
+	printf("Order in GenParam: %s\n",ccc);
+	mip->IOBASE=256;
+*/
+
+	pfc->random(delta1); pfc->random(delta2);
+	pfc->random(g1); pfc->random(g2); 
+	pfc->random(g2_2);
+	pfc->random(theta1); pfc->random(theta2);
+	pfc->random(omega);
+
+	for(int i=0;i<ell;i++){
+		pfc->random(w1[i]);
+		pfc->random(t1[i]);
+		pfc->random(f1[i]);
+		pfc->random(f2[i]);
+		pfc->random(h1[i]);
+		pfc->random(h2[i]);
+		w2[i]=moddiv(omega+modmult(delta2,w1[i],order),delta1,order);
+		t2[i]=moddiv(omega+modmult(theta2,t1[i],order),theta1,order);
+		W1[i]=pfc->mult(g1,w1[i]);
+		W2[i]=pfc->mult(g1,w2[i]);
+		pfc->precomp_for_mult(W1[i]);  // precompute on everything!
+		pfc->precomp_for_mult(W2[i]);
+		T1[i]=pfc->mult(g1,t1[i]);
+		T2[i]=pfc->mult(g1,t2[i]);
+		pfc->precomp_for_mult(T1[i]);
+		pfc->precomp_for_mult(T2[i]);
+
+		F1[i]=pfc->mult(g1,f1[i]);
+		F2[i]=pfc->mult(g1,f2[i]);
+		pfc->precomp_for_mult(F1[i]);
+		pfc->precomp_for_mult(F2[i]);
+		H1[i]=pfc->mult(g1,h1[i]);
+		H2[i]=pfc->mult(g1,h2[i]);
+		pfc->precomp_for_mult(H1[i]);
+		pfc->precomp_for_mult(H2[i]);
+	}
+
+	U1=pfc->mult(g1,delta1);
+	U2=pfc->mult(g1,delta2);
+	V1=pfc->mult(g1,theta1);
+	V2=pfc->mult(g1,theta2);
+	g1_1=pfc->mult(g1,omega);
+	alpha=pfc->pairing(g2_2,g1);
+
+	pfc->precomp_for_power(alpha);
+	pfc->precomp_for_mult(U1); pfc->precomp_for_mult(U2);
+	pfc->precomp_for_mult(V1); pfc->precomp_for_mult(V2);
+	pfc->precomp_for_mult(g1); pfc->precomp_for_mult(g2);
+	pfc->precomp_for_mult(g1_1);
+
+	cout << "Leaving GenParam" << endl;
+}
+
+
+IpdbCT 
+Ipdb::Enc(Big M, Big *x)
+{
+
+	IpdbCT xxx(ell);
+	Big s1,s2,s3,s4;
+	Big D;
+
+	cout << "Encrypt" << endl;
+/*
+	char ccc[100]; 
+	order=pfc->order();
+	mip->IOBASE=16;
+	ccc<<order;
+	printf("Order in Enc: %s\n",ccc);
+*/
+
+	//mip->IOBASE=256;
+	//char *M=(char *)"massage"; // to be encrypted
+	//cout << "Message to be encrypted=   " << M << endl;
+	//mip->IOBASE=16;
+
+	pfc->random(s1); pfc->random(s2);
+	pfc->random(s3); pfc->random(s4);
+	
+	xxx.A=pfc->mult(g1,s2);
+	xxx.B=pfc->mult(g1_1,s1);
+	for(int i=0;i<ell;i++){
+		xxx.C1[i]=pfc->mult(W1[i],s1)+pfc->mult(F1[i],s2)+pfc->mult(U1,modmult(x[i],s3,order));
+		xxx.C2[i]=pfc->mult(W2[i],s1)+pfc->mult(F2[i],s2)+pfc->mult(U2,modmult(x[i],s3,order));
+	}
+	for(int i=0;i<ell;i++){
+		xxx.C3[i]=pfc->mult(T1[i],s1)+pfc->mult(H1[i],s2)+pfc->mult(V1,modmult(x[i],s4,order));
+		xxx.C4[i]=pfc->mult(T2[i],s1)+pfc->mult(H2[i],s2)+pfc->mult(V2,modmult(x[i],s4,order));
+	}
+	D=pfc->hash_to_aes_key(pfc->power(alpha,s2));
+	//mip->IOBASE=256;
+	//Big MMM=(char *)"massage"; // to be encrypted
+	//cout << "Message to be encrypted=   " << M << endl;
+	//mip->IOBASE=16;
+	xxx.C=lxor(M,D);   // ciphertext
+	
+	return xxx;
+}
+
+IpdbKey
+Ipdb::KeyGen(Big *v, int len=0)
+{
+	int elll;
+	if (len==0) elll=ell; else elll=ell;
+	IpdbKey xxx(elll);
+	Big lambda1,lambda2,t;
+	Big *r  =new Big[elll];
+	Big *phi=new Big[elll];
+
+	cout << "KeyGen"<< endl;
+/*
+	char ccc[100]; 
+	order=pfc->order();
+	mip->IOBASE=16;
+	ccc<<order;
+	printf("Order in Key Gen: %s\n",ccc);
+*/
+
+	pfc->random(lambda1); pfc->random(lambda2);
+	for(int i=0;i<elll;i++){pfc->random(r[i]); pfc->random(phi[i]); }
+
+	for(int i=0;i<elll;i++){
+		t=modmult(lambda1,v[i],order);
+		xxx.K1[i]=pfc->mult(g2,modmult(t,w2[i],order)-modmult(delta2,r[i],order));
+		xxx.K2[i]=pfc->mult(g2,modmult(delta1,r[i],order)-modmult(t,w1[i],order));
+		pfc->precomp_for_pairing(xxx.K1[i]);
+		pfc->precomp_for_pairing(xxx.K2[i]);
+	}
+	for(int i=0;i<elll;i++){
+		t=modmult(lambda2,v[i],order);
+		xxx.K3[i]=pfc->mult(g2,modmult(t,t2[i],order)-modmult(theta2,phi[i],order));
+		xxx.K4[i]=pfc->mult(g2,modmult(theta1,phi[i],order)-modmult(t,t1[i],order));
+		pfc->precomp_for_pairing(xxx.K3[i]);
+		pfc->precomp_for_pairing(xxx.K4[i]);
+	}
+
+	xxx.KA=g2_2;
+	for(int i=0;i<elll;i++){
+		xxx.KA=xxx.KA+pfc->mult(xxx.K1[i],-f1[i])+pfc->mult(xxx.K2[i],-f2[i])+pfc->mult(xxx.K3[i],-h1[i])+pfc->mult(xxx.K4[i],-h2[i]);
+		xxx.KB=xxx.KB+pfc->mult(g2,-(r[i]+phi[i])%order);
+	}
+	pfc->precomp_for_pairing(xxx.KA);
+	pfc->precomp_for_pairing(xxx.KB);
+
+	return xxx;
+}
+
+
+// Decrypt
+	
+Big
+Ipdb::Dec(IpdbCT *X, IpdbKey *Y,int l=0)
+{
+	cout << "Decrypt" << endl;
+
+	int j,i;
+	Big M;
+	GT Res;
+
+	int elll=l;
+	if (l==0) elll=ell;
+	//G1 **right=new G1* [4*elll+2];
+	//G2 **left= new G2* [4*elll+2];
+/*
+	for(j=2,i=0;i<10;i++) {
+		left[j]=&(Y.K1[i]); right[j]=&(X.C1[i]); j++;
+		left[j]=&(Y.K2[i]); right[j]=&(X.C2[i]); j++;
+		left[j]=&(Y.K3[i]); right[j]=&(X.C3[i]); j++;
+		left[j]=&(Y.K4[i]); right[j]=&(X.C4[i]); j++;
+	}
+*/
+
+	Res=pfc->pairing(Y->KA,X->A);
+	Res=Res*pfc->pairing(Y->KB,X->B);
+	for(i=0;i<elll;i++){
+		Res=Res*pfc->pairing(Y->K1[i],X->C1[i]);
+		Res=Res*pfc->pairing(Y->K2[i],X->C2[i]);
+		Res=Res*pfc->pairing(Y->K3[i],X->C3[i]);
+		Res=Res*pfc->pairing(Y->K4[i],X->C4[i]);
+	}
+	M=lxor(X->C,pfc->hash_to_aes_key(Res));
+	//M=lxor(C,pfc.hash_to_aes_key(pfc.multi_pairing(4*n+2,left,right)));
+/*
+	mip->IOBASE=256;
+	cout << "Decrypted message=         " << M << endl;
+*/
+	return M;
+}
+
+EncryptedRow 
+Ipdb::EncRow(Big *V){
+
+	EncryptedRow EK;
+	Big X[2*ell+2];
+
+	X[0]=1;
+	for(int i=1;i<11;i++){X[i]=V[i-1]; X[i+11]=V[i-1];};
+
+	for(int j=0;j<10;j++){
+		X[11]=j;
+		EK.ek[j]=Enc(V[j],X);
+	}
+	
+	return EK;
+}
+	
+/* 
+	a row has ell cells
+	a query has ell attributes 
+	and an index of a cell
+*/
+IpdbKey 
+Ipdb::QueryKeyGen(Big A, Big *V, Big cell){
+
+	Big rr[ell+1];
+	IpdbKey res(2*ell+3);
+	Big KeyAttribute[2*ell+3];
+
+	for(int j=0;j<ell;j++){
+		if (V[j]==0) rr[j]=0; else pfc->random(rr[j]);
+		KeyAttribute[0]+=modmult(rr[j],V[j],order);
+	}
+	pfc->random(rr[ell]);
+	KeyAttribute[0]=modmult(rr[ell],cell,order);
+	KeyAttribute[0]=modmult(KeyAttribute[0],A,order);
+	for(int j=1;j<ell+1;j++){
+		KeyAttribute[j]=V[j-1];
+		KeyAttribute[j+ell+2]=modmult(A,V[j-1],order);
+	}
+	KeyAttribute[ell+1]=cell;
+	KeyAttribute[2*ell+2]=modmult(A,cell,order);
+	
+	res=KeyGen(KeyAttribute,2*ell+3);
+
+	return res;
+		
+}
