@@ -14,7 +14,9 @@ public:
 	IpeMsk **ASetup();
 	IpeCt **AEncrypt(IpeMsk **, Big *, Big **,GT *);
 	IpeKey *PKeyGen(IpeMsk **, Big *);
+	IpeKey **MKeyGen(IpeMsk **, Big *, Big *, int);
 	GT PDecrypt(IpeCt *, IpeKey *);
+	GT MDecrypt(IpeCt **, IpeKey **, int);
 	Ipdb(int n_, int l_, int k_, PFC *p, miracl * m, Big o){
 		n=n_;
 		l=l_;

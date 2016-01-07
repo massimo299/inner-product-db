@@ -49,15 +49,50 @@ Ipdb::AEncrypt(IpeMsk **msks, Big *X0, Big **X, GT *M){
 IpeKey *
 Ipdb::PKeyGen(IpeMsk **msks, Big *Y){
 
-	ipe->len=l+1;
 	Y[l]=0;
+	ipe->len=l+1;
 
 	return ipe->MKeyGen(msks[0],Y);
 }
 
 GT
 Ipdb::PDecrypt(IpeCt *C0, IpeKey *pkey){
+
 	ipe->len=l+1;
 
 	return ipe->MDecrypt(C0,pkey);
+}
+
+IpeKey **
+Ipdb::MKeyGen(IpeMsk **msks, Big *Y, Big *Yj, int j){
+
+	IpeKey **keys = new IpeKey*[2];
+	Big lambda1, lambda2;
+
+	pfc->random(lambda1);
+	pfc->random(lambda2);
+
+	Y[l]=1;
+	ipe->len=l+1;
+	keys[0] = ipe->MKeyGen(msks[0],Y,lambda1,lambda2);
+
+	Yj[0]=-1;
+	ipe->len=k+1;
+	keys[1] = ipe->MKeyGen(msks[j],Yj,lambda1,lambda2);
+
+	return keys;
+}
+
+GT 
+Ipdb::MDecrypt(IpeCt **cts, IpeKey **keys, int j){
+
+	GT res1,res2;
+
+	ipe->len=l+1;
+	res1 = ipe->MDecrypt(cts[0],keys[0]);
+
+	ipe->len=k+1;
+	res2 = ipe->MDecrypt(cts[j],keys[1]);
+
+	return res1*res2;
 }

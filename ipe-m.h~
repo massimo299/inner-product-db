@@ -93,8 +93,8 @@ public:
 	IpeMsk *Setup();
 	IpeMsk *Setup(G1, G2, Big, Big *, Big *);
 	IpeCt *PEncrypt(IpeMsk *, Big *);
-	IpeCt *MEncrypt(IpeMsk *, Big *, Big, Big, GT);
 	IpeCt *MEncrypt(IpeMsk *, Big *, GT);
+	IpeCt *MEncrypt(IpeMsk *, Big *, Big, Big, GT);
 	IpeKey *PKeyGen(IpeMsk *, Big *);
 	IpeKey *MKeyGen(IpeMsk *, Big *);
 	bool PDecrypt(IpeCt *, IpeKey *);

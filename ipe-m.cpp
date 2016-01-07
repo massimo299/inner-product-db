@@ -238,6 +238,37 @@ Ipe::MKeyGen(IpeMsk *msk, Big *Y){
 	return k;
 }
 
+IpeKey *
+Ipe::MKeyGen(IpeMsk *msk, Big *Y, Big lambda1, Big lambda2){
+	
+	IpeKey *k;
+	IpeBKey ***bk = new IpeBKey**[len];
+	Big r[len],phi[len],kb=0;
+	G2 KA, KB;
+	KA=msk->g2;
+
+	IpeBMsk *bmsk1, *bmsk2;
+	for(int i=0;i<len;i++){
+		bk[i] = new IpeBKey*[2];
+		pfc->random(r[i]);
+		pfc->random(phi[i]);
+		bmsk1 = msk->bmsk[i][0];
+		bmsk2 = msk->bmsk[i][1];
+
+		bk[i][0] = BasicKeyGen(bmsk1,msk->Delta1,Y[i],lambda1,r[i],msk->g2);
+		bk[i][1] = BasicKeyGen(bmsk2,msk->Delta2,Y[i],lambda2,phi[i],msk->g2);
+		KA = KA+pfc->mult(bk[i][0]->k1,-bmsk1->f1);
+		KA = KA+pfc->mult(bk[i][0]->k2,-bmsk1->f2);
+		KA = KA+pfc->mult(bk[i][1]->k1,-bmsk2->f1);
+		KA = KA+pfc->mult(bk[i][1]->k2,-bmsk2->f2);
+		kb += -(r[i]+phi[i])%order;
+	}
+	KB = pfc->mult(msk->g2,kb);
+
+	k = new IpeKey(KA,KB,bk);
+	return k;
+}
+
 bool
 Ipe::PDecrypt(IpeCt *ct, IpeKey *key){
 

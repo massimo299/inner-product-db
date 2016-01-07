@@ -97,6 +97,7 @@ public:
 	IpeCt *MEncrypt(IpeMsk *, Big *, Big, Big, GT);
 	IpeKey *PKeyGen(IpeMsk *, Big *);
 	IpeKey *MKeyGen(IpeMsk *, Big *);
+	IpeKey *MKeyGen(IpeMsk *, Big *, Big, Big);
 	bool PDecrypt(IpeCt *, IpeKey *);
 	GT MDecrypt(IpeCt *, IpeKey *);
 	Ipe(int l, PFC *p, miracl * m, Big o){
