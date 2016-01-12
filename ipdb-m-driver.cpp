@@ -26,7 +26,7 @@ main(){
 
 	cout << "Setup" << endl;
 	time(&seed1);
-	IpeMsk **msks = ipdb.ASetup();
+	IpeMsk **msks = ipdb.Setup();
 	time(&seed2);
 	cout << "\t" << seed2-seed1 << endl;
 
@@ -52,10 +52,11 @@ main(){
 
 	cout << "Encrypt" << endl;
 	time(&seed1);
-	IpeCt **cts = ipdb.AEncrypt(msks,X0,X,M);
+	IpeCt **cts = ipdb.Encrypt(msks,X0,X,M);
 	time(&seed2);
 	cout << "\t" << seed2-seed1 << endl;
 
+	// Key generation and decryption for the predicate
 	Big Y[l+1];
 	for(int i=0;i<l;i++)
 		pfc.random(Y[i]);
@@ -78,9 +79,7 @@ main(){
 	else
 		cout << "Failed" << endl;
 
-
-
-
+	// Key generation and decryption for element j
 	int j;
 	cout << "Insert cell number to select (from 1 to " << n << ")" << endl;
 	cin >> j;

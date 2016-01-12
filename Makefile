@@ -44,6 +44,9 @@ ipe-m-ptest.o: ipe-m-ptest.cpp
 ipdb-m-driver.o: ipdb-m-driver.cpp
 	g++ -std=gnu++11 -D MR_PAIRING_BN -D AES_SECURITY=128 -c ipdb-m-driver.cpp -o ipdb-m-driver.o
 
+SecureDB.o: SecureDB.cpp
+	g++ -std=gnu++11 -D MR_PAIRING_BN -D AES_SECURITY=128 -c SecureDB.cpp -o SecureDB.o
+
 key_gen.o: key_gen.cpp
 	g++ -std=gnu++11 -D MR_PAIRING_BN -D AES_SECURITY=128 -c key_gen.cpp -o key_gen.o
 
@@ -64,6 +67,9 @@ ipe-m-ptest: ${BNOBJB} ipe-m-ptest.o
 
 ipdb-m-driver: ${BNOBJB} ipdb-m-driver.o
 	g++ -o ipdb-m-driver ${BNOBJB} ipdb-m-driver.o miracl.a -lcrypto -lssl
+
+SecureDB: ${BNOBJB} SecureDB.o
+	g++ -o SecureDB ${BNOBJB} SecureDB.o miracl.a -lcrypto -lssl
 
 key_gen: ${BNOBJB} key_gen.o
 	g++ -o key_gen ${BNOBJB} key_gen.o miracl.a -lcrypto -lssl
@@ -143,4 +149,4 @@ ipe-bls: ipe-bls.o ${BLSOBJ}
 
 
 clean:
-	rm -f ${CPOBJ} ${MNTOBJ} ${BNOBJB} ${BNOBJA} ${BNOBJ} ${KSSOBJ} ${BLSOBJ} ${EXE} ${DRIVEROBJ} driver-cp.o driver-bn.o driver-a.o driver-b.o key_gen.o row_enc.o que_dec.o ipe-m-test.o ipdb-m-driver.o ipe-m-ptest.o
+	rm -f ${CPOBJ} ${MNTOBJ} ${BNOBJB} ${BNOBJA} ${BNOBJ} ${KSSOBJ} ${BLSOBJ} ${EXE} ${DRIVEROBJ} driver-cp.o driver-bn.o driver-a.o driver-b.o key_gen.o row_enc.o que_dec.o ipe-m-test.o ipdb-m-driver.o ipe-m-ptest.o SecureDB.o

@@ -19,14 +19,14 @@ main(){
 	Big order=pfc.order();
 	time(&seed1); irand((long)seed1);
 
-	int n=120;
-	int l=120;
-	int k=1;
+	int n=10;
+	int l=80;
+	int k=3;
 	Ipdb ipdb(n,l,k,&pfc,mip,order);
 
 	cout << "Setup" << endl;
 	time(&seed1);
-	IpeMsk **msks = ipdb.ASetup();
+	IpeMsk **msks = ipdb.Setup();
 	time(&seed2);
 	cout << "\t" << seed2-seed1 << endl;
 
@@ -52,7 +52,7 @@ main(){
 
 	cout << "Encrypt" << endl;
 	time(&seed1);
-	IpeCt **cts = ipdb.AEncrypt(msks,X0,X,M);
+	IpeCt **cts = ipdb.Encrypt(msks,X0,X,M);
 	time(&seed2);
 	cout << "\t" << seed2-seed1 << endl;
 
@@ -61,6 +61,7 @@ main(){
 		pfc.random(Y[i]);
 	inner_product(X0,Y,order,l);
 
+	// Key generation and decryption for the predicate
 	cout << "KeyGen predicate" << endl;
 	time(&seed1);
 	IpeKey *pkey = ipdb.PKeyGen(msks,Y);
@@ -78,9 +79,7 @@ main(){
 	else
 		cout << "Failed" << endl;
 
-
-
-
+	// Key generation and decryption for element j
 	int j;
 	cout << "Insert cell number to select (from 1 to " << n << ")" << endl;
 	cin >> j;

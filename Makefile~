@@ -38,6 +38,9 @@ driver-b.o: driver-b.cpp
 ipe-m-test.o: ipe-m-test.cpp
 	g++ -std=gnu++11 -D MR_PAIRING_BN -D AES_SECURITY=128 -c ipe-m-test.cpp -o ipe-m-test.o
 
+ipe-m-ptest.o: ipe-m-ptest.cpp
+	g++ -std=gnu++11 -D MR_PAIRING_BN -D AES_SECURITY=128 -c ipe-m-ptest.cpp -o ipe-m-ptest.o
+
 ipdb-m-driver.o: ipdb-m-driver.cpp
 	g++ -std=gnu++11 -D MR_PAIRING_BN -D AES_SECURITY=128 -c ipdb-m-driver.cpp -o ipdb-m-driver.o
 
@@ -55,6 +58,9 @@ driver-b: ${BNOBJB} driver-b.o
 
 ipe-m-test: ${BNOBJB} ipe-m-test.o
 	g++ -o ipe-m-test ${BNOBJB} ipe-m-test.o miracl.a -lcrypto -lssl
+
+ipe-m-ptest: ${BNOBJB} ipe-m-ptest.o
+	g++ -o ipe-m-ptest ${BNOBJB} ipe-m-ptest.o miracl.a -lcrypto -lssl
 
 ipdb-m-driver: ${BNOBJB} ipdb-m-driver.o
 	g++ -o ipdb-m-driver ${BNOBJB} ipdb-m-driver.o miracl.a -lcrypto -lssl
@@ -137,4 +143,4 @@ ipe-bls: ipe-bls.o ${BLSOBJ}
 
 
 clean:
-	rm -f ${CPOBJ} ${MNTOBJ} ${BNOBJB} ${BNOBJA} ${BNOBJ} ${KSSOBJ} ${BLSOBJ} ${EXE} ${DRIVEROBJ} driver-cp.o driver-bn.o driver-a.o driver-b.o key_gen.o row_enc.o que_dec.o ipe-m-test.o ipdb-m-driver.o
+	rm -f ${CPOBJ} ${MNTOBJ} ${BNOBJB} ${BNOBJA} ${BNOBJ} ${KSSOBJ} ${BLSOBJ} ${EXE} ${DRIVEROBJ} driver-cp.o driver-bn.o driver-a.o driver-b.o key_gen.o row_enc.o que_dec.o ipe-m-test.o ipdb-m-driver.o ipe-m-ptest.o
