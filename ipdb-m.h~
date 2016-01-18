@@ -29,6 +29,27 @@ public:
 	};
 };
 
+class IpdbNoise{
+public:
+	int n,l,k;
+	Ipdb *ipdb;
+	PFC *pfc;
+	Big order;
+public:
+	IpeMsk **RSetup();
+	IpeCt **EncryptRow(IpeMsk **, Big *, GT *);
+	IpeKey *PKeyGen(IpeMsk **, Big *);
+	IpeKey **MKeyGen(IpeMsk **, Big *, int);
+	IpdbNoise(int m, PFC *p, miracl *mi, Big o){
+		n=m;
+		l=2*m+1;
+		k=2;
+		pfc=p;
+		order=o;
+		ipdb = new Ipdb(n,l,k,pfc,mi,order);
+	};
+};
+
 class SecureDB{
 public:
 	Ipdb *ipdb;
@@ -67,6 +88,6 @@ private:
 	Big *create_query_attribute(string);
 	vector<string> get_select_params(string);
 	string read_line_from_file(int, string);
-	std::fstream &GotoLine(std::fstream&, unsigned int);
+	fstream &GotoLine(fstream&, unsigned int);
 	string decMsg(GT M, string Msg);
 };

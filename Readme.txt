@@ -1,9 +1,14 @@
 1.Test inner product ammortized encryption
    Build by issuing
 	make ipdb-m-driver
-it uses ipdb-m where we have the definition of the basic algorithms, developed through ipe-m, the basic inner product encryption implementation
+it uses the class Ipdb in ipdb-m where we have the definition of the basic algorithms, developed through ipe-m, the basic inner product encryption implementation
 
-Test inner product database (with the constraint that l<=n)
+2.Test inner product ammortized encryption with noise
+   Build by issuing
+	make ipdbnoise-m-driver
+it uses the class IpdbNoise in ipdb-m where we have the definition of the basic algorithms, developed through ipe-m, the basic inner product encryption implementation
+
+3.Test inner product database (with the constraint that l<=n)
    Build by issuing
 	make SecureDB
 The file that contains the rows has to be structured as follows:

@@ -104,6 +104,81 @@ Ipdb::MDecrypt(IpeCt **cts, IpeKey **keys, int j){
 	return res1*res2;
 }
 
+IpeMsk **
+IpdbNoise::RSetup(){
+	return ipdb->Setup();
+}
+
+IpeCt **
+IpdbNoise::EncryptRow(IpeMsk **msks, Big *A, GT *M){
+
+	Big X0[l+1], *X[n];
+	Big r = rand()%10+1;
+
+	X0[n]=r;
+	for(int i=0;i<n;i++){
+		X0[i] = A[i];
+		X0[n+i+1] = modmult(r,A[i],order);
+
+		X[i] = new Big[k+1];
+		X[i][0]=0;
+		X[i][1]=1;
+		X[i][2]=i+1;
+	}
+	X0[l-1]=1;
+	
+	return ipdb->Encrypt(msks,X0,X,M);
+}
+
+IpeKey *
+IpdbNoise::PKeyGen(IpeMsk **msks, Big *Q){
+
+	Big Y0[l+1], R[n];
+	Big r = rand()%10+1;
+
+	Y0[l-1] = 0;
+	Y0[n]=0;
+	for(int i=0;i<n;i++){
+		if(Q[i]==0)
+			R[i] = 0;
+		else
+			pfc->random(R[i]);
+		Y0[i] = -modmult(r,R[i],order);
+		Y0[n] = Y0[n] - modmult(R[i],Q[i],order);
+		Y0[n+i+1] = R[i];
+		Y0[l-1] = Y0[l-1] + modmult(R[i],Q[i],order);
+	}
+	Y0[l-1] = modmult(r,Y0[l-1],order);
+
+	return ipdb->PKeyGen(msks,Y0);
+}
+
+IpeKey **
+IpdbNoise::MKeyGen(IpeMsk **msks, Big *Q, int j){
+
+	Big Y0[l+1], R[n], Yj[k+1];
+	Big r = rand()%20+1;
+
+	Y0[l-1] = 0;
+	for(int i=0;i<n;i++){
+		if(Q[i]==0)
+			R[i] = 0;
+		else
+			pfc->random(R[i]);
+		Y0[i] = -modmult(r,R[i],order);
+		Y0[n] = Y0[n] - modmult(R[i],Q[i],order);
+		Y0[n+i+1] = R[i];
+		Y0[l-1] = Y0[l-1] + modmult(R[i],Q[i],order);
+	}
+	Y0[l-1] = modmult(r,Y0[l-1],order);
+
+	Yj[0]=0;
+	Yj[1]=j;
+	Yj[2]=-1;
+
+	return ipdb->MKeyGen(msks,Y0,Yj,j);
+}
+
 void
 SecureDB::saveMsks(string fname, IpeMsk **msks)
 {

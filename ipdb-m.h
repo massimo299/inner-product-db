@@ -29,6 +29,27 @@ public:
 	};
 };
 
+class IpdbNoise{
+public:
+	int n,l,k;
+	Ipdb *ipdb;
+	PFC *pfc;
+	Big order;
+public:
+	IpeMsk **RSetup();
+	IpeCt **EncryptRow(IpeMsk **, Big *, GT *);
+	IpeKey *PKeyGen(IpeMsk **, Big *);
+	IpeKey **MKeyGen(IpeMsk **, Big *, int);
+	IpdbNoise(int m, PFC *p, miracl *mi, Big o){
+		n=m;
+		l=2*m+2;
+		k=2;
+		pfc=p;
+		order=o;
+		ipdb = new Ipdb(n,l,k,pfc,mi,order);
+	};
+};
+
 class SecureDB{
 public:
 	Ipdb *ipdb;
