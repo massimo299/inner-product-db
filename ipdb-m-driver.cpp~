@@ -56,12 +56,12 @@ main(){
 	time(&seed2);
 	cout << "\t" << seed2-seed1 << endl;
 
+	// Key generation and decryption for the predicate
 	Big Y[l+1];
 	for(int i=0;i<l;i++)
 		pfc.random(Y[i]);
 	inner_product(X0,Y,order,l);
 
-	// Key generation and decryption for the predicate
 	cout << "KeyGen predicate" << endl;
 	time(&seed1);
 	IpeKey *pkey = ipdb.PKeyGen(msks,Y);

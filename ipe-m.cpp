@@ -120,10 +120,12 @@ Ipe::MEncrypt(IpeMsk *msk, Big *X, GT M){
 		bct[i][0]=BasicEncrypt(msk->bmsk[i][0],msk->Delta1,X[i],s1,s2,s3,msk->g);
 		bct[i][1]=BasicEncrypt(msk->bmsk[i][1],msk->Delta2,X[i],s1,s2,s4,msk->g);
 	}
+
 	g_1 = pfc->mult(msk->g,s2);
 	g1_1 = pfc->mult(msk->g,modmult(msk->omega,s1,order));
-
-	GT C = M*pfc->power(pfc->pairing(msk->g2,msk->g),s2);
+	GT tmpgt = pfc->pairing(msk->g2,msk->g);
+	GT C0 = pfc->power(tmpgt,s2);
+	GT C = M*C0;
 	ct = new IpeCt(g_1,g1_1,bct,C);
 
 	return ct;
@@ -148,7 +150,9 @@ Ipe::MEncrypt(IpeMsk *msk, Big *X, Big s3, Big s4, GT M){
 
 	g_1 = pfc->mult(msk->g,s2);
 	g1_1 = pfc->mult(msk->g,modmult(msk->omega,s1,order));
-	GT C = M*pfc->power(pfc->pairing(msk->g2,msk->g),s2);
+	GT tmpgt = pfc->pairing(msk->g2,msk->g);
+	GT C0 = pfc->power(tmpgt,s2);
+	GT C = M*C0;
 
 	ct = new IpeCt(g_1,g1_1,bct,C);
 	return ct;
@@ -280,7 +284,6 @@ Ipe::PDecrypt(IpeCt *ct, IpeKey *key){
 	int j=2;
 	for (int i=0;i<len;i++)
 	{
-
 		left[j]=&key->key[i][0]->k1;
 		right[j]=&ct->ct[i][0]->ct1;
 		j++;
@@ -314,7 +317,6 @@ Ipe::MDecrypt(IpeCt *ct, IpeKey *key){
 	int j=2;
 	for (int i=0;i<len;i++)
 	{
-
 		left[j]=&key->key[i][0]->k1;
 		right[j]=&ct->ct[i][0]->ct1;
 		j++;

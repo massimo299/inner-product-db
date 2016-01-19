@@ -49,7 +49,7 @@ main(){
 	Big y[len];
 	for (int i=0;i<len;i++)
 		pfc.random(y[i]);
-	//inner_product(x,y,order,len);    // modify y such that x.y=0
+	inner_product(x,y,order,len);    // modify y such that x.y=0
 	time(&seed1);
 	IpeKey *key = ipe.MKeyGen(msk,y);
 	time(&seed2);

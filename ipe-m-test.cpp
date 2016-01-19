@@ -38,7 +38,6 @@ main(){
 	G2 tmpg2;
 	pfc.random(tmpg2);
 	GT M = pfc.pairing(tmpg2,tmpg1);
-	//cout << M << endl;
 
 	time(&seed1);
 	IpeCt *ct = ipe.MEncrypt(msk,x,M);
@@ -60,8 +59,6 @@ main(){
 	GT res = ipe.MDecrypt(ct,key);
 	time(&seed2);
 	cout << "\t" << seed2-seed1 << endl;
-
-	//cout << res << endl;
 
 	if(res==M)
 		cout << "Ok" << endl;

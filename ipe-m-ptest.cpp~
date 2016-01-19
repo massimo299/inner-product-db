@@ -19,7 +19,7 @@ main(){
 	Big order=pfc.order();
 	time(&seed1); irand((long)seed1);
 
-	int len=120;
+	int len=10;
 	Ipe ipe(len,&pfc,mip,order);
 
 	cout<< "Setup" << endl;
@@ -42,10 +42,6 @@ main(){
 	Big y[len];
 	for (int i=0;i<len;i++)
 		pfc.random(y[i]);
-Big prod=0;
-for (int i=0;i<len;i++)
-		prod+=modmult(x[i],y[i],order);
-cout<<prod<<endl;
 	inner_product(x,y,order,len);    // modify y such that x.y=0
 
 

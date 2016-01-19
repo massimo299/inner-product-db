@@ -185,23 +185,23 @@ SecureDB::saveMsks(string fname, IpeMsk **msks)
 	ofstream outputFile;
 	outputFile.open(fname);
 
-	// Write n,l,k
-	outputFile << n << endl << l << endl << k << endl;
+	// Write n (number of columns)
+	outputFile << n << endl;
 
 	// Write ipdb parameters
-	outputFile << ipdb->omega << endl << ipdb->ab1[0] << endl << ipdb->ab1[1] << endl;
-	outputFile << ipdb->ab2[0] << endl << ipdb->ab2[1] << endl << ipdb->g << endl << ipdb->g2 << endl;
+	outputFile << ipdb->ipdb->omega << endl << ipdb->ipdb->ab1[0] << endl << ipdb->ipdb->ab1[1] << endl;
+	outputFile << ipdb->ipdb->ab2[0] << endl << ipdb->ipdb->ab2[1] << endl << ipdb->ipdb->g << endl << ipdb->ipdb->g2 << endl;
 
 	// Write msks parameters
 	IpeBMsk *bmsk;
-	for(int i=0;i<l+2;i++){
+	for(int i=0;i<l+1;i++){
 		bmsk = msks[0]->bmsk[i][0];
 		outputFile << bmsk->w1 << endl << bmsk->w2 << endl << bmsk->f1 << endl << bmsk->f2 << endl;
 		bmsk = msks[0]->bmsk[i][1];
 		outputFile << bmsk->w1 << endl << bmsk->w2 << endl << bmsk->f1 << endl << bmsk->f2 << endl;
 	}
 	for(int i=1;i<n+1;i++)
-		for(int j=0;j<k+2;j++){
+		for(int j=0;j<k+1;j++){
 			bmsk = msks[i]->bmsk[j][0];
 			outputFile << bmsk->w1 << endl << bmsk->w2 << endl << bmsk->f1 << endl << bmsk->f2 << endl;
 			bmsk = msks[i]->bmsk[j][1];
@@ -213,59 +213,62 @@ SecureDB::saveMsks(string fname, IpeMsk **msks)
 
 void
 SecureDB::KeyGen(string key_name){
-	msks = ipdb->Setup();
+	msks = ipdb->RSetup();
 	saveMsks(key_name,msks);
 }
 
-void
+bool
 SecureDB::LoadKey(string key_name){
 
 	// Check if key file exists
 	if (!ifstream(key_name)){
-		cout << "File doesn't exists" << endl;
-		return;
+		cout << "File doesn't exist" << endl;
+		return false;
 	}
 
 	ifstream inputFile(key_name);
 
-	// Get n,l,k
-	inputFile >> n; inputFile >> l; inputFile >> k;
+	// Get m (number of columns)
+	inputFile >> n;
+	l=2*n+2;
+	k=2;
 
 	// Get ipdb parameters and set them
 	miracl* mip=get_mip();
 	Big order=pfc->order();
-	ipdb = new Ipdb(n,l+1,k+1,pfc,mip,order);
-	inputFile >> ipdb->omega; inputFile >> ipdb->ab1[0]; inputFile >> ipdb->ab1[1];
-	inputFile >> ipdb->ab2[0]; inputFile >> ipdb->ab2[1]; inputFile >> ipdb->g; inputFile >> ipdb->g2;
-	ipdb->ipe = new Ipe(l+2,pfc,mip,order);
+	ipdb = new IpdbNoise(n,pfc,mip,order);
+	inputFile >> ipdb->ipdb->omega; inputFile >> ipdb->ipdb->ab1[0]; inputFile >> ipdb->ipdb->ab1[1];
+	inputFile >> ipdb->ipdb->ab2[0]; inputFile >> ipdb->ipdb->ab2[1]; inputFile >> ipdb->ipdb->g; inputFile >> ipdb->ipdb->g2;
+	ipdb->ipdb->ipe = new Ipe(l+1,pfc,mip,order);
 
 	// Get msks parameters and set them
 	msks = new IpeMsk*[n+1];
 	// First key paramters
-	IpeBMsk ***bmsk = new IpeBMsk**[l+2];
+	IpeBMsk ***bmsk = new IpeBMsk**[l+1];
 	Big w1,w2,f1,f2;
-	for(int i=0;i<l+2;i++){
+	for(int i=0;i<l+1;i++){
 		bmsk[i] = new IpeBMsk*[2];
 		inputFile >> w1; inputFile >> w2; inputFile >> f1; inputFile >> f2;
 		bmsk[i][0] = new IpeBMsk(w1,w2,f1,f2);
 		inputFile >> w1; inputFile >> w2; inputFile >> f1; inputFile >> f2;
 		bmsk[i][1] = new IpeBMsk(w1,w2,f1,f2);
 	}
-	msks[0] = new IpeMsk(ipdb->g,ipdb->g2,ipdb->omega,ipdb->ab1,ipdb->ab2,bmsk);
+	msks[0] = new IpeMsk(ipdb->ipdb->g,ipdb->ipdb->g2,ipdb->ipdb->omega,ipdb->ipdb->ab1,ipdb->ipdb->ab2,bmsk);
 	// All others n key paramters
 	for(int j=1;j<n+1;j++){
-		IpeBMsk ***bmsk = new IpeBMsk**[k+2];
-		for(int i=0;i<k+2;i++){
+		IpeBMsk ***bmsk = new IpeBMsk**[k+1];
+		for(int i=0;i<k+1;i++){
 			bmsk[i] = new IpeBMsk*[2];
 			inputFile >> w1; inputFile >> w2; inputFile >> f1; inputFile >> f2;
 			bmsk[i][0] = new IpeBMsk(w1,w2,f1,f2);
 			inputFile >> w1; inputFile >> w2; inputFile >> f1; inputFile >> f2;
 			bmsk[i][1] = new IpeBMsk(w1,w2,f1,f2);
 		}
-		msks[j] = new IpeMsk(ipdb->g,ipdb->g2,ipdb->omega,ipdb->ab1,ipdb->ab2,bmsk);
+		msks[j] = new IpeMsk(ipdb->ipdb->g,ipdb->ipdb->g2,ipdb->ipdb->omega,ipdb->ipdb->ab1,ipdb->ipdb->ab2,bmsk);
 	}
 
 	inputFile.close();
+	return true;
 }
 
 vector<string> &
@@ -297,14 +300,14 @@ SecureDB::create_row(string line, int len)
 	}
 
 	string *row = new string[len];
-	for(int i=0;i<cells.size();i++){
+	for(int i=0;i<len;i++){
 		row[i] = cells.at(i);
 	}
 	return row;
 }
 
 void
-SecureDB::save_cts(string fname, int len, IpeCt **cts)
+SecureDB::save_cts(string fname, IpeCt **cts)
 {
 	ofstream outputFile;
 	outputFile.open(fname);
@@ -317,7 +320,7 @@ SecureDB::save_cts(string fname, int len, IpeCt **cts)
 	// Save ciphertext of length l(+2)
 	t = cts[0];
 	outputFile << t->A << endl << t->B << endl;
-	for(int i=0;i<l+2;i++){
+	for(int i=0;i<l+1;i++){
 		outputFile << t->ct[i][0]->ct1 << endl << t->ct[i][0]->ct2 << endl;
 		outputFile << t->ct[i][1]->ct1 << endl << t->ct[i][1]->ct2 << endl;
 	}
@@ -327,7 +330,7 @@ SecureDB::save_cts(string fname, int len, IpeCt **cts)
 	for(int i=1;i<n+1;i++){
 		t = cts[i];
 		outputFile << t->A << endl << t->B << endl;
-		for(int j=0;j<k+2;j++){
+		for(int j=0;j<k+1;j++){
 			outputFile << t->ct[j][0]->ct1 << endl << t->ct[j][0]->ct2 << endl;
 			outputFile << t->ct[j][1]->ct1 << endl << t->ct[j][1]->ct2 << endl;
 		}
@@ -399,7 +402,7 @@ SecureDB::EncryptRows(string rows_name){
 
 	// Check if rows file exists
 	if (!ifstream(rows_name)){
-		cout << "File doesn't exists" << endl;
+		cout << "File doesn't exist" << endl;
 		return;
 	}
 
@@ -407,8 +410,7 @@ SecureDB::EncryptRows(string rows_name){
 	string line, *row, cell;
 	hash<string> hash_fn;
 	size_t str_hash;
-	Big X0[l+2];
-	Big *X[n];
+	Big X0[n];
 	IpeCt **cts;
 	GT M[n];
 	G1 tmpg1;
@@ -434,37 +436,27 @@ SecureDB::EncryptRows(string rows_name){
 		row=create_row(line,n);
 
 		if(row!=NULL){
-			// Create X0 attribute (idea, works only if l<=n)
-			for(int i=0;i<l;i++){
+			// Create X0 attribute
+			for(int i=0;i<n;i++){
 				cell = row[i];
 		   		str_hash = hash_fn(cell);
 				X0[i]=str_hash;
 			}
-			X0[l]=1;
-			// Create X attributes (i don't know how to create them, now they're <num_col,0...,0>)
-			for(int i=0;i<n;i++){
-				X[i] = new Big[k+2];
-				X[i][0]=0;
-				X[i][1]=i;
-				X[i][2]=-1;
-				for(int j=3;j<k+2;j++)
-					X[i][j]=0;
-			}
 			// Create n M keys (random) to use as aes key
 			for(int i=0;i<n;i++){
 				pfc->random(tmpg1); pfc->random(tmpg2);
-				M[i] = pfc->pairing(tmpg2,tmpg1);//if(i==1) cout << M[i] << endl;
+				M[i] = pfc->pairing(tmpg2,tmpg1);
 				encMsg(M[i],row[i],rows_enc_msgs);
 			}
 			// Encrypt the row saving it into a file called 'rows_name'_enc_msgs
 			cout << "Encrypting row " << row_num+1 << " with n=" << n << endl;
-			cts = ipdb->Encrypt(msks,X0,X,M);
+			cts = ipdb->EncryptRow(msks,X0,M);
 
 			// Save the encrypted row ciphertext in a file called 'row_name'_enc_ct plus a sequential number
 			stringstream ss;
 			ss << rows_enc_ct << row_num;
 			result = ss.str();
-			save_cts(result, n, cts);
+			save_cts(result, cts);
 			row_num++;
 		}
 		else
@@ -487,15 +479,15 @@ SecureDB::load_ct(string fname){
 		return NULL;
 	}
 
-	// Load ciphertext of length l(+2)
+	// Load ciphertext of length l(+1)
 	G1 A,B;
-	IpeBCt ***bct = new IpeBCt**[l+2];
+	IpeBCt ***bct = new IpeBCt**[l+1];
 	G1 bct1,bct2;
 	GT C;
 
 	inputFile >> A;
 	inputFile >> B;
-	for(int i=0;i<l+2;i++){
+	for(int i=0;i<l+1;i++){
 		bct[i] = new IpeBCt*[2];
 		inputFile >> bct1; inputFile >> bct2;
 		bct[i][0] = new IpeBCt(bct1,bct2);
@@ -506,12 +498,12 @@ SecureDB::load_ct(string fname){
 
 	cts[0] = new IpeCt(A,B,bct,C);
 
-	// Load ciphertexts of length k(+2)
+	// Load ciphertexts of length k(+1)
 	for(int j=1;j<n+1;j++){
-		bct = new IpeBCt**[k+2];
+		bct = new IpeBCt**[k+1];
 		inputFile >> A;
 		inputFile >> B;
-		for(int i=0;i<k+2;i++){
+		for(int i=0;i<k+1;i++){
 			bct[i] = new IpeBCt*[2];
 			inputFile >> bct1; inputFile >> bct2;
 			bct[i][0] = new IpeBCt(bct1,bct2);
@@ -544,7 +536,7 @@ SecureDB::get_select_params(string fname)
 Big *
 SecureDB::create_query_attribute(string fname){
 
-	Big *Y = new Big[l+2];
+	Big *Y = new Big[n];
 	fstream inputFile(fname);
 	string line;
 
@@ -554,18 +546,19 @@ SecureDB::create_query_attribute(string fname){
 	hash<string> hash_fn;
 	size_t str_hash;
 	// These are the 'where' parameters
-	Y[l]=0;
-	for(int i=0;i<l;i++){
+	for(int i=0;i<n;i++){
 		getline(inputFile,line);
+		if(inputFile.eof()&&i<n-1){
+			cout << "Query doesn't respect row size" << endl;
+			return NULL;
+		}
 		if(line.size()>0){
 		   	str_hash = hash_fn(line);
 			Y[i]=str_hash;
-			Y[l]-=modmult(Y[i],Y[i],pfc->order());
 		}
 		else
 			Y[i] = 0;
 	}
-	Y[l+1]=0;
 
 	inputFile.close();
 	return Y;
@@ -639,28 +632,35 @@ SecureDB::ExecuteQuery(string query_name,string db_name){
 
 	// Get colon numbers to select
 	vector<string> sel_params = get_select_params(query_name);
+	if(sel_params.size()==0){
+		cout << "No select parameters found" << endl;
+		return results;
+	}
 
 	// Create attribute from the query
 	Big *Y = create_query_attribute(query_name);
+	if(Y==NULL)
+		return results;
 
 	// Load every existing ciphertexts in the db
 	string db_enc_ct = db_name+"_enc_ct";
 	int row_num=0;
-
 	stringstream ss;
 	ss << db_enc_ct << row_num;
 	string res = ss.str();
+
 	IpeCt **cts;
 	IpeKey *pkey;
 	IpeKey **mkey;
 	GT r;
 	string db_enc_msgs = db_name+"_enc_msgs";
 	string encoded,decoded;
+
 	while(ifstream(res)){
 		cts = load_ct(res);
 		if(cts==NULL) return results;
 		pkey = ipdb->PKeyGen(msks,Y);
-		r = ipdb->PDecrypt(cts[0],pkey);
+		r = ipdb->ipdb->PDecrypt(cts[0],pkey);
 
 		if(r==(GT)1){ // Row match query
 			// Key generation and decryption for every element in sel_params
@@ -668,14 +668,8 @@ SecureDB::ExecuteQuery(string query_name,string db_name){
 			for(int i=0;i<sel_params.size();i++){
 				istringstream(sel_params.at(i)) >> j;
 				if(j>1 && j<=n){
-					Big Yj[k+2];
-					Yj[0]=0;
-					Yj[1]=1;
-					Yj[2]=j-1;
-					for(int i=3;i<k+2;i++)
-						Yj[i]=0;
-					mkey = ipdb->MKeyGen(msks,Y,Yj,j);
-					r = ipdb->MDecrypt(cts,mkey,j);
+					mkey = ipdb->MKeyGen(msks,Y,j);
+					r = ipdb->ipdb->MDecrypt(cts,mkey,j);
 
 					encoded = read_line_from_file(j-1+(row_num*n),db_enc_msgs);
 					decoded = base64_decode(encoded);
@@ -683,6 +677,8 @@ SecureDB::ExecuteQuery(string query_name,string db_name){
 
 					if(tmp.compare("")!=0) results.push_back(tmp);
 				}
+				else
+					cout << "Cell j doesn't exist (there are " << n << " cells)" << endl;
 			}
 		}
 

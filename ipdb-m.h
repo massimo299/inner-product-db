@@ -52,24 +52,24 @@ public:
 
 class SecureDB{
 public:
-	Ipdb *ipdb;
+	IpdbNoise *ipdb;
 	int n,l,k;
 	IpeMsk **msks;
 	PFC *pfc;
 	Big order;
 public:
 	void KeyGen(string);
-	void LoadKey(string);
+	bool LoadKey(string);
 	void EncryptRows(string);
 	vector<string> ExecuteQuery(string,string);
-	SecureDB(int n_, int l_, int k_, PFC *pfc_, Big order_){
-		n=n_;
-		l=l_;
-		k=k_;
+	SecureDB(int m, PFC *pfc_, Big order_){
+		n=m;
+		l=2*m+2;
+		k=2;
 		pfc=pfc_;
 		miracl* mip=get_mip();
 		order=order_;
-		ipdb = new Ipdb(n,l+1,k+1,pfc,mip,order);
+		ipdb = new IpdbNoise(m,pfc,mip,order);
 	}
 	SecureDB(PFC *pfc_, Big order_){
 		pfc=pfc_;
@@ -80,7 +80,7 @@ private:
 	vector<string> &split(const string&, char, vector<string>&);
 	vector<string> split(const string&, char);
 	string *create_row(string, int);
-	void save_cts(string, int, IpeCt **);
+	void save_cts(string, IpeCt **);
 	void encMsg(GT, string, string);
 	string stdsha256(const string);
 	void append_file(string, const unsigned char *, int, char *);

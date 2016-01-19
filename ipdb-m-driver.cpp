@@ -19,7 +19,7 @@ main(){
 	Big order=pfc.order();
 	time(&seed1); irand((long)seed1);
 
-	int n=10;
+	int n=120;
 	int l=80;
 	int k=3;
 	Ipdb ipdb(n,l,k,&pfc,mip,order);

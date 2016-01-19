@@ -12,7 +12,7 @@ BNOBJT=  bn_pair.o  zzn2.o zzn12a.o       zzn4.o ecn2.o big.o zzn.o ecn.o
 IPDBOBJ=cp_pair.o  zzn2.o                              big.o zzn.o ecn.o  
 DRIVEROBJ=ipdb.o driver.o
 
-EXE=ipe-cp ipe-mnt ipe-bn ipe-kss ipe-bls driver driver-cp driver-bn driver-a driver-b key_gen row_enc que_dec
+EXE=ipe-cp ipe-mnt ipe-bn ipe-kss ipe-bls driver driver-cp driver-bn driver-a driver-b key_gen row_enc que_dec ipe-m-test ipe-m-ptest ipdb-m-driver ipdbnoise-m-driver SecureDB ipe
 
 ipe: ipe.o ${BNOBJT}
 	g++ -std=gnu++11 -o ipe ipe.o ${BNOBJT} miracl.a
@@ -155,4 +155,4 @@ ipe-bls: ipe-bls.o ${BLSOBJ}
 
 
 clean:
-	rm -f ${CPOBJ} ${MNTOBJ} ${BNOBJB} ${BNOBJA} ${BNOBJ} ${KSSOBJ} ${BLSOBJ} ${EXE} ${DRIVEROBJ} driver-cp.o driver-bn.o driver-a.o driver-b.o key_gen.o row_enc.o que_dec.o ipe-m-test.o ipdb-m-driver.o ipe-m-ptest.o SecureDB.o ipdbnoise-m-driver.o
+	rm -f ${CPOBJ} ${MNTOBJ} ${BNOBJB} ${BNOBJA} ${BNOBJ} ${KSSOBJ} ${BLSOBJ} ${EXE} ${DRIVEROBJ} ipe.o driver-cp.o driver-bn.o driver-a.o driver-b.o key_gen.o row_enc.o que_dec.o ipe-m-test.o ipdb-m-driver.o ipe-m-ptest.o SecureDB.o ipdbnoise-m-driver.o

@@ -8,14 +8,14 @@ it uses the class Ipdb in ipdb-m where we have the definition of the basic algor
 	make ipdbnoise-m-driver
 it uses the class IpdbNoise in ipdb-m where we have the definition of the basic algorithms, developed through ipe-m, the basic inner product encryption implementation
 
-3.Test inner product database (with the constraint that l<=n)
+3.Test inner product database
    Build by issuing
 	make SecureDB
 The file that contains the rows has to be structured as follows:
-	row1cell1#cell2#cell3#....#celln
-	row2cell1#cell2#cell3#....#celln
-Example are in files 'row'(120 cells) and 'row2'(8 cells).
-The query file has to be structured as 'query' file. That is:
+	row1cell1#row1cell2#row1cell3#....#row1celln
+	rowmcell1#rowncell2#rowncell3#....#rowmcelln
+Example are in files 'row_120'(1 row, 120 cells), 'row_8'(1 row, 8 cells) and 'rows_8_40'(40 rows, 8 cells)
+The query file has to be structured as 'query_8'(8 cells) file. That is:
 	select1#select2#...
 	where1
 	where2
@@ -23,4 +23,4 @@ The query file has to be structured as 'query' file. That is:
 	where4
 	...
 	wheren
-The white spaces are considered like there's not a where condition for that cell.
+The new line character is considered like there's not a where condition for that cell.
