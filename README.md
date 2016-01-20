@@ -3,6 +3,7 @@
 This project includes a set of programs that can be used to encrypt tables (consisting of rows and columns) so that the owner of the data can create tokens to allow third party users to perform query on the encrypted tables and access only the informations that the token permitts them.
 
 1. **Generate keys:**
+
 	run command **GenKey** <num_col> <key_name>
 	* <num_col> is the number of column that the created key will be able to encrypt;
 	* <key_name> represents the name of the file in which the key will be saved;
@@ -37,7 +38,7 @@ This project includes a set of programs that can be used to encrypt tables (cons
 	select1#select2#...#selects
 	where1
 	where2
-	
+
 	where4
 	...
 	wheren
