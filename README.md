@@ -4,7 +4,7 @@ This project includes a set of programs that can be used to encrypt tables (cons
 
 1. **Generate keys:**
 
-	run command **GenKey** <num_col> <key_name>
+	run command **GenKey** \<num_col\> <key_name>
 	* <num_col> is the number of column that the created key will be able to encrypt;
 	* <key_name> represents the name of the file in which the key will be saved;
 	* the created master key will be written in Keys/<key_name>.
@@ -34,7 +34,7 @@ This project includes a set of programs that can be used to encrypt tables (cons
 	row1cell1#row1cell2#row1cell3#....#row1celln  
 	rowmcell1#rowncell2#rowncell3#....#rowmcelln
 
-	In which every element is separated by a '#' character.
+	In which every element is separated by a '#' character.  
 	Example are in files 'row_120'(1 row, 120 cells) and 'rows_8_40'(40 rows, 8 cells).
 * **Query structure:**
 
