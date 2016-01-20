@@ -1,6 +1,7 @@
 ### **Secure Database**
 
-This project includes a set of programs that can be used to encrypt tables (consisting of rows and columns) so that the owner of the data can create tokens to allow third party users to perform query on the encrypted tables and access only the informations that the token permitts them.
+This project includes a set of programs that can be used to encrypt tables (consisting of rows and columns) so that the owner of the data can create tokens to allow third party users to perform query on the encrypted tables and access only the informations that the token permitts them.  
+The following is a typical the workflow:
 
 1. **Generate keys:**
 
@@ -12,7 +13,7 @@ This project includes a set of programs that can be used to encrypt tables (cons
 2. **Encrypt rows:**
 
 	run command **EncRow** \<key_name\> \<rows_name\> \<rand_lim\>
-	* \<key_name\> is the name of the master, key needed for the encryption;
+	* \<key_name\> is the name of the master key, needed for the encryption;
 	* \<rows_name\> file name of the table;
 	* \<rand_lim\> this is the maximum limit of the noise parameter generation (minimum is 1);
 	* the encrypted table will be written in EncRows/\<rows_name\>_enc_msgs;
@@ -46,7 +47,7 @@ This project includes a set of programs that can be used to encrypt tables (cons
 	where2  
 
 	where4  
-	...
+	...  
 	wheren  
 
 	The new line character is considered like there's not a where condition for that cell.
