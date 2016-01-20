@@ -49,7 +49,6 @@ Ipdb::Encrypt(IpeMsk **msks, Big *X0, Big **X, GT *M){
 
 	ipe->len=k+1;
 	for(int i=1;i<=n;i++){
-
 		X[i-1][0]=y;
 		cts[i] = ipe->MEncrypt(msks[i],X[i-1],z1,z2,M[i-1]);
 	}
@@ -655,25 +654,36 @@ SecureDB::ExecuteQuery(string query_name,string db_name, int rand_lim){
 
 	IpeCt **cts;
 	IpeKey *pkey;
-	IpeKey **mkey;
+	IpeKey **mkey[sel_params.size()];
 	GT r;
 	string db_enc_msgs = db_name+"_enc_msgs";
 	string encoded,decoded;
 
+	// Predicate key generation
+	pkey = ipdb->PKeyGen(msks,Y,rand_lim);
+
+	// Message keys generation
+	int j;
+	for(int i=0;i<sel_params.size();i++){
+		istringstream(sel_params.at(i)) >> j;
+		if(j>1 && j<=n){
+			mkey[i] = ipdb->MKeyGen(msks,Y,j,rand_lim);
+		}
+		else
+			cout << "Cell j doesn't exist (there are " << n << " cells)" << endl;
+	}
+
 	while(ifstream(Ct_dir+"/"+res)){
 		cts = load_ct(res);
 		if(cts==NULL) return results;
-		pkey = ipdb->PKeyGen(msks,Y,rand_lim);
 		r = ipdb->ipdb->PDecrypt(cts[0],pkey);
 
 		if(r==(GT)1){ // Row match query
-			// Key generation and decryption for every element in sel_params
-			int j;
+			// Decryption for every element in sel_params
 			for(int i=0;i<sel_params.size();i++){
 				istringstream(sel_params.at(i)) >> j;
 				if(j>1 && j<=n){
-					mkey = ipdb->MKeyGen(msks,Y,j,rand_lim);
-					r = ipdb->ipdb->MDecrypt(cts,mkey,j);
+					r = ipdb->ipdb->MDecrypt(cts,mkey[i],j);
 
 					encoded = read_line_from_file(j-1+(row_num*n),db_enc_msgs);
 					decoded = base64_decode(encoded);
@@ -681,8 +691,6 @@ SecureDB::ExecuteQuery(string query_name,string db_name, int rand_lim){
 
 					if(tmp.compare("")!=0) results.push_back(tmp);
 				}
-				else
-					cout << "Cell j doesn't exist (there are " << n << " cells)" << endl;
 			}
 		}
 
