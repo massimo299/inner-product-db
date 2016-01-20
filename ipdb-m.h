@@ -37,9 +37,9 @@ public:
 	Big order;
 public:
 	IpeMsk **RSetup();
-	IpeCt **EncryptRow(IpeMsk **, Big *, GT *);
-	IpeKey *PKeyGen(IpeMsk **, Big *);
-	IpeKey **MKeyGen(IpeMsk **, Big *, int);
+	IpeCt **EncryptRow(IpeMsk **, Big *, GT *, int);
+	IpeKey *PKeyGen(IpeMsk **, Big *, int);
+	IpeKey **MKeyGen(IpeMsk **, Big *, int, int);
 	IpdbNoise(int m, PFC *p, miracl *mi, Big o){
 		n=m;
 		l=2*m+2;
@@ -60,8 +60,8 @@ public:
 public:
 	void KeyGen(string);
 	bool LoadKey(string);
-	void EncryptRows(string);
-	vector<string> ExecuteQuery(string,string);
+	void EncryptRows(string, int);
+	vector<string> ExecuteQuery(string, string, int);
 	SecureDB(int m, PFC *pfc_, Big order_){
 		n=m;
 		l=2*m+2;
@@ -83,7 +83,7 @@ private:
 	void save_cts(string, IpeCt **);
 	void encMsg(GT, string, string);
 	string stdsha256(const string);
-	void append_file(string, const unsigned char *, int, char *);
+	void append_enc_cell_file(string, const unsigned char *, int, char *);
 	IpeCt **load_ct(string);
 	Big *create_query_attribute(string);
 	vector<string> get_select_params(string);

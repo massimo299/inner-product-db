@@ -8,6 +8,10 @@
 #include "base64.h"
 #include "ipdb-m.h"
 
+string Keys_dir = "Keys";
+string Ct_dir = "Ciphertexts";
+string Enc_rows_dir = "EncRows";
+
 IpeMsk **
 Ipdb::Setup(){
 
@@ -110,10 +114,10 @@ IpdbNoise::RSetup(){
 }
 
 IpeCt **
-IpdbNoise::EncryptRow(IpeMsk **msks, Big *A, GT *M){
+IpdbNoise::EncryptRow(IpeMsk **msks, Big *A, GT *M, int rand_lim){
 
 	Big X0[l+1], *X[n];
-	Big r = rand()%10+1;
+	Big r = rand()%rand_lim+1;
 
 	X0[n]=r;
 	for(int i=0;i<n;i++){
@@ -131,10 +135,10 @@ IpdbNoise::EncryptRow(IpeMsk **msks, Big *A, GT *M){
 }
 
 IpeKey *
-IpdbNoise::PKeyGen(IpeMsk **msks, Big *Q){
+IpdbNoise::PKeyGen(IpeMsk **msks, Big *Q, int rand_lim){
 
 	Big Y0[l+1], R[n];
-	Big r = rand()%10+1;
+	Big r = rand()%rand_lim+1;
 
 	Y0[l-1] = 0;
 	Y0[n]=0;
@@ -154,10 +158,10 @@ IpdbNoise::PKeyGen(IpeMsk **msks, Big *Q){
 }
 
 IpeKey **
-IpdbNoise::MKeyGen(IpeMsk **msks, Big *Q, int j){
+IpdbNoise::MKeyGen(IpeMsk **msks, Big *Q, int j, int rand_lim){
 
 	Big Y0[l+1], R[n], Yj[k+1];
-	Big r = rand()%20+1;
+	Big r = rand()%rand_lim+1;
 
 	Y0[l-1] = 0;
 	for(int i=0;i<n;i++){
@@ -183,7 +187,7 @@ void
 SecureDB::saveMsks(string fname, IpeMsk **msks)
 {
 	ofstream outputFile;
-	outputFile.open(fname);
+	outputFile.open(Keys_dir+"/"+fname);
 
 	// Write n (number of columns)
 	outputFile << n << endl;
@@ -221,12 +225,12 @@ bool
 SecureDB::LoadKey(string key_name){
 
 	// Check if key file exists
-	if (!ifstream(key_name)){
-		cout << "File doesn't exist" << endl;
+	if (!ifstream(Keys_dir+"/"+key_name)){
+		cout << "Key file doesn't exist" << endl;
 		return false;
 	}
 
-	ifstream inputFile(key_name);
+	ifstream inputFile(Keys_dir+"/"+key_name);
 
 	// Get m (number of columns)
 	inputFile >> n;
@@ -310,7 +314,7 @@ void
 SecureDB::save_cts(string fname, IpeCt **cts)
 {
 	ofstream outputFile;
-	outputFile.open(fname);
+	outputFile.open(Ct_dir+"/"+fname);
 
 	outputFile << n << endl;
 	outputFile << l << endl;
@@ -354,10 +358,10 @@ SecureDB::stdsha256(const string str)
 }
 
 void
-SecureDB::append_file(string fname, const unsigned char *Msg, int elength, char *dec)
+SecureDB::append_enc_cell_file(string fname, const unsigned char *Msg, int elength, char *dec)
 {
 	ofstream outputFile;
-	outputFile.open(fname, ios::app);
+	outputFile.open(Enc_rows_dir+"/"+fname, ios::app);
 	string encoded = base64_encode(Msg,elength);
 	outputFile << encoded << endl;
 	outputFile.close();	
@@ -393,16 +397,16 @@ SecureDB::encMsg(GT M, string Msg, string fname)
 	AES_set_encrypt_key((const unsigned char *)aes_key_char, AES_SECURITY, &enc_key);
 	AES_cbc_encrypt((const unsigned char *)Msg.c_str(), enc_out, inputslength, &enc_key, iv_enc, AES_ENCRYPT);
 
-	append_file(fname,enc_out, encslength, NULL);
+	append_enc_cell_file(fname,enc_out, encslength, NULL);
 
 }
 
 void
-SecureDB::EncryptRows(string rows_name){
+SecureDB::EncryptRows(string rows_name, int rand_lim){
 
 	// Check if rows file exists
 	if (!ifstream(rows_name)){
-		cout << "File doesn't exist" << endl;
+		cout << "Rows file doesn't exist" << endl;
 		return;
 	}
 
@@ -424,7 +428,7 @@ SecureDB::EncryptRows(string rows_name){
 	stringstream ss;
 	ss << rows_enc_ct << row_num;
 	string result = ss.str();
-	while(ifstream(result)){
+	while(ifstream(Ct_dir+"/"+result)){
 		row_num++;
 		stringstream ss;
 		ss << rows_enc_ct << row_num;
@@ -450,7 +454,7 @@ SecureDB::EncryptRows(string rows_name){
 			}
 			// Encrypt the row saving it into a file called 'rows_name'_enc_msgs
 			cout << "Encrypting row " << row_num+1 << " with n=" << n << endl;
-			cts = ipdb->EncryptRow(msks,X0,M);
+			cts = ipdb->EncryptRow(msks,X0,M, rand_lim);
 
 			// Save the encrypted row ciphertext in a file called 'row_name'_enc_ct plus a sequential number
 			stringstream ss;
@@ -470,7 +474,7 @@ IpeCt **
 SecureDB::load_ct(string fname){
 
 	IpeCt **cts = new IpeCt*[n+1];
-	ifstream inputFile(fname);
+	ifstream inputFile(Ct_dir+"/"+fname);
 
 	int n_,l_,k_;
 	inputFile >> n_; inputFile >> l_; inputFile >> k_;
@@ -578,7 +582,7 @@ string
 SecureDB::read_line_from_file(int lnum, string fname)
 {
 	string line;
-	fstream inputFile(fname);
+	fstream inputFile(Enc_rows_dir+"/"+fname);
 	GotoLine(inputFile, lnum);
 	getline(inputFile,line);
 	inputFile.close();
@@ -626,7 +630,7 @@ SecureDB::decMsg(GT M, string Msg){
 }
 
 vector<string>
-SecureDB::ExecuteQuery(string query_name,string db_name){
+SecureDB::ExecuteQuery(string query_name,string db_name, int rand_lim){
 
 	vector<string> results;
 
@@ -656,10 +660,10 @@ SecureDB::ExecuteQuery(string query_name,string db_name){
 	string db_enc_msgs = db_name+"_enc_msgs";
 	string encoded,decoded;
 
-	while(ifstream(res)){
+	while(ifstream(Ct_dir+"/"+res)){
 		cts = load_ct(res);
 		if(cts==NULL) return results;
-		pkey = ipdb->PKeyGen(msks,Y);
+		pkey = ipdb->PKeyGen(msks,Y,rand_lim);
 		r = ipdb->ipdb->PDecrypt(cts[0],pkey);
 
 		if(r==(GT)1){ // Row match query
@@ -668,7 +672,7 @@ SecureDB::ExecuteQuery(string query_name,string db_name){
 			for(int i=0;i<sel_params.size();i++){
 				istringstream(sel_params.at(i)) >> j;
 				if(j>1 && j<=n){
-					mkey = ipdb->MKeyGen(msks,Y,j);
+					mkey = ipdb->MKeyGen(msks,Y,j,rand_lim);
 					r = ipdb->ipdb->MDecrypt(cts,mkey,j);
 
 					encoded = read_line_from_file(j-1+(row_num*n),db_enc_msgs);
