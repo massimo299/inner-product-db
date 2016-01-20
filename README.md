@@ -31,7 +31,7 @@ This project includes a set of programs that can be used to encrypt tables (cons
 
 	A table with m rows and n columns has to be structured as follows:
 
-	row1cell1#row1cell2#row1cell3#....#row1celln
+	row1cell1#row1cell2#row1cell3#....#row1celln  
 	rowmcell1#rowncell2#rowncell3#....#rowmcelln
 
 	In which every element is separated by a '#' character.
@@ -40,13 +40,13 @@ This project includes a set of programs that can be used to encrypt tables (cons
 
 	A query for a n columns database with s select to perform has to be structured as follows:
 
-	select1#select2#...#selects
-	where1
-	where2
+	select1#select2#...#selects  
+	where1  
+	where2  
 
-	where4
+	where4  
 	...
-	wheren
+	wheren  
 
 	The new line character is considered like there's not a where condition for that cell.
 
