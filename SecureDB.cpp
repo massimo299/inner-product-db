@@ -62,7 +62,7 @@ main(){
 				cout << "Insert rows file name (" << db->n << " cells per row)" << endl;
 				cin >> rows_name;
 				time(&seed1);
-				db->EncryptRows(rows_name);
+				db->EncryptRows(rows_name,10);
 				time(&seed2);
 				cout << "\t" << seed2-seed1 << endl;
 				break;
@@ -84,7 +84,7 @@ main(){
 					break;
 				}
 				time(&seed1);
-				query_results = db->ExecuteQuery(query_name,db_name);
+				query_results = db->ExecuteQuery(query_name,db_name,10);
 				time(&seed2);
 				cout << "\t" << seed2-seed1 << endl;
 				if(query_results.size()==0){

@@ -58,7 +58,7 @@ main(int argc, char *argv[]){
 	time(&seed1);
 	query_results = db->ExecuteQuery(query_name,db_name,rand_lim);
 	time(&seed2);
-	cout << "\t" << seed2-seed1 << endl;
+	cout << "\texec time " << seed2-seed1 << endl;
 	if(query_results.size()==0){
 		cout << "No result found" << endl;
 		return 1;

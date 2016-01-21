@@ -43,7 +43,7 @@ main(){
 
 	cout << "Encrypt" << endl;
 	time(&seed1);
-	IpeCt **cts = ipdb.EncryptRow(msks,A,M);
+	IpeCt **cts = ipdb.EncryptRow(msks,A,M,10);
 	time(&seed2);
 	cout << "\t" << seed2-seed1 << endl;
 
@@ -57,7 +57,7 @@ main(){
 	
 	cout << "KeyGen predicate" << endl;
 	time(&seed1);
-	IpeKey *pkey = ipdb.PKeyGen(msks,Q);
+	IpeKey *pkey = ipdb.PKeyGen(msks,Q,10);
 	time(&seed2);
 	cout << "\t" << seed2-seed1 << endl;
 
@@ -83,7 +83,7 @@ main(){
 
 	cout << "KeyGen message" << endl;
 	time(&seed1);
-	IpeKey **mkey = ipdb.MKeyGen(msks,Q,j);
+	IpeKey **mkey = ipdb.MKeyGen(msks,Q,j,10);
 	time(&seed2);
 	cout << "\t" << seed2-seed1 << endl;
 

@@ -8,6 +8,8 @@
 #include "base64.h"
 #include "ipdb-m.h"
 
+//#define VERBOSE
+
 string Keys_dir = "Keys";
 string Ct_dir = "Ciphertexts";
 string Enc_rows_dir = "EncRows";
@@ -370,7 +372,7 @@ void
 SecureDB::encMsg(GT M, string Msg, string fname)
 {
 	Big aes_key_big = pfc->hash_to_aes_key(M);
-	char aes_key_char[AES_SECURITY/8];
+	char aes_key_char[128/8];
 	aes_key_char << aes_key_big;
 
 	// Crypt using openssl cbc
@@ -393,7 +395,7 @@ SecureDB::encMsg(GT M, string Msg, string fname)
 
 	// so i can do with this aes-cbc-128 aes-cbc-192 aes-cbc-256
 	AES_KEY enc_key;
-	AES_set_encrypt_key((const unsigned char *)aes_key_char, AES_SECURITY, &enc_key);
+	AES_set_encrypt_key((const unsigned char *)aes_key_char, 128, &enc_key);
 	AES_cbc_encrypt((const unsigned char *)Msg.c_str(), enc_out, inputslength, &enc_key, iv_enc, AES_ENCRYPT);
 
 	append_enc_cell_file(fname,enc_out, encslength, NULL);
@@ -593,7 +595,7 @@ string
 SecureDB::decMsg(GT M, string Msg){
 
 	Big aes_key_big = pfc->hash_to_aes_key(M);
-	char aes_key_char[AES_SECURITY/8];
+	char aes_key_char[128/8];
 	aes_key_char << aes_key_big;
 
 	// Decrypt using openssl
@@ -609,7 +611,7 @@ SecureDB::decMsg(GT M, string Msg){
 	memset(dec_out, 0, sizeof(dec_out));
 
 	AES_KEY dec_key;
-	AES_set_decrypt_key((const unsigned char *)aes_key_char, AES_SECURITY, &dec_key);
+	AES_set_decrypt_key((const unsigned char *)aes_key_char, 128, &dec_key);
 	AES_cbc_encrypt((const unsigned char *)Msg.c_str(), dec_out, encslength, &dec_key, iv_dec, AES_DECRYPT);
 
 	// Check with sha256 if the decryption were goodzz
@@ -659,15 +661,34 @@ SecureDB::ExecuteQuery(string query_name,string db_name, int rand_lim){
 	string db_enc_msgs = db_name+"_enc_msgs";
 	string encoded,decoded;
 
+	#ifdef VERBOSE
+	time_t seed1, seed2;
+	time(&seed1);
+	#endif
+
 	// Predicate key generation
 	pkey = ipdb->PKeyGen(msks,Y,rand_lim);
+
+	#ifdef VERBOSE
+	time(&seed2);
+	cout << "\tPredicate key generation time: " << seed2-seed1 << endl;
+	#endif
 
 	// Message keys generation
 	int j;
 	for(int i=0;i<sel_params.size();i++){
 		istringstream(sel_params.at(i)) >> j;
 		if(j>1 && j<=n){
+			#ifdef VERBOSE
+			time(&seed1);
+			#endif
+
 			mkey[i] = ipdb->MKeyGen(msks,Y,j,rand_lim);
+
+			#ifdef VERBOSE
+			time(&seed2);
+			cout << "\tMessage key generation time: " << seed2-seed1 << endl;
+			#endif
 		}
 		else
 			cout << "Cell j doesn't exist (there are " << n << " cells)" << endl;
@@ -676,14 +697,33 @@ SecureDB::ExecuteQuery(string query_name,string db_name, int rand_lim){
 	while(ifstream(Ct_dir+"/"+res)){
 		cts = load_ct(res);
 		if(cts==NULL) return results;
+
+		#ifdef VERBOSE
+		time(&seed1);
+		#endif
+
 		r = ipdb->ipdb->PDecrypt(cts[0],pkey);
+
+		#ifdef VERBOSE
+		time(&seed2);
+		cout << "\tPredicate decryption time: " << seed2-seed1 << endl;
+		#endif
 
 		if(r==(GT)1){ // Row match query
 			// Decryption for every element in sel_params
 			for(int i=0;i<sel_params.size();i++){
 				istringstream(sel_params.at(i)) >> j;
 				if(j>1 && j<=n){
+					#ifdef VERBOSE
+					time(&seed1);
+					#endif
+
 					r = ipdb->ipdb->MDecrypt(cts,mkey[i],j);
+
+					#ifdef VERBOSE
+					time(&seed2);
+					cout << "\tMessage decryption time: " << seed2-seed1 << endl;
+					#endif
 
 					encoded = read_line_from_file(j-1+(row_num*n),db_enc_msgs);
 					decoded = base64_decode(encoded);

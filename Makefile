@@ -1,13 +1,13 @@
 CXXFLAGS=-g
 CXXFLAGS= -std=gnu++11
-CPOBJ=  cp_pair.o  zzn2.o                              big.o zzn.o ecn.o  ipdb-cp.o
-MNTOBJ= mnt_pair.o zzn2.o zzn6a.o        zzn3.o ecn3.o big.o zzn.o ecn.o 
+CPOBJ=  cp_pair.o  zzn2.o                              big.o zzn.o ecn.o  ipdb-cp.o base64.o ipe-m.o ipdb-m.o
+MNTOBJ= mnt_pair.o zzn2.o zzn6a.o        zzn3.o ecn3.o big.o zzn.o ecn.o  base64.o ipe-m.o ipdb-m.o
 BNOBJ=  bn_pair.o  zzn2.o zzn12a.o       zzn4.o ecn2.o big.o zzn.o ecn.o  ipdb-bn.o
-KSSOBJ= kss_pair.o        zzn18.o zzn6.o zzn3.o ecn3.o big.o zzn.o ecn.o 
-BLSOBJ= bls_pair.o zzn2.o zzn24.o zzn8.o zzn4.o ecn4.o big.o zzn.o ecn.o 
-BNOBJB=  bn_pair.o  zzn2.o zzn12a.o       zzn4.o ecn2.o big.o zzn.o ecn.o  ipdb-b.o base64.o ipe-m.o ipdb-m.o
+KSSOBJ= kss_pair.o        zzn18.o zzn6.o zzn3.o ecn3.o big.o zzn.o ecn.o  base64.o ipe-m.o ipdb-m.o
+BLSOBJ= bls_pair.o zzn2.o zzn24.o zzn8.o zzn4.o ecn4.o big.o zzn.o ecn.o  base64.o ipe-m.o ipdb-m.o
+BNOBJB=  bn_pair.o  zzn2.o zzn12a.o       zzn4.o ecn2.o big.o zzn.o ecn.o ipdb-b.o base64.o ipe-m.o ipdb-m.o
 
-BNOBJT=  bn_pair.o  zzn2.o zzn12a.o       zzn4.o ecn2.o big.o zzn.o ecn.o  
+BNOBJT=  bn_pair.o  zzn2.o zzn12a.o       zzn4.o ecn2.o big.o zzn.o ecn.o
 
 IPDBOBJ=cp_pair.o  zzn2.o                              big.o zzn.o ecn.o  
 DRIVEROBJ=ipdb.o driver.o
