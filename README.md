@@ -8,7 +8,9 @@ The current release allows very simple queries in which it is possible to read o
 rows that satisfy a certain predicate. Only equality predicates are currently supported. 
 These roughly correspond to SQL queries of the following form:
 
+<center>
 select col from table where col1='AA' and col2='BB' and col4='DD'
+</center>
 
 
 and access only the informations that the token permitts them.  
