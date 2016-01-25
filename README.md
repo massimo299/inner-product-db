@@ -8,50 +8,53 @@ The current release allows very simple queries in which it is possible to read o
 rows that satisfy a certain predicate. Only equality predicates are currently supported. 
 These roughly correspond to SQL queries of the following form:
 
-<center>
-select col from table where col1='AA' and col2='BB' and col4='DD'
-</center>
+-> select col5 from table where col1='AA' and col2='BB' and col4='DD' <-
 
+that show the fifth column of all rows in which the first column is 'AA', the second is 'BB' and the fourth
+is 'DD'.  
 
-and access only the informations that the token permitts them.  
-The following is a typical the workflow:
+The following is a typical workflow:
 
 1. **Generate keys:**
 
-	run command **GenKey** \<num_col\> \<key_name\>
-	* \<num_col\> is the number of column that the created key will be able to encrypt;
-	* \<key_name\> represents the name of the file in which the key will be saved;
-	* the created master key will be written in Keys/\<key_name\>.
+	run command **GenKey** \<num_col\> \<key_file\>
+	* \<num_col\>:  number of columns in the table we intend to encrypt;
+	* \<key_file\>: the name of the file in which the key will be saved;
 
 2. **Encrypt rows:**
 
-	run command **EncRow** \<key_name\> \<rows_name\> \<rand_lim\>
-	* \<key_name\> is the name of the master key, needed for the encryption;
-	* \<rows_name\> file name of the table;
-	* \<rand_lim\> this is the maximum limit of the noise parameter generation (minimum is 1);
-	* the encrypted table will be written in EncRows/\<rows_name\>_enc_msgs;
-	* every ciphertext (one per each row) will be stored in Ciphertexts/\<rows_name\>_enc_ct0,\<rows_name\>_enc_ct1,....,\<rows_name\>_enc_ctn (where n is the number of rows).
+	run command **EncRow** \<key_file\> \<table_name\> \<enctable_name\> \<noise\>
+	* \<key_file\>:  name of the file that contains the master key to be used for the encryption;
+	* \<table_name\>: file name of the table;
+	* \<enctable_name\>: file name of the encrypted table;
+	* \<noise\>: the noise parameter;
 
-2. **Query generation and execution:**
 
-	run command **QueGenExe** \<key_name\> \<query_name\> \<db_name\> \<rand_lim\>
-	* \<key_name\> is the name of the master key, needed for the decryption;
-	* \<query_name\> indicates the file that contains the query;
-	* \<db_name\> file name of the encrypted table;
-	* \<rand_lim\> this is the maximum limit of the noise parameter generation (minimum is 1);
-	* the decryption results will be printed on the standard output.
+3. **Token generation:**
 
-#### **Additional informations**
-* **Table structure:**
+	run command **GenToken** \<key_file\> \<query_name\> \<noise\>
+	* \<key_file\>: name of the file that contains the master key to be used for the token generation;
+	* \<query_name\>: the name of the file that contains the query;
+	* \<noise\>: the noise parameter;
+
+4. **Token execution:**
+
+	run command **ApplyToken** \<query_name\> \<enctable_name\>
+	* \<query_name\>: the name of the file to be used to get the different tokens;
+	* \<enctable_name\>: file name of the encrypted table.
+
+#### **File formats**
+* **Table format:**
 
 	A table with m rows and n columns has to be structured as follows:
 
 	row1cell1#row1cell2#row1cell3#....#row1celln  
 	rowmcell1#rowncell2#rowncell3#....#rowmcelln
 
-	In which every element is separated by a '#' character.  
-	Example are in files 'row_120'(1 row, 120 cells) and 'rows_8_40'(40 rows, 8 cells).
-* **Query structure:**
+	Elements of the same row are separated by '#' character.  
+	Examples are in files 'row_120'(1 row, 120 cells) and 'rows_8_40'(40 rows, 8 cells).
+
+* **Query format:**
 
 	A query for a n columns database with s select to perform has to be structured as follows:
 

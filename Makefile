@@ -12,7 +12,7 @@ BNOBJT=  bn_pair.o  zzn2.o zzn12a.o       zzn4.o ecn2.o big.o zzn.o ecn.o
 IPDBOBJ=cp_pair.o  zzn2.o                              big.o zzn.o ecn.o  
 DRIVEROBJ=ipdb.o driver.o
 
-EXE=ipe-cp ipe-mnt ipe-bn ipe-kss ipe-bls driver driver-cp driver-bn driver-a driver-b key_gen row_enc que_dec ipe-m-test ipe-m-ptest ipdb-m-driver ipdbnoise-m-driver SecureDB ipe GenKey EncRow QueGenExe
+EXE=ipe-cp ipe-mnt ipe-bn ipe-kss ipe-bls driver driver-cp driver-bn driver-a driver-b key_gen row_enc que_dec ipe-m-test ipe-m-ptest ipdb-m-driver ipdbnoise-m-driver SecureDB ipe GenKey EncRow GenToken ApplyToken
 
 EXE: ${EXE}
 
@@ -58,8 +58,11 @@ GenKey.o: GenKey.cpp
 EncRow.o: EncRow.cpp
 	g++ -std=gnu++11 -D MR_PAIRING_BN -D AES_SECURITY=128 -c EncRow.cpp -o EncRow.o
 
-QueGenExe.o: QueGenExe.cpp
-	g++ -std=gnu++11 -D MR_PAIRING_BN -D AES_SECURITY=128 -c QueGenExe.cpp -o QueGenExe.o
+GenToken.o: GenToken.cpp
+	g++ -std=gnu++11 -D MR_PAIRING_BN -D AES_SECURITY=128 -c GenToken.cpp -o GenToken.o
+
+ApplyToken.o: ApplyToken.cpp
+	g++ -std=gnu++11 -D MR_PAIRING_BN -D AES_SECURITY=128 -c ApplyToken.cpp -o ApplyToken.o
 
 key_gen.o: key_gen.cpp
 	g++ -std=gnu++11 -D MR_PAIRING_BN -D AES_SECURITY=128 -c key_gen.cpp -o key_gen.o
@@ -94,8 +97,11 @@ GenKey: ${BNOBJB} GenKey.o
 EncRow: ${BNOBJB} EncRow.o
 	g++ -o EncRow ${BNOBJB} EncRow.o miracl.a -lcrypto -lssl
 
-QueGenExe: ${BNOBJB} QueGenExe.o
-	g++ -o QueGenExe ${BNOBJB} QueGenExe.o miracl.a -lcrypto -lssl
+GenToken: ${BNOBJB} GenToken.o
+	g++ -o GenToken ${BNOBJB} GenToken.o miracl.a -lcrypto -lssl
+
+ApplyToken: ${BNOBJB} ApplyToken.o
+	g++ -o ApplyToken ${BNOBJB} ApplyToken.o miracl.a -lcrypto -lssl
 
 key_gen: ${BNOBJB} key_gen.o
 	g++ -o key_gen ${BNOBJB} key_gen.o miracl.a -lcrypto -lssl
@@ -175,4 +181,4 @@ ipe-bls: ipe-bls.o ${BLSOBJ}
 
 
 clean:
-	rm -f ${CPOBJ} ${MNTOBJ} ${BNOBJB} ${BNOBJA} ${BNOBJ} ${KSSOBJ} ${BLSOBJ} ${EXE} ${DRIVEROBJ} ipe.o driver-cp.o driver-bn.o driver-a.o driver-b.o key_gen.o row_enc.o que_dec.o ipe-m-test.o ipdb-m-driver.o ipe-m-ptest.o SecureDB.o ipdbnoise-m-driver.o GenKey.o EncRow.o QueGenExe.o
+	rm -f ${CPOBJ} ${MNTOBJ} ${BNOBJB} ${BNOBJA} ${BNOBJ} ${KSSOBJ} ${BLSOBJ} ${EXE} ${DRIVEROBJ} ipe.o driver-cp.o driver-bn.o driver-a.o driver-b.o key_gen.o row_enc.o que_dec.o ipe-m-test.o ipdb-m-driver.o ipe-m-ptest.o SecureDB.o ipdbnoise-m-driver.o GenKey.o EncRow.o GenToken.o ApplyToken.o

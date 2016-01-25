@@ -50,18 +50,29 @@ public:
 	};
 };
 
+/**
+ * \class The secure database class.
+ * \brief It is useful for data owners and readers.
+ *
+ * This can be used to generate a master key, encrypt tables and execute query on them.
+ */
 class SecureDB{
 public:
-	IpdbNoise *ipdb;
-	int n,l,k;
-	IpeMsk **msks;
-	PFC *pfc;
-	Big order;
+	IpdbNoise *ipdb; /**< This is needed to make inner product encryption operations */
+	int n,l,k; /**< n is the number of columns, l the length of the principal attribute, k the lenght of the attribute for every column */
+	IpeMsk **msks; /**< Contains the n+1 master keys */
+	PFC *pfc; /**< pairing-friendly curve object */
+	Big order; /**< Number of elements of the curve */
 public:
 	void KeyGen(string);
 	bool LoadKey(string);
-	void EncryptRows(string, int);
-	vector<string> ExecuteQuery(string, string, int);
+	void EncryptRows(string, string, int);
+	int GenToken(string, int);
+	vector<string> ApplyToken(string, string);
+	/** \brief Class constructor
+	 *
+	 * m is the number of columns per row, pfc_ is the curve and order_ its order
+	 */
 	SecureDB(int m, PFC *pfc_, Big order_){
 		n=m;
 		l=2*m+2;
@@ -83,11 +94,15 @@ private:
 	void save_cts(string, IpeCt **);
 	void encMsg(GT, string, string);
 	string stdsha256(const string);
-	void append_enc_cell_file(string, const unsigned char *, int, char *);
+	void append_enc_cell_file(string, const unsigned char *, int);
 	IpeCt **load_ct(string);
 	Big *create_query_attribute(string);
 	vector<string> get_select_params(string);
+	void save_token(IpeKey *, string, int, int);
 	string read_line_from_file(int, string);
 	fstream &GotoLine(fstream&, unsigned int);
 	string decMsg(GT M, string Msg);
+	void set_parameters(string);
+	IpeKey *load_token(string, int);
+	IpeKey *load_token(string, int, vector<int>&);
 };

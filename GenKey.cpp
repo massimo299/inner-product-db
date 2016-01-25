@@ -9,15 +9,12 @@
 
 main(int argc, char *argv[]){
 
-	// Check the number of parameters
+	/** Check the number of parameters */
 	if (argc < 3) {
-		// Tell the user how to run the program
-		cerr << "Usage: " << argv[0] << " num_col key_name" << endl;
+		/** Tell the user how to run the program */
+		cerr << "Usage: " << argv[0] << " num_col key_file" << endl;
         	return 1;
 	}
-
-	// Set the random seed for noise parameter generation
-	srand(time(NULL));
 
 	time_t seed1, seed2;
 	PFC pfc(AES_SECURITY);
