@@ -14,6 +14,8 @@ DRIVEROBJ=ipdb.o driver.o
 
 EXE=ipe-cp ipe-mnt ipe-bn ipe-kss ipe-bls driver driver-cp driver-bn driver-a driver-b key_gen row_enc que_dec ipe-m-test ipe-m-ptest ipdb-m-driver ipdbnoise-m-driver SecureDB ipe GenKey EncRow QueGenExe
 
+EXE: ${EXE}
+
 ipe: ipe.o ${BNOBJT}
 	g++ -std=gnu++11 -o ipe ipe.o ${BNOBJT} miracl.a
 

@@ -1,6 +1,17 @@
 ### **Secure Database**
 
-This project includes a set of programs that can be used to encrypt tables (consisting of rows and columns) so that the owner of the data can create tokens to allow third party users to perform query on the encrypted tables and access only the informations that the token permitts them.  
+This project includes a set of programs that can be used to encrypt tables (consisting of rows and columns) 
+so that the owner of the table can create tokens to allow third party users to perform queries on the 
+encrypted tables. 
+
+The current release allows very simple queries in which it is possible to read one specific column of all 
+rows that satisfy a certain predicate. Only equality predicates are currently supported. 
+These roughly correspond to SQL queries of the following form:
+
+select col from table where col1='AA' and col2='BB' and col4='DD'
+
+
+and access only the informations that the token permitts them.  
 The following is a typical the workflow:
 
 1. **Generate keys:**
