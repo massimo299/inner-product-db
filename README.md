@@ -65,8 +65,10 @@ The following is a typical workflow:
     and subsequent lines contain wi or is empty, if wi is a don't care symbol
 
 
-#### **Noise parameter:**
+#### **Noise parameter**
 
+
+* 
 	Random noise is added to ciphertexts during encryption (one per each row) and to tokens during token generation (one per each select parameter of the query).
     If a token and an encrypted row have the same noise then the query has success even if the rows would not have been selected by the query.
 The noise parameter denotes the size of the interval from which  the random noise is picked.
