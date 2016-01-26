@@ -1,0 +1,153 @@
+\hypertarget{classSecureDB}{}\section{Secure\+DB Class Reference}
+\label{classSecureDB}\index{Secure\+DB@{Secure\+DB}}
+
+
+The secure database main class.  
+
+
+
+
+{\ttfamily \#include $<$ipdb-\/m.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{classSecureDB_aa91f7d309988d84c6922d7e52162517c}{Key\+Gen} (string)
+\item 
+bool \hyperlink{classSecureDB_ac4626ebf45db1aeccd1a4698f22d92b5}{Load\+Key} (string)
+\item 
+void \hyperlink{classSecureDB_ae3c57379e37ba84f2f1bf8a29fba5bf2}{Encrypt\+Rows} (string, string, int)
+\item 
+int \hyperlink{classSecureDB_ac48eb9810677fd34c5c59b7537bcd970}{Gen\+Token} (string, int)
+\item 
+vector$<$ string $>$ \hyperlink{classSecureDB_a267eb02115e80bffd751bfe3e2fc566f}{Apply\+Token} (string, string)
+\item 
+\hyperlink{classSecureDB_ab4c368e84ac078f9f598a8cd1da25ed7}{Secure\+DB} (int m, P\+FC $\ast$pfc\+\_\+, Big order\+\_\+)
+\begin{DoxyCompactList}\small\item\em Class constructor. \end{DoxyCompactList}\item 
+{\bfseries Secure\+DB} (P\+FC $\ast$pfc\+\_\+, Big order\+\_\+)\hypertarget{classSecureDB_a5ae766ecb788b9923d85f45ea96f922f}{}\label{classSecureDB_a5ae766ecb788b9923d85f45ea96f922f}
+
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classIpdbNoise}{Ipdb\+Noise} $\ast$ \hyperlink{classSecureDB_a56b13795575a382f7a3a263d2e79a4ab}{ipdb}
+\item 
+int \hyperlink{classSecureDB_ae034772516922899c09a0e2790dac008}{n}
+\item 
+int \hyperlink{classSecureDB_ab8f7de0f939b03278cabc7d9c4d248df}{l}
+\item 
+int \hyperlink{classSecureDB_a1c0171e735bb38a78af19fb5b530557a}{k}
+\item 
+Ipe\+Msk $\ast$$\ast$ \hyperlink{classSecureDB_a7c64d61dc130f025e769937a0303e301}{msks}
+\item 
+P\+FC $\ast$ \hyperlink{classSecureDB_a3feb6fe6c3928b757edcf0a04573bb1a}{pfc}
+\item 
+Big \hyperlink{classSecureDB_ae2cdeef405f4711ca5e17c6052c1d78a}{order}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+The secure database main class. 
+
+It is useful for data owners and readers. This class can be used to generate a master key, encrypt tables and execute query on them. 
+
+\subsection{Constructor \& Destructor Documentation}
+\index{Secure\+DB@{Secure\+DB}!Secure\+DB@{Secure\+DB}}
+\index{Secure\+DB@{Secure\+DB}!Secure\+DB@{Secure\+DB}}
+\subsubsection[{\texorpdfstring{Secure\+D\+B(int m, P\+F\+C $\ast$pfc\+\_\+, Big order\+\_\+)}{SecureDB(int m, PFC *pfc_, Big order_)}}]{\setlength{\rightskip}{0pt plus 5cm}Secure\+D\+B\+::\+Secure\+DB (
+\begin{DoxyParamCaption}
+\item[{int}]{m, }
+\item[{P\+FC $\ast$}]{pfc\+\_\+, }
+\item[{Big}]{order\+\_\+}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classSecureDB_ab4c368e84ac078f9f598a8cd1da25ed7}{}\label{classSecureDB_ab4c368e84ac078f9f598a8cd1da25ed7}
+
+
+Class constructor. 
+
+m is the number of columns per row, pfc\+\_\+ is the curve and order\+\_\+ its order 
+
+\subsection{Member Function Documentation}
+\index{Secure\+DB@{Secure\+DB}!Apply\+Token@{Apply\+Token}}
+\index{Apply\+Token@{Apply\+Token}!Secure\+DB@{Secure\+DB}}
+\subsubsection[{\texorpdfstring{Apply\+Token(string, string)}{ApplyToken(string, string)}}]{\setlength{\rightskip}{0pt plus 5cm}vector$<$ string $>$ Secure\+D\+B\+::\+Apply\+Token (
+\begin{DoxyParamCaption}
+\item[{string}]{query\+\_\+name, }
+\item[{string}]{db\+\_\+name}
+\end{DoxyParamCaption}
+)}\hypertarget{classSecureDB_a267eb02115e80bffd751bfe3e2fc566f}{}\label{classSecureDB_a267eb02115e80bffd751bfe3e2fc566f}
+Get a token file name (query\+\_\+name) and the database name (db\+\_\+name).
+
+Execute the query for the desiderd database and return all the founded results in a vector. \index{Secure\+DB@{Secure\+DB}!Encrypt\+Rows@{Encrypt\+Rows}}
+\index{Encrypt\+Rows@{Encrypt\+Rows}!Secure\+DB@{Secure\+DB}}
+\subsubsection[{\texorpdfstring{Encrypt\+Rows(string, string, int)}{EncryptRows(string, string, int)}}]{\setlength{\rightskip}{0pt plus 5cm}void Secure\+D\+B\+::\+Encrypt\+Rows (
+\begin{DoxyParamCaption}
+\item[{string}]{rows\+\_\+name, }
+\item[{string}]{enctable\+\_\+name, }
+\item[{int}]{rand\+\_\+lim}
+\end{DoxyParamCaption}
+)}\hypertarget{classSecureDB_ae3c57379e37ba84f2f1bf8a29fba5bf2}{}\label{classSecureDB_ae3c57379e37ba84f2f1bf8a29fba5bf2}
+Get the name of the file that contains one or more rows.
+
+Encrypt every row in the file, write ciphertexts and encrypted cells in different files.
+
+rand\+\_\+lim is the maximum for the noise parameter generation. \index{Secure\+DB@{Secure\+DB}!Gen\+Token@{Gen\+Token}}
+\index{Gen\+Token@{Gen\+Token}!Secure\+DB@{Secure\+DB}}
+\subsubsection[{\texorpdfstring{Gen\+Token(string, int)}{GenToken(string, int)}}]{\setlength{\rightskip}{0pt plus 5cm}int Secure\+D\+B\+::\+Gen\+Token (
+\begin{DoxyParamCaption}
+\item[{string}]{query\+\_\+name, }
+\item[{int}]{rand\+\_\+lim}
+\end{DoxyParamCaption}
+)}\hypertarget{classSecureDB_ac48eb9810677fd34c5c59b7537bcd970}{}\label{classSecureDB_ac48eb9810677fd34c5c59b7537bcd970}
+Get a query file name (query\+\_\+name) and rand\+\_\+lim.
+
+Generate a token for predicate only and a token for every select parameters.
+
+Save the created tokens in files. \index{Secure\+DB@{Secure\+DB}!Key\+Gen@{Key\+Gen}}
+\index{Key\+Gen@{Key\+Gen}!Secure\+DB@{Secure\+DB}}
+\subsubsection[{\texorpdfstring{Key\+Gen(string)}{KeyGen(string)}}]{\setlength{\rightskip}{0pt plus 5cm}void Secure\+D\+B\+::\+Key\+Gen (
+\begin{DoxyParamCaption}
+\item[{string}]{key\+\_\+name}
+\end{DoxyParamCaption}
+)}\hypertarget{classSecureDB_aa91f7d309988d84c6922d7e52162517c}{}\label{classSecureDB_aa91f7d309988d84c6922d7e52162517c}
+Get the key file name in input.
+
+Create n+1 master keys and store them in a file called key\+\_\+name. \index{Secure\+DB@{Secure\+DB}!Load\+Key@{Load\+Key}}
+\index{Load\+Key@{Load\+Key}!Secure\+DB@{Secure\+DB}}
+\subsubsection[{\texorpdfstring{Load\+Key(string)}{LoadKey(string)}}]{\setlength{\rightskip}{0pt plus 5cm}bool Secure\+D\+B\+::\+Load\+Key (
+\begin{DoxyParamCaption}
+\item[{string}]{key\+\_\+name}
+\end{DoxyParamCaption}
+)}\hypertarget{classSecureDB_ac4626ebf45db1aeccd1a4698f22d92b5}{}\label{classSecureDB_ac4626ebf45db1aeccd1a4698f22d92b5}
+Load a previously created key, stored in key\+\_\+name.
+
+Put it in msks variable. 
+
+\subsection{Member Data Documentation}
+\index{Secure\+DB@{Secure\+DB}!ipdb@{ipdb}}
+\index{ipdb@{ipdb}!Secure\+DB@{Secure\+DB}}
+\subsubsection[{\texorpdfstring{ipdb}{ipdb}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Ipdb\+Noise}$\ast$ Secure\+D\+B\+::ipdb}\hypertarget{classSecureDB_a56b13795575a382f7a3a263d2e79a4ab}{}\label{classSecureDB_a56b13795575a382f7a3a263d2e79a4ab}
+This is needed to make inner product encryption operations. \index{Secure\+DB@{Secure\+DB}!k@{k}}
+\index{k@{k}!Secure\+DB@{Secure\+DB}}
+\subsubsection[{\texorpdfstring{k}{k}}]{\setlength{\rightskip}{0pt plus 5cm}int Secure\+D\+B\+::k}\hypertarget{classSecureDB_a1c0171e735bb38a78af19fb5b530557a}{}\label{classSecureDB_a1c0171e735bb38a78af19fb5b530557a}
+Lenght of the attribute for every column. \index{Secure\+DB@{Secure\+DB}!l@{l}}
+\index{l@{l}!Secure\+DB@{Secure\+DB}}
+\subsubsection[{\texorpdfstring{l}{l}}]{\setlength{\rightskip}{0pt plus 5cm}int Secure\+D\+B\+::l}\hypertarget{classSecureDB_ab8f7de0f939b03278cabc7d9c4d248df}{}\label{classSecureDB_ab8f7de0f939b03278cabc7d9c4d248df}
+Length of the principal attribute. \index{Secure\+DB@{Secure\+DB}!msks@{msks}}
+\index{msks@{msks}!Secure\+DB@{Secure\+DB}}
+\subsubsection[{\texorpdfstring{msks}{msks}}]{\setlength{\rightskip}{0pt plus 5cm}Ipe\+Msk$\ast$$\ast$ Secure\+D\+B\+::msks}\hypertarget{classSecureDB_a7c64d61dc130f025e769937a0303e301}{}\label{classSecureDB_a7c64d61dc130f025e769937a0303e301}
+Contains the n+1 master keys. \index{Secure\+DB@{Secure\+DB}!n@{n}}
+\index{n@{n}!Secure\+DB@{Secure\+DB}}
+\subsubsection[{\texorpdfstring{n}{n}}]{\setlength{\rightskip}{0pt plus 5cm}int Secure\+D\+B\+::n}\hypertarget{classSecureDB_ae034772516922899c09a0e2790dac008}{}\label{classSecureDB_ae034772516922899c09a0e2790dac008}
+Number of columns. \index{Secure\+DB@{Secure\+DB}!order@{order}}
+\index{order@{order}!Secure\+DB@{Secure\+DB}}
+\subsubsection[{\texorpdfstring{order}{order}}]{\setlength{\rightskip}{0pt plus 5cm}Big Secure\+D\+B\+::order}\hypertarget{classSecureDB_ae2cdeef405f4711ca5e17c6052c1d78a}{}\label{classSecureDB_ae2cdeef405f4711ca5e17c6052c1d78a}
+Number of elements of the curve. \index{Secure\+DB@{Secure\+DB}!pfc@{pfc}}
+\index{pfc@{pfc}!Secure\+DB@{Secure\+DB}}
+\subsubsection[{\texorpdfstring{pfc}{pfc}}]{\setlength{\rightskip}{0pt plus 5cm}P\+FC$\ast$ Secure\+D\+B\+::pfc}\hypertarget{classSecureDB_a3feb6fe6c3928b757edcf0a04573bb1a}{}\label{classSecureDB_a3feb6fe6c3928b757edcf0a04573bb1a}
+Pairing-\/friendly curve object. 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+ipdb-\/m.\+h\item 
+ipdb-\/m.\+cpp\end{DoxyCompactItemize}

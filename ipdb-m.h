@@ -3,6 +3,9 @@
 #include "pairing_3.h"
 #include "ipe-m.h"
 
+/**
+ * \brief The inner product ammortized class.
+ */
 class Ipdb{
 public:
 	int n,l,k;
@@ -29,6 +32,9 @@ public:
 	};
 };
 
+/**
+ * \brief The inner product ammortized class with noise.
+ */
 class IpdbNoise{
 public:
 	int n,l,k;
@@ -51,18 +57,20 @@ public:
 };
 
 /**
- * \class The secure database class.
- * \brief It is useful for data owners and readers.
+ * \brief The secure database main class.
  *
- * This can be used to generate a master key, encrypt tables and execute query on them.
+ * It is useful for data owners and readers.
+ * This class can be used to generate a master key, encrypt tables and execute query on them.
  */
 class SecureDB{
 public:
-	IpdbNoise *ipdb; /**< This is needed to make inner product encryption operations */
-	int n,l,k; /**< n is the number of columns, l the length of the principal attribute, k the lenght of the attribute for every column */
-	IpeMsk **msks; /**< Contains the n+1 master keys */
-	PFC *pfc; /**< pairing-friendly curve object */
-	Big order; /**< Number of elements of the curve */
+	IpdbNoise *ipdb; /**< This is needed to make inner product encryption operations. */
+	int n; /**< Number of columns. */
+	int l; /**< Length of the principal attribute. */
+	int k; /**< Lenght of the attribute for every column. */
+	IpeMsk **msks; /**< Contains the n+1 master keys. */
+	PFC *pfc; /**< Pairing-friendly curve object. */
+	Big order; /**< Number of elements of the curve. */
 public:
 	void KeyGen(string);
 	bool LoadKey(string);

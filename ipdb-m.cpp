@@ -202,7 +202,7 @@ IpdbNoise::MKeyGen(IpeMsk **msks, Big *Q, int j, int rand_lim){
 }
 
 /**
- * Write all the n+1 master keys in /fname to make them reusable
+ * Write all the n+1 master keys in fname to make them reusable.
  */
 void
 SecureDB::saveMsks(string fname, IpeMsk **msks)
@@ -237,9 +237,10 @@ SecureDB::saveMsks(string fname, IpeMsk **msks)
 }
 
 /**
- * Get the key file name in input
- * create n+1 master keys
- * and store them in a file
+ * Get the key file name in input.
+ *
+ * Create n+1 master keys
+ * and store them in a file called key_name.
  */
 void
 SecureDB::KeyGen(string key_name){
@@ -248,13 +249,14 @@ SecureDB::KeyGen(string key_name){
 }
 
 /**
- * Load a previously created key, stored in key_name
- * put it in msks variable
+ * Load a previously created key, stored in key_name.
+ *
+ * Put it in msks variable.
  */
 bool
 SecureDB::LoadKey(string key_name){
 
-	/** Check if key file exists */
+	/* Check if key file exists */
 	if (!ifstream(key_name)){
 		cout << "Key file doesn't exist" << endl;
 		return false;
@@ -262,12 +264,12 @@ SecureDB::LoadKey(string key_name){
 
 	ifstream inputFile(key_name);
 
-	/** Get n (number of columns) */
+	/* Get n (number of columns) */
 	inputFile >> n;
 	l=2*n+2;
 	k=2;
 
-	/** Get ipdb parameters and set them */
+	/* Get ipdb parameters and set them */
 	miracl* mip=get_mip();
 	Big order=pfc->order();
 	ipdb = new IpdbNoise(n,pfc,mip,order);
@@ -275,9 +277,9 @@ SecureDB::LoadKey(string key_name){
 	inputFile >> ipdb->ipdb->ab2[0]; inputFile >> ipdb->ipdb->ab2[1]; inputFile >> ipdb->ipdb->g; inputFile >> ipdb->ipdb->g2;
 	ipdb->ipdb->ipe = new Ipe(l+1,pfc,mip,order);
 
-	/** Get msks parameters and set them */
+	/* Get msks parameters and set them */
 	msks = new IpeMsk*[n+1];
-	/** First key paramters */
+	/* First key paramters */
 	IpeBMsk ***bmsk = new IpeBMsk**[l+1];
 	Big w1,w2,f1,f2;
 	for(int i=0;i<l+1;i++){
@@ -288,7 +290,7 @@ SecureDB::LoadKey(string key_name){
 		bmsk[i][1] = new IpeBMsk(w1,w2,f1,f2);
 	}
 	msks[0] = new IpeMsk(ipdb->ipdb->g,ipdb->ipdb->g2,ipdb->ipdb->omega,ipdb->ipdb->ab1,ipdb->ipdb->ab2,bmsk);
-	/** All others n key paramters */
+	/* All others n key paramters */
 	for(int j=1;j<n+1;j++){
 		IpeBMsk ***bmsk = new IpeBMsk**[k+1];
 		for(int i=0;i<k+1;i++){
@@ -316,8 +318,8 @@ SecureDB::split(const string &s, char delim, vector<string> &elems) {
 }
 
 /**
- * Split s by delim
- * return a vector with all the resulting strings
+ * Split s by delim.
+ * Return a vector with all the resulting strings.
  */
 vector<string>
 SecureDB::split(const string &s, char delim) {
@@ -327,8 +329,8 @@ SecureDB::split(const string &s, char delim) {
 }
 
 /**
- * Get an entire row and the number of columns
- * if the row has the correct length return it in array with a column in every cell
+ * Get an entire row and the number of columns.
+ * If the row has the correct length returns it in array with a column in every cell
  */
 string *
 SecureDB::create_row(string line, int len)
@@ -349,7 +351,7 @@ SecureDB::create_row(string line, int len)
 }
 
 /**
- * Write the ciphertexts for a row in a file in fname
+ * Write the ciphertexts for a row in a file called fname.
  */
 void
 SecureDB::save_cts(string fname, IpeCt **cts)
@@ -386,7 +388,7 @@ SecureDB::save_cts(string fname, IpeCt **cts)
 }
 
 /**
- * Create and return the sha256 for str
+ * Create and return the sha256 for str.
  */
 string
 SecureDB::stdsha256(const string str)
@@ -402,8 +404,8 @@ SecureDB::stdsha256(const string str)
 }
 
 /**
- * Encode Msg with base64_encode
- * write the result at the end of file fname
+ * Encode Msg with base64_encode,
+ * write the result at the end of file fname.
  */
 void
 SecureDB::append_enc_cell_file(string fname, const unsigned char *Msg, int elength)
@@ -416,9 +418,9 @@ SecureDB::append_enc_cell_file(string fname, const unsigned char *Msg, int eleng
 }
 
 /**
- * Create an aes 128bit key from M
- * extend Msg and encrypt the resulting string with aes_cbc from openssl library
- * append the result at the end of fname file
+ * Create an aes 128bit key from M,
+ * extend Msg and encrypt the resulting string with aes_cbc from openssl library,
+ * append the result at the end of file fname.
  */
 void
 SecureDB::encMsg(GT M, string Msg, string fname)
@@ -454,15 +456,17 @@ SecureDB::encMsg(GT M, string Msg, string fname)
 }
 
 /**
- * Get the name of the file that contains one or more rows
- * rand_lim is the maximum for the noise parameter generation
- * encrypt every row in the file
- * write ciphertexts and encrypted cells in different files
+ * Get the name of the file that contains one or more rows.
+ *
+ * Encrypt every row in the file,
+ * write ciphertexts and encrypted cells in different files.
+ *
+ * rand_lim is the maximum for the noise parameter generation.
  */
 void
 SecureDB::EncryptRows(string rows_name, string enctable_name, int rand_lim){
 
-	/** Check if rows file exists */
+	/* Check if rows file exists */
 	if (!ifstream(rows_name)){
 		cout << "Rows file doesn't exist" << endl;
 		return;
@@ -479,7 +483,7 @@ SecureDB::EncryptRows(string rows_name, string enctable_name, int rand_lim){
 	G2 tmpg2;
 	string rows_enc_msgs = enctable_name+"_enc_msgs";
 
-	/** Count how many rows with same name exist */
+	/* Count how many rows with same name exist */
 	string rows_enc_ct = enctable_name+"_enc_ct";
 	int row_num=0;
 
@@ -493,28 +497,28 @@ SecureDB::EncryptRows(string rows_name, string enctable_name, int rand_lim){
 		result = ss.str();
 	}
 
-	/** Read file row by row */
+	/* Read file row by row */
 	while (getline(inputFile, line)){
 		row=create_row(line,n);
 
 		if(row!=NULL){
-			/** Create X0 attribute */
+			/* Create X0 attribute */
 			for(int i=0;i<n;i++){
 				cell = row[i];
 		   		str_hash = hash_fn(cell);
 				X0[i]=str_hash;
 			}
-			/** Create n M keys (random) to use as aes key */
+			/* Create n M keys (random) to use as aes key */
 			for(int i=0;i<n;i++){
 				pfc->random(tmpg1); pfc->random(tmpg2);
 				M[i] = pfc->pairing(tmpg2,tmpg1);
 				encMsg(M[i],row[i],rows_enc_msgs);
 			}
-			/** Encrypt the row saving it into a file called 'enctable_name'_enc_msgs */
+			/* Encrypt the row saving it into a file called 'enctable_name'_enc_msgs */
 			cout << "Encrypting row " << row_num+1 << " with n=" << n << endl;
 			cts = ipdb->EncryptRow(msks,X0,M, rand_lim);
 
-			/** Save the encrypted row ciphertext in a file called 'enctable_name'_enc_ct plus a sequential number */
+			/* Save the encrypted row ciphertext in a file called 'enctable_name'_enc_ct plus a sequential number */
 			stringstream ss;
 			ss << rows_enc_ct << row_num;
 			result = ss.str();
@@ -529,8 +533,8 @@ SecureDB::EncryptRows(string rows_name, string enctable_name, int rand_lim){
 }
 
 /**
- * Load the ciphertext for a row stored in fname
- * return the loaded ciphertexts
+ * Load the ciphertext for a row stored in fname,
+ * return the loaded ciphertexts.
  */
 IpeCt **
 SecureDB::load_ct(string fname){
@@ -586,9 +590,9 @@ SecureDB::load_ct(string fname){
 }
 
 /**
- * Get a query file name
- * read the first line of the file, that contains the select parameters
- * split the line and return it
+ * Get a query file name,
+ * read the first line of the file, that contains the select parameters,
+ * split the line and return it.
  */
 vector<string>
 SecureDB::get_select_params(string fname)
@@ -605,8 +609,8 @@ SecureDB::get_select_params(string fname)
 }
 
 /**
- * From the query file name fname read each line and create the attribute useful for token generation
- * return the created attribute Y
+ * From the query file name fname read each line and create the attribute useful for token generation.
+ * Return the created attribute Y.
  */
 Big *
 SecureDB::create_query_attribute(string fname){
@@ -650,7 +654,7 @@ SecureDB::GotoLine(fstream& file, unsigned int num)
 }
 
 /**
- * Read and return lnum line from fname file
+ * Read and return line number lnum from fname file.
  */
 string
 SecureDB::read_line_from_file(int lnum, string fname)
@@ -665,9 +669,9 @@ SecureDB::read_line_from_file(int lnum, string fname)
 }
 
 /**
- * Get an aes key M and a message Msg
- * retrieve the real key from M and decrypt Msg
- * return the decryption result if the sha256 from Msg conicide with the original one, an empty string othewise
+ * Get an aes key (M) and a message (Msg),
+ * retrieve the real key from M and decrypt Msg.
+ * Return the decryption result if the sha256 from Msg conicide with the original one, an empty string othewise.
  */
 string
 SecureDB::decMsg(GT M, string Msg){
@@ -708,7 +712,7 @@ SecureDB::decMsg(GT M, string Msg){
 }
 
 /**
- * Write key of length len in fname
+ * Write key of length len in fname.
  */
 void
 SecureDB::save_token(IpeKey *key, string fname, int len, int cell){
@@ -733,21 +737,23 @@ SecureDB::save_token(IpeKey *key, string fname, int len, int cell){
 }
 
 /**
- * Get a query file name query_name and rand_lim
- * generate a token for predicate only and a token for every select parameters
- * save the created tokens in files
+ * Get a query file name (query_name) and rand_lim.
+ *
+ * Generate a token for predicate only and a token for every select parameters.
+ *
+ * Save the created tokens in files.
  */
 int
 SecureDB::GenToken(string query_name, int rand_lim){
 
-	/** Get column numbers to select */
+	/* Get column numbers to select */
 	vector<string> sel_params = get_select_params(query_name);
 	if(sel_params.size()==0){
 		cout << "No select parameters found" << endl;
 		return 0;
 	}
 
-	/** Create attribute from the query */
+	/* Create attribute from the query */
 	Big *Y = create_query_attribute(query_name);
 	if(Y==NULL)
 		return 0;
@@ -759,7 +765,7 @@ SecureDB::GenToken(string query_name, int rand_lim){
 	int start = getMilliCount();
 	#endif
 
-	/** Predicate key generation */
+	/* Predicate key generation */
 	pkey = ipdb->PKeyGen(msks,Y,rand_lim);
 
 	#ifdef VERBOSE
@@ -767,7 +773,7 @@ SecureDB::GenToken(string query_name, int rand_lim){
 	cout << "\tPredicate key generation time: " << milliSecondsElapsed << endl;
 	#endif
 
-	/** Message keys generation */
+	/* Message keys generation */
 	int j;
 	for(int i=0;i<sel_params.size();i++){
 		istringstream(sel_params.at(i)) >> j;
@@ -813,7 +819,7 @@ SecureDB::GenToken(string query_name, int rand_lim){
 }
 
 /**
- * Initialise length and curve parameters
+ * Initialise length and curve parameters.
  */
 void
 SecureDB::set_parameters(string fname){
@@ -835,7 +841,7 @@ SecureDB::set_parameters(string fname){
 }
 
 /**
- * Read token stored in fname and return it
+ * Read token stored in fname and return it.
  */
 IpeKey *
 SecureDB::load_token(string fname, int len){
@@ -868,8 +874,8 @@ SecureDB::load_token(string fname, int len){
 }
 
 /**
- * Read token stored in fname and return it
- * the first parameter is the column for whom the token was generated
+ * Read token stored in fname and return it.
+ * The first parameter is the column for whom the token was generated.
  */
 IpeKey *
 SecureDB::load_token(string fname, int len, vector<int> &sel_par){
@@ -903,9 +909,10 @@ SecureDB::load_token(string fname, int len, vector<int> &sel_par){
 }
 
 /**
- * Get a token file name query_name and the database name in db_name
- * execute the query for the desiderd database
- * return all the founded results in a vector
+ * Get a token file name (query_name) and the database name (db_name).
+ *
+ * Execute the query for the desiderd database
+ * and return all the founded results in a vector.
  */
 vector<string>
 SecureDB::ApplyToken(string query_name,string db_name){
@@ -916,7 +923,7 @@ SecureDB::ApplyToken(string query_name,string db_name){
 
 	vector<string> results;
 
-	/** Set name for ciphertexts and messages in db */
+	/* Set name for ciphertexts and messages in db */
 	string db_enc_ct = db_name+"_enc_ct";
 	int row_num=0;
 	stringstream ss;
@@ -928,11 +935,11 @@ SecureDB::ApplyToken(string query_name,string db_name){
 	string db_enc_msgs = db_name+"_enc_msgs";
 	string encoded,decoded;
 
-	/** Predicate key loading */
+	/* Predicate key loading */
 	IpeKey *pkey;
 	pkey = load_token(query_name+"_ptok", l+1);
 
-	/** Enumerate the keys */
+	/* Enumerate the keys */
 	string mtok = query_name+"_mtok";
 	int tok_num=0;
 	stringstream ss2;
@@ -945,7 +952,7 @@ SecureDB::ApplyToken(string query_name,string db_name){
 		tok_res = ss.str();
 	}
 
-	/** Message keys loading */
+	/* Message keys loading */
 	IpeKey **mkey[tok_num];
 
 	for(int i=0;i<tok_num;i++){
@@ -973,8 +980,8 @@ SecureDB::ApplyToken(string query_name,string db_name){
 		cout << "\tPredicate decryption time: " << milliSecondsElapsed << endl;
 		#endif
 
-		if(r==(GT)1){ /** Row match query */
-			/** Decryption for every element in sel_params */
+		if(r==(GT)1){ /* Row match query */
+			/* Decryption for every element in sel_params */
 			for(int i=0;i<tok_num;i++){
 				#ifdef VERBOSE
 				start = getMilliCount();
