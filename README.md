@@ -65,7 +65,7 @@ The following is a typical workflow:
     and subsequent lines contain wi or is empty, if wi is a don't care symbol
 
 
-* **Noise parameter:**
+#### **Noise parameter:**
 
 	A noise parameter is generated during encryption (one per each row) and query generation (one per each select parameter of the query) phase to add noise to the query resulsts. The noise parameter denotes the size of the interval from which  the noise parameter is picked.
     If the two random parameters match, the query returns that row even if the where parameters aren't satisfied.
