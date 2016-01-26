@@ -8,9 +8,9 @@ The current release allows very simple queries in which it is possible to read o
 rows that satisfy a certain predicate. Only equality predicates are currently supported. 
 These roughly correspond to SQL queries of the following form:
 
--> select col5 from table where col1='AA' and col2='BB' and col4='DD' <-
+> select col5 from table where col1='AA' and col2='BB' and col4='DD' 
 
-that show the fifth column of all rows in which the first column is 'AA', the second is 'BB' and the fourth
+that shows the fifth column of all rows in which the first column is 'AA', the second is 'BB' and the fourth
 is 'DD'.  
 
 The following is a typical workflow:
@@ -23,51 +23,52 @@ The following is a typical workflow:
 
 2. **Encrypt rows:**
 
-	run command **EncRow** \<key_file\> \<table_name\> \<enctable_name\> \<noise\>
+	run command **EncRow** \<key_file\> \<rows\> \<encrows\> \<noise\>
 	* \<key_file\>:  name of the file that contains the master key to be used for the encryption;
-	* \<table_name\>: file name of the table;
-	* \<enctable_name\>: file name of the encrypted table;
+	* \<rows\>: name of the file that contains the rows to be encrypted;
+	* \<encrows\>: name of the file to which the encrypted rows will be added;
 	* \<noise\>: the noise parameter;
 
 
 3. **Token generation:**
 
-	run command **GenToken** \<key_file\> \<query_name\> \<noise\>
+	run command **GenToken** \<key_file\> \<query\> \<noise\>
 	* \<key_file\>: name of the file that contains the master key to be used for the token generation;
-	* \<query_name\>: the name of the file that contains the query;
+	* \<query\>: name of the file that contains the query;
 	* \<noise\>: the noise parameter;
 
 4. **Token execution:**
 
-	run command **ApplyToken** \<query_name\> \<enctable_name\>
-	* \<query_name\>: the name of the file to be used to get the different tokens;
-	* \<enctable_name\>: file name of the encrypted table.
+	run command **ApplyToken** \<token\> \<encrows\>
+	* \<token\>: name of the file that contains the token;
+	* \<encrows\>: name of the file that contains the encrypted rows;
 
 #### **File formats**
 * **Table format:**
 
-	A table with m rows and n columns has to be structured as follows:
+    The **EncRow** command expects rows to be structured as follows:
 
 	row1cell1#row1cell2#row1cell3#....#row1celln  
 	rowmcell1#rowncell2#rowncell3#....#rowmcelln
 
-	Elements of the same row are separated by '#' character.  
+	Cells of the same row are separated by '#' character and rows are separeted by a newline.  
 	Examples are in files 'row_120'(1 row, 120 cells) and 'rows_8_40'(40 rows, 8 cells).
 
 * **Query format:**
 
-	A query for a n columns database with s select to perform has to be structured as follows:
+    Queries for an n-column table are encoded for the **GenToken** command in the following way:
 
-	select1#select2#...#selects  
-	where1  
-	where2  
+    Query that shows r columns c1,c2,...,cr for rows such that 
+    columni=wi for i=1,...,n (where wi is either a string or a don't care symbol) are encoded by 
+    file whose first line contains
+	c1#c2#...#cr  
+    and subsequent lines contain wi or is empty, if wi is a don't care symbol
 
-	where4  
-	...  
-	wheren  
 
-	The new line character is considered like there's not a where condition for that cell.
+#### **Noise parameter**
 
-* **Noise parameter:**
 
-	A random parameter is generated during encryption (one per each row) and query generation (one per each select parameter of the query) phase to add noise to the query resulsts. If the two random parameters match, the query returns that row even if the where parameters aren't satisfied.
+* 
+	Random noise is added to ciphertexts during encryption (one per each row) and to tokens during token generation (one per each select parameter of the query).
+    If a token and an encrypted row have the same noise then the query has success even if the rows would not have been selected by the query.
+The noise parameter denotes the size of the interval from which  the random noise is picked.
