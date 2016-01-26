@@ -67,5 +67,6 @@ The following is a typical workflow:
 
 #### **Noise parameter:**
 
-	A noise parameter is generated during encryption (one per each row) and query generation (one per each select parameter of the query) phase to add noise to the query resulsts. The noise parameter denotes the size of the interval from which  the noise parameter is picked.
-    If the two random parameters match, the query returns that row even if the where parameters aren't satisfied.
+	Random noise is added to ciphertexts during encryption (one per each row) and to tokens during token generation (one per each select parameter of the query).
+    If a token and an encrypted row have the same noise then the query has success even if the rows would not have been selected by the query.
+The noise parameter denotes the size of the interval from which  the random noise is picked.
