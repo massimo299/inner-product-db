@@ -158,7 +158,11 @@ IpeKey **
 IpdbNoise::MKeyGen(IpeMsk **msks, Big *Q, int j, int rand_lim){
 
 	Big Y0[l+1], R[n], Yj[k+1];
-	Big r = rand()%rand_lim+1;
+	Big r;
+	if(rand_lim!=0)
+		r = rand()%rand_lim+1;
+	else
+		r = Big(0);
 
 	Y0[l-1] = 0;
 	for(int i=0;i<n;i++){
@@ -756,7 +760,7 @@ SecureDB::GenToken(string query_name, int rand_lim){
 			time(&seed1);
 			#endif
 
-			mkey[i] = ipdb->MKeyGen(msks,Y,j,rand_lim);
+			mkey[i] = ipdb->MKeyGen(msks,Y,j,0);
 
 			#ifdef VERBOSE
 			time(&seed2);
