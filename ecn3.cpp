@@ -240,7 +240,7 @@ ostream& operator<<(ostream& s,const ECn3& b)
     return s;
 }
 
-/*CODICE AGGIUNTO*/
+/* Input output code */
 istream& operator>>(istream& s, ECn3& b)
 {
     ZZn3 x,y;

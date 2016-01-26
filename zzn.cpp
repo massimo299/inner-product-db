@@ -189,7 +189,7 @@ ostream& operator<<(ostream& s,const ZZn& xx)
     return s;    
 }
 
-/*CODICE AGGIUNTO*/
+/* Input output code */
 istream& operator>>(istream& s, ZZn& b)
 {
     Big x;

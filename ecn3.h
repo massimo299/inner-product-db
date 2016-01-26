@@ -148,7 +148,7 @@ public:
     friend ECn3 operator*(const Big &,const ECn3&);
 #ifndef MR_NO_STANDARD_IO
     friend ostream& operator<<(ostream&,const ECn3&);
-/*CODICE AGGIUNTO*/
+/* Input output code */
     friend istream& operator>>(istream&, ECn3&);
 #endif
 

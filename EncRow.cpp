@@ -7,6 +7,24 @@
 #include "pairing_3.h"
 #include "ipdb-m.h"
 
+#include <sys/timeb.h>
+
+//#define VERBOSE
+
+int getMilliCount(){
+	timeb tb;
+	ftime(&tb);
+	int nCount = tb.millitm + (tb.time & 0xfffff) * 1000;
+	return nCount;
+}
+
+int getMilliSpan(int nTimeStart){
+	int nSpan = getMilliCount() - nTimeStart;
+	if(nSpan < 0)
+		nSpan += 0x100000 * 1000;
+	return nSpan;
+}
+
 main(int argc, char *argv[]){
 
 	/** Check the number of parameters */
@@ -19,10 +37,7 @@ main(int argc, char *argv[]){
 	/** Set the random seed for noise parameter generation */
 	srand(time(NULL));
 
-	time_t seed1, seed2;
 	PFC pfc(AES_SECURITY);
-	time(&seed1);
-	irand((long)seed1);
 
 	SecureDB *db=NULL;
 
@@ -41,9 +56,13 @@ main(int argc, char *argv[]){
 		return 0;
 	}
 
-	time(&seed1);
+	#ifdef VERBOSE
+	int start = getMilliCount();
+	#endif
 	db->EncryptRows(table_name,enctable_name,rand_lim);
-	time(&seed2);
-	cout << "\texec time " << seed2-seed1 << endl;
+	#ifdef VERBOSE
+	int milliSecondsElapsed = getMilliSpan(start);
+	cout << "\texec time " << milliSecondsElapsed << endl;
+	#endif
 
 }

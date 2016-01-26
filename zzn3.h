@@ -152,7 +152,7 @@ public:
 
 #ifndef MR_NO_STANDARD_IO
     friend ostream& operator<<(ostream&,const ZZn3&);
-/*CODICE AGGIUNTO*/
+/* Input output code */
     friend istream& operator>>(istream&, ZZn3&);
 #endif
 

@@ -125,7 +125,7 @@ ostream& operator<<(ostream& s,const ECn2& b)
     return s;
 }
 
-/*CODICE AGGIUNTO*/
+/* Input output code */
 istream& operator>>(istream& s, ECn2& b)
 {
     ZZn2 x,y;

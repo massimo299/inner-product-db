@@ -7,8 +7,25 @@
 #include "pairing_3.h"
 #include "base64.h"
 #include "ipdb-m.h"
+#include <sys/timeb.h>
 
 //#define VERBOSE
+
+int
+SecureDB::getMilliCount(){
+	timeb tb;
+	ftime(&tb);
+	int nCount = tb.millitm + (tb.time & 0xfffff) * 1000;
+	return nCount;
+}
+
+int
+SecureDB::getMilliSpan(int nTimeStart){
+	int nSpan = getMilliCount() - nTimeStart;
+	if(nSpan < 0)
+		nSpan += 0x100000 * 1000;
+	return nSpan;
+}
 
 IpeMsk **
 Ipdb::Setup(){
@@ -739,16 +756,15 @@ SecureDB::GenToken(string query_name, int rand_lim){
 	IpeKey **mkey[sel_params.size()];
 
 	#ifdef VERBOSE
-	time_t seed1, seed2;
-	time(&seed1);
+	int start = getMilliCount();
 	#endif
 
 	/** Predicate key generation */
 	pkey = ipdb->PKeyGen(msks,Y,rand_lim);
 
 	#ifdef VERBOSE
-	time(&seed2);
-	cout << "\tPredicate key generation time: " << seed2-seed1 << endl;
+	int milliSecondsElapsed = getMilliSpan(start);
+	cout << "\tPredicate key generation time: " << milliSecondsElapsed << endl;
 	#endif
 
 	/** Message keys generation */
@@ -757,14 +773,14 @@ SecureDB::GenToken(string query_name, int rand_lim){
 		istringstream(sel_params.at(i)) >> j;
 		if(j>=1 && j<=n){
 			#ifdef VERBOSE
-			time(&seed1);
+			start = getMilliCount();
 			#endif
 
 			mkey[i] = ipdb->MKeyGen(msks,Y,j,0);
 
 			#ifdef VERBOSE
-			time(&seed2);
-			cout << "\tMessage key generation time: " << seed2-seed1 << endl;
+			milliSecondsElapsed = getMilliSpan(start);
+			cout << "\tMessage key generation time: " << milliSecondsElapsed << endl;
 			#endif
 		}
 		else{
@@ -796,6 +812,9 @@ SecureDB::GenToken(string query_name, int rand_lim){
 	return 1;
 }
 
+/**
+ * Initialise length and curve parameters
+ */
 void
 SecureDB::set_parameters(string fname){
 
@@ -815,6 +834,9 @@ SecureDB::set_parameters(string fname){
 	inputFile.close();
 }
 
+/**
+ * Read token stored in fname and return it
+ */
 IpeKey *
 SecureDB::load_token(string fname, int len){
 
@@ -845,6 +867,10 @@ SecureDB::load_token(string fname, int len){
 	return key;
 }
 
+/**
+ * Read token stored in fname and return it
+ * the first parameter is the column for whom the token was generated
+ */
 IpeKey *
 SecureDB::load_token(string fname, int len, vector<int> &sel_par){
 
@@ -937,28 +963,28 @@ SecureDB::ApplyToken(string query_name,string db_name){
 		if(cts==NULL) return results;
 
 		#ifdef VERBOSE
-		time(&seed1);
+		int start = getMilliCount();
 		#endif
 
 		r = ipdb->ipdb->PDecrypt(cts[0],pkey);
 
 		#ifdef VERBOSE
-		time(&seed2);
-		cout << "\tPredicate decryption time: " << seed2-seed1 << endl;
+		int milliSecondsElapsed = getMilliSpan(start);
+		cout << "\tPredicate decryption time: " << milliSecondsElapsed << endl;
 		#endif
 
 		if(r==(GT)1){ /** Row match query */
 			/** Decryption for every element in sel_params */
 			for(int i=0;i<tok_num;i++){
 				#ifdef VERBOSE
-				time(&seed1);
+				start = getMilliCount();
 				#endif
 
 				r = ipdb->ipdb->MDecrypt(cts,mkey[i],sel_params.at(i));
 
 				#ifdef VERBOSE
-				time(&seed2);
-				cout << "\tMessage decryption time: " << seed2-seed1 << endl;
+				milliSecondsElapsed = getMilliSpan(start);
+				cout << "\tMessage decryption time: " << milliSecondsElapsed << endl;
 				#endif
 
 				encoded = read_line_from_file(sel_params.at(i)-1+(row_num*n),db_enc_msgs);

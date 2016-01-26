@@ -417,7 +417,7 @@ ostream& operator<<(ostream& s,const ZZn8& xx)
     return s;    
 }
 
-/*CODICE AGGIUNTO*/
+/* Input output code */
 istream& operator>>(istream& s, ZZn8& b)
 {
     ZZn4 x,y;

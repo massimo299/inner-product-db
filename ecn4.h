@@ -97,7 +97,7 @@ public:
 
 #ifndef MR_NO_STANDARD_IO
     friend ostream& operator<<(ostream&,const ECn4&);
-/*CODICE AGGIUNTO*/
+/* Input output code */
     friend istream& operator>>(istream&, ECn4&);
 #endif
 

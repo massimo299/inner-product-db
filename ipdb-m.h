@@ -105,4 +105,6 @@ private:
 	void set_parameters(string);
 	IpeKey *load_token(string, int);
 	IpeKey *load_token(string, int, vector<int>&);
+	int getMilliCount();
+	int getMilliSpan(int);
 };

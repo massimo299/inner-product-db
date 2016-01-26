@@ -139,7 +139,7 @@ public:
       {if (x.g!=y.g) return TRUE; else return FALSE; }
 	~G1()  {if (mtable!=NULL) {delete [] mtable; mtable=NULL;}}
 
-/*CODICE AGGIUNTO*/
+/* Input output code */
 	friend ostream& operator<<(ostream& s,const G1& x)
       {s << x.g; return s;}
 	friend istream& operator>>(istream& s, G1& x)
@@ -182,7 +182,7 @@ public:
 	~G2() {if (ptable!=NULL) {delete [] ptable; ptable=NULL;}
 	       if (mtable!=NULL) {delete [] mtable; mtable=NULL;}}
 
-/*CODICE AGGIUNTO*/
+/* Input output code */
 	friend ostream& operator<<(ostream& s,const G2& x)
       {s << x.g; return s;}
 	friend istream& operator>>(istream& s, G2& x)
@@ -217,7 +217,7 @@ public:
       {if (x.g!=y.g) return TRUE; else return FALSE; }
 	~GT() {if (etable!=NULL) {delete [] etable; etable=NULL;}}
 
-/*CODICE AGGIUNTO*/
+/* Input output code */
 	friend ostream& operator<<(ostream& s,const GT& x)
       {s << x.g; return s;}
 	friend istream& operator>>(istream& s, GT& x)

@@ -181,7 +181,7 @@ ostream& operator<<(ostream& s,const ECn& b)
     return s;
 }
 
-/*CODICE AGGIUNTO*/
+/* Input output code */
 istream& operator>>(istream& s, ECn& b)
 {
     Big x,y;
