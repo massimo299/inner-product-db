@@ -30,7 +30,7 @@ main(int argc, char *argv[]){
 	/** Check the number of parameters */
 	if (argc < 4) {
 		/** Tell the user how to run the program */
-		cerr << "Usage: " << argv[0] << " key_file query_name noise" << endl;
+		cerr << "Usage: " << argv[0] << " key_file query noise" << endl;
         	return 1;
 	}
 

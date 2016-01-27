@@ -30,7 +30,7 @@ main(int argc, char *argv[]){
 	/** Check the number of parameters */
 	if (argc < 5) {
 		/** Tell the user how to run the program */
-		cerr << "Usage: " << argv[0] << " key_file table_name enctable_name noise" << endl;
+		cerr << "Usage: " << argv[0] << " key_file rows encrows noise" << endl;
         	return 1;
 	}
 

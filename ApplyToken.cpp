@@ -30,7 +30,7 @@ main(int argc, char *argv[]){
 	/** Check the number of parameters */
 	if (argc < 3) {
 		/** Tell the user how to run the program */
-		cerr << "Usage: " << argv[0] << " query_name enctable_name" << endl;
+		cerr << "Usage: " << argv[0] << " token encrows" << endl;
         	return 1;
 	}
 
