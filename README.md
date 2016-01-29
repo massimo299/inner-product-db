@@ -41,7 +41,7 @@ The following is a typical workflow:
 
 	run command **ApplyToken** \<token\> \<encrows\>
 	* \<token\>: name of the file that contains the token;
-	* \<encrows\>: name of the file that contains the encrypted rows;
+	* \<encrows\>: name of the file that contains the encrypted rows.
 
 #### **File formats**
 * **Table format:**
@@ -62,7 +62,7 @@ The following is a typical workflow:
     columni=wi for i=1,...,n (where wi is either a string or a don't care symbol) are encoded by 
     file whose first line contains
 	c1#c2#...#cr  
-    and subsequent lines contain wi or is empty, if wi is a don't care symbol
+    and subsequent lines contain wi or is empty, if wi is a don't care symbol.
 
 
 #### **Noise parameter**
