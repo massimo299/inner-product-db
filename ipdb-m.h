@@ -87,6 +87,9 @@ public:
 		k=2;
 		pfc=pfc_;
 		miracl* mip=get_mip();
+		time_t seed;
+		time(&seed);
+		irand((long)seed);
 		order=order_;
 		ipdb = new IpdbNoise(m,pfc,mip,order);
 	}

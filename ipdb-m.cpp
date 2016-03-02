@@ -271,6 +271,9 @@ SecureDB::LoadKey(string key_name){
 
 	/* Get ipdb parameters and set them */
 	miracl* mip=get_mip();
+	time_t seed;
+	time(&seed);
+	irand((long)seed);
 	Big order=pfc->order();
 	ipdb = new IpdbNoise(n,pfc,mip,order);
 	inputFile >> ipdb->ipdb->omega; inputFile >> ipdb->ipdb->ab1[0]; inputFile >> ipdb->ipdb->ab1[1];
@@ -833,6 +836,9 @@ SecureDB::set_parameters(string fname){
 	k = 2;
 
 	miracl* mip=get_mip();
+	time_t seed;
+	time(&seed);
+	irand((long)seed);
 	Big order=pfc->order();
 	ipdb = new IpdbNoise(n,pfc,mip,order);
 	ipdb->ipdb->ipe = new Ipe(l+1,pfc,mip,order);
