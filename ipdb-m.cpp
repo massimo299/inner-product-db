@@ -354,40 +354,37 @@ SecureDB::create_row(string line, int len)
 }
 
 /**
- * Write the ciphertexts for a row in a file called fname.
+ * Write the ciphertexts for a row in a file passed as argument.
  */
 void
-SecureDB::save_cts(string fname, IpeCt **cts)
+SecureDB::save_cts(ofstream *outputFile, IpeCt **cts)
 {
-	ofstream outputFile;
-	outputFile.open(fname);
 
-	outputFile << n << endl;
-	outputFile << l << endl;
-	outputFile << k << endl;
+	(*outputFile) << n << endl;
+	(*outputFile) << l << endl;
+	(*outputFile) << k << endl;
 
 	IpeCt *t;
 	/** Save ciphertext of length l(+1) */
 	t = cts[0];
-	outputFile << t->A << endl << t->B << endl;
+	(*outputFile) << t->A << endl << t->B << endl;
 	for(int i=0;i<l+1;i++){
-		outputFile << t->ct[i][0]->ct1 << endl << t->ct[i][0]->ct2 << endl;
-		outputFile << t->ct[i][1]->ct1 << endl << t->ct[i][1]->ct2 << endl;
+		(*outputFile) << t->ct[i][0]->ct1 << endl << t->ct[i][0]->ct2 << endl;
+		(*outputFile) << t->ct[i][1]->ct1 << endl << t->ct[i][1]->ct2 << endl;
 	}
-	outputFile << t->C << endl;
+	(*outputFile) << t->C << endl;
 
 	/** Save ciphertexts of length k(+1) */
 	for(int i=1;i<n+1;i++){
 		t = cts[i];
-		outputFile << t->A << endl << t->B << endl;
+		(*outputFile) << t->A << endl << t->B << endl;
 		for(int j=0;j<k+1;j++){
-			outputFile << t->ct[j][0]->ct1 << endl << t->ct[j][0]->ct2 << endl;
-			outputFile << t->ct[j][1]->ct1 << endl << t->ct[j][1]->ct2 << endl;
+			(*outputFile) << t->ct[j][0]->ct1 << endl << t->ct[j][0]->ct2 << endl;
+			(*outputFile) << t->ct[j][1]->ct1 << endl << t->ct[j][1]->ct2 << endl;
 		}
-		outputFile << t->C << endl;
+		(*outputFile) << t->C << endl;
 	}
 
-	outputFile.close();	
 }
 
 /**
@@ -486,21 +483,13 @@ SecureDB::EncryptRows(string rows_name, string enctable_name, int rand_lim){
 	G2 tmpg2;
 	string rows_enc_msgs = enctable_name+"_enc_msgs";
 
-	/* Count how many rows with same name exist */
+	/* Set ciphertexts file name */
 	string rows_enc_ct = enctable_name+"_enc_ct";
-	int row_num=0;
 
-	stringstream ss;
-	ss << rows_enc_ct << row_num;
-	string result = ss.str();
-	while(ifstream(result)){
-		row_num++;
-		stringstream ss;
-		ss << rows_enc_ct << row_num;
-		result = ss.str();
-	}
-
+	ofstream rows_cts;
+	rows_cts.open(rows_enc_ct, ios::app);
 	/* Read file row by row */
+	int row_num=0;
 	while (getline(inputFile, line)){
 		row=create_row(line,n);
 
@@ -518,39 +507,34 @@ SecureDB::EncryptRows(string rows_name, string enctable_name, int rand_lim){
 				encMsg(M[i],row[i],rows_enc_msgs);
 			}
 			/* Encrypt the row saving it into a file called 'enctable_name'_enc_msgs */
+			#ifdef VERBOSE
 			cout << "Encrypting row " << row_num+1 << " with n=" << n << endl;
+			#endif
 			cts = ipdb->EncryptRow(msks,X0,M, rand_lim);
 
-			/* Save the encrypted row ciphertext in a file called 'enctable_name'_enc_ct plus a sequential number */
-			stringstream ss;
-			ss << rows_enc_ct << row_num;
-			result = ss.str();
-			save_cts(result, cts);
+			/* Save the encrypted row ciphertext in a file called 'enctable_name'_enc_ct */
+			save_cts(&rows_cts, cts);
+
 			row_num++;
 		}
 		else
 			return;
 	}
-
+	rows_cts.close();
 	inputFile.close();
 }
 
 /**
- * Load the ciphertext for a row stored in fname,
+ * Load the ciphertext for a row stored in inputFile,
  * return the loaded ciphertexts.
  */
 IpeCt **
-SecureDB::load_ct(string fname){
+SecureDB::load_ct(ifstream *inputFile){
 
 	IpeCt **cts = new IpeCt*[n+1];
-	ifstream inputFile(fname);
 
 	int n_,l_,k_;
-	inputFile >> n_; inputFile >> l_; inputFile >> k_;
-	if(n!=n_){
-		cout << "Db's parameters different from key's" << endl;
-		return NULL;
-	}
+	(*inputFile) >> l_; (*inputFile) >> k_;
 
 	/** Load ciphertext of length l(+1) */
 	G1 A,B;
@@ -558,37 +542,36 @@ SecureDB::load_ct(string fname){
 	G1 bct1,bct2;
 	GT C;
 
-	inputFile >> A;
-	inputFile >> B;
+	(*inputFile) >> A;
+	(*inputFile) >> B;
 	for(int i=0;i<l+1;i++){
 		bct[i] = new IpeBCt*[2];
-		inputFile >> bct1; inputFile >> bct2;
+		(*inputFile) >> bct1; (*inputFile) >> bct2;
 		bct[i][0] = new IpeBCt(bct1,bct2);
-		inputFile >> bct1; inputFile >> bct2;
+		(*inputFile) >> bct1; (*inputFile) >> bct2;
 		bct[i][1] = new IpeBCt(bct1,bct2);
 	}
-	inputFile >> C;
+	(*inputFile) >> C;
 
 	cts[0] = new IpeCt(A,B,bct,C);
 
 	/** Load ciphertexts of length k(+1) */
 	for(int j=1;j<n+1;j++){
 		bct = new IpeBCt**[k+1];
-		inputFile >> A;
-		inputFile >> B;
+		(*inputFile) >> A;
+		(*inputFile) >> B;
 		for(int i=0;i<k+1;i++){
 			bct[i] = new IpeBCt*[2];
-			inputFile >> bct1; inputFile >> bct2;
+			(*inputFile) >> bct1; (*inputFile) >> bct2;
 			bct[i][0] = new IpeBCt(bct1,bct2);
-			inputFile >> bct1; inputFile >> bct2;
+			(*inputFile) >> bct1; (*inputFile) >> bct2;
 			bct[i][1] = new IpeBCt(bct1,bct2);
 		}
-		inputFile >> C;
+		(*inputFile) >> C;
 
 		cts[j] = new IpeCt(A,B,bct,C);
 	}
 
-	inputFile.close();
 	return cts;
 }
 
@@ -932,9 +915,6 @@ SecureDB::ApplyToken(string query_name,string db_name){
 	/* Set name for ciphertexts and messages in db */
 	string db_enc_ct = db_name+"_enc_ct";
 	int row_num=0;
-	stringstream ss;
-	ss << db_enc_ct << row_num;
-	string db_res = ss.str();
 
 	IpeCt **cts;
 	GT r;
@@ -971,8 +951,15 @@ SecureDB::ApplyToken(string query_name,string db_name){
 		mkey[i][1] = load_token(tok_res+"_k", k+1, sel_params);
 	}
 
-	while(ifstream(db_res)){
-		cts = load_ct(db_res);
+	ifstream db_cts(db_enc_ct);
+	int n_;
+	while(db_cts >> n_){
+		if(n!=n_){
+			cout << "Db's parameters different from key's" << endl;
+			return results;
+		}
+
+		cts = load_ct(&db_cts);
 		if(cts==NULL) return results;
 
 		#ifdef VERBOSE
@@ -1009,10 +996,9 @@ SecureDB::ApplyToken(string query_name,string db_name){
 		}
 
 		row_num++;
-		stringstream ss;
-		ss << db_enc_ct << row_num;
-		db_res = ss.str();
+
 	}
+	db_cts.close();
 
 	return results;
 }

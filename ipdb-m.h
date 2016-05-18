@@ -102,11 +102,11 @@ private:
 	vector<string> &split(const string&, char, vector<string>&);
 	vector<string> split(const string&, char);
 	string *create_row(string, int);
-	void save_cts(string, IpeCt **);
+	void save_cts(ofstream *, IpeCt **);
 	void encMsg(GT, string, string);
 	string stdsha256(const string);
 	void append_enc_cell_file(string, const unsigned char *, int);
-	IpeCt **load_ct(string);
+	IpeCt **load_ct(ifstream *);
 	Big *create_query_attribute(string);
 	vector<string> get_select_params(string);
 	void save_token(IpeKey *, string, int, int);
