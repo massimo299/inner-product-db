@@ -20,6 +20,7 @@ public:
 	IpeCt **Encrypt(IpeMsk **, Big *, Big **,GT *);
 	IpeKey *PKeyGen(IpeMsk **, Big *);
 	IpeKey **MKeyGen(IpeMsk **, Big *, Big *, int);
+	IpeKey **MKeyGen(IpeMsk **, Big *, Big **, vector<string>);
 	GT PDecrypt(IpeCt *, IpeKey *);
 	GT MDecrypt(IpeCt **, IpeKey **, int);
 	Ipdb(int n_, int l_, int k_, PFC *p, miracl * m, Big o){
@@ -46,6 +47,7 @@ public:
 	IpeCt **EncryptRow(IpeMsk **, Big *, GT *, int);
 	IpeKey *PKeyGen(IpeMsk **, Big *, int);
 	IpeKey **MKeyGen(IpeMsk **, Big *, int, int);
+	IpeKey **MKeyGen(IpeMsk **, Big *, vector<string>, int);
 	IpdbNoise(int m, PFC *p, miracl *mi, Big o){
 		n=m;
 		l=2*m+2;

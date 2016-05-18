@@ -108,6 +108,30 @@ Ipdb::MKeyGen(IpeMsk **msks, Big *Y, Big *Yj, int j){
 	return keys;
 }
 
+IpeKey **
+Ipdb::MKeyGen(IpeMsk **msks, Big *Y, Big **Yj, vector<string> sel_params){
+
+	IpeKey **keys = new IpeKey*[sel_params.size()+1];
+	Big lambda1, lambda2;
+
+	pfc->random(lambda1);
+	pfc->random(lambda2);
+
+	Y[l]=1;
+	ipe->len=l+1;
+	keys[0] = ipe->MKeyGen(msks[0],Y,lambda1,lambda2);
+
+	ipe->len=k+1;
+	int j;
+	for(int i=0;i<sel_params.size();i++){
+		istringstream(sel_params.at(i)) >> j;
+		Yj[i][0]=-1;
+		keys[i+1] = ipe->MKeyGen(msks[j],Yj[i],lambda1,lambda2);
+	}
+
+	return keys;
+}
+
 GT 
 Ipdb::MDecrypt(IpeCt **cts, IpeKey **keys, int j){
 
@@ -199,6 +223,44 @@ IpdbNoise::MKeyGen(IpeMsk **msks, Big *Q, int j, int rand_lim){
 	Yj[2]=-1;
 
 	return ipdb->MKeyGen(msks,Y0,Yj,j);
+}
+
+IpeKey **
+IpdbNoise::MKeyGen(IpeMsk **msks, Big *Q, vector<string> sel_params, int rand_lim){
+
+	Big **Yj;
+	Yj = new Big*[sel_params.size()];
+	
+	Big Y0[l+1], R[n];
+	Big r;
+	if(rand_lim!=0)
+		r = rand()%rand_lim+1;
+	else
+		r = Big(0);
+
+	Y0[l-1] = 0;
+	for(int i=0;i<n;i++){
+		if(Q[i]==0)
+			R[i] = 0;
+		else
+			pfc->random(R[i]);
+		Y0[i] = -modmult(r,R[i],order);
+		Y0[n] = Y0[n] - modmult(R[i],Q[i],order);
+		Y0[n+i+1] = R[i];
+		Y0[l-1] = Y0[l-1] + modmult(R[i],Q[i],order);
+	}
+	Y0[l-1] = modmult(r,Y0[l-1],order);
+
+	int j;
+	for(int i=0;i<sel_params.size();i++){
+		Yj[i] = new Big[k+1];
+		istringstream(sel_params.at(i)) >> j;
+		Yj[i][0]=0;
+		Yj[i][1]=j;
+		Yj[i][2]=-1;
+	}
+
+	return ipdb->MKeyGen(msks,Y0,Yj,sel_params);
 }
 
 /**
@@ -745,7 +807,8 @@ SecureDB::GenToken(string query_name, int rand_lim){
 		return 0;
 
 	IpeKey *pkey;
-	IpeKey **mkey[sel_params.size()];
+// 	IpeKey **mkey[sel_params.size()];
+	IpeKey **mkey;
 
 	#ifdef VERBOSE
 	int start = getMilliCount();
@@ -760,27 +823,38 @@ SecureDB::GenToken(string query_name, int rand_lim){
 	#endif
 
 	/* Message keys generation */
+// 	int j;
+// 	for(int i=0;i<sel_params.size();i++){
+// 		istringstream(sel_params.at(i)) >> j;
+// 		if(j>=1 && j<=n){
+// 			#ifdef VERBOSE
+// 			start = getMilliCount();
+// 			#endif
+// 
+// 			mkey[i] = ipdb->MKeyGen(msks,Y,j,0);
+// 
+// 			#ifdef VERBOSE
+// 			milliSecondsElapsed = getMilliSpan(start);
+// 			cout << "\tMessage key generation time: " << milliSecondsElapsed << endl;
+// 			#endif
+// 		}
+// 		else{
+// 			cout << "Cell j doesn't exist (there are " << n << " cells)" << endl;
+// 			return 0;
+// 		}
+// 	}
+
 	int j;
 	for(int i=0;i<sel_params.size();i++){
 		istringstream(sel_params.at(i)) >> j;
-		if(j>=1 && j<=n){
-			#ifdef VERBOSE
-			start = getMilliCount();
-			#endif
-
-			mkey[i] = ipdb->MKeyGen(msks,Y,j,0);
-
-			#ifdef VERBOSE
-			milliSecondsElapsed = getMilliSpan(start);
-			cout << "\tMessage key generation time: " << milliSecondsElapsed << endl;
-			#endif
-		}
-		else{
+		if(!(j>=1 && j<=n)){
 			cout << "Cell j doesn't exist (there are " << n << " cells)" << endl;
 			return 0;
 		}
 	}
-
+		
+	mkey = ipdb->MKeyGen(msks,Y,sel_params,0);
+	
 	string ptok_file = query_name+"_ptok";
 	string mtok_file = query_name+"_mtok";
 
@@ -790,10 +864,10 @@ SecureDB::GenToken(string query_name, int rand_lim){
 	string res = ss.str();
 
 	save_token(pkey, ptok_file, l+1, 0);
-	for(int i=0;i<sel_params.size();i++){
-		save_token(mkey[i][0],res+"_l",l+1,0);
-		istringstream(sel_params.at(i)) >> j;
-		save_token(mkey[i][1],res+"_k",k+1,j);
+	save_token(mkey[0],mtok_file+"_l",l+1,0);
+	for(int i=1;i<sel_params.size()+1;i++){
+		istringstream(sel_params.at(i-1)) >> j;
+		save_token(mkey[i],res+"_k",k+1,j);
 
 		query_num++;
 		stringstream ss;
@@ -929,17 +1003,19 @@ SecureDB::ApplyToken(string query_name,string db_name){
 	string mtok = query_name+"_mtok";
 	int tok_num=0;
 	stringstream ss2;
-	ss2 << mtok << tok_num << "_l";
+	ss2 << mtok << tok_num << "_k";
 	string tok_res = ss2.str();
 	while(ifstream(tok_res)){
 		tok_num++;
 		stringstream ss;
-		ss << mtok << tok_num << "_l";
+		ss << mtok << tok_num << "_k";
 		tok_res = ss.str();
 	}
 
 	/* Message keys loading */
 	IpeKey **mkey[tok_num];
+
+	IpeKey *mkey_l = load_token(mtok+"_l", l+1);
 
 	for(int i=0;i<tok_num;i++){
 		stringstream ss;
@@ -947,7 +1023,7 @@ SecureDB::ApplyToken(string query_name,string db_name){
 		string tok_res = ss.str();
 
 		mkey[i] = new IpeKey*[2];
-		mkey[i][0] = load_token(tok_res+"_l", l+1);
+		mkey[i][0] = mkey_l;
 		mkey[i][1] = load_token(tok_res+"_k", k+1, sel_params);
 	}
 
