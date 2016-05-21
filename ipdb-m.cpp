@@ -638,6 +638,61 @@ SecureDB::load_ct(ifstream *inputFile){
 }
 
 /**
+ * Load the ciphertext for the row row_num stored in inputFile,
+ * return the loaded ciphertexts.
+ */
+IpeCt **
+SecureDB::load_ct(fstream *inputFile, int row_num){
+
+	IpeCt **cts = new IpeCt*[n+1];
+
+	int cts_size = 10+(l*4)+(4*n*k)+(7*n);
+	GotoLine(*inputFile, (row_num*(cts_size)));
+
+	int n_,l_,k_;
+	(*inputFile) >> n_;
+	(*inputFile) >> l_; (*inputFile) >> k_;
+
+	/** Load ciphertext of length l(+1) */
+	G1 A,B;
+	IpeBCt ***bct = new IpeBCt**[l+1];
+	G1 bct1,bct2;
+	GT C;
+
+	(*inputFile) >> A;
+	(*inputFile) >> B;
+	for(int i=0;i<l+1;i++){
+		bct[i] = new IpeBCt*[2];
+		(*inputFile) >> bct1; (*inputFile) >> bct2;
+		bct[i][0] = new IpeBCt(bct1,bct2);
+		(*inputFile) >> bct1; (*inputFile) >> bct2;
+		bct[i][1] = new IpeBCt(bct1,bct2);
+	}
+	(*inputFile) >> C;
+
+	cts[0] = new IpeCt(A,B,bct,C);
+
+	/** Load ciphertexts of length k(+1) */
+	for(int j=1;j<n+1;j++){
+		bct = new IpeBCt**[k+1];
+		(*inputFile) >> A;
+		(*inputFile) >> B;
+		for(int i=0;i<k+1;i++){
+			bct[i] = new IpeBCt*[2];
+			(*inputFile) >> bct1; (*inputFile) >> bct2;
+			bct[i][0] = new IpeBCt(bct1,bct2);
+			(*inputFile) >> bct1; (*inputFile) >> bct2;
+			bct[i][1] = new IpeBCt(bct1,bct2);
+		}
+		(*inputFile) >> C;
+
+		cts[j] = new IpeCt(A,B,bct,C);
+	}
+
+	return cts;
+}
+
+/**
  * Get a query file name,
  * read the first line of the file, that contains the select parameters,
  * split the line and return it.
@@ -807,7 +862,6 @@ SecureDB::GenToken(string query_name, int rand_lim){
 		return 0;
 
 	IpeKey *pkey;
-// 	IpeKey **mkey[sel_params.size()];
 	IpeKey **mkey;
 
 	#ifdef VERBOSE
@@ -823,27 +877,6 @@ SecureDB::GenToken(string query_name, int rand_lim){
 	#endif
 
 	/* Message keys generation */
-// 	int j;
-// 	for(int i=0;i<sel_params.size();i++){
-// 		istringstream(sel_params.at(i)) >> j;
-// 		if(j>=1 && j<=n){
-// 			#ifdef VERBOSE
-// 			start = getMilliCount();
-// 			#endif
-// 
-// 			mkey[i] = ipdb->MKeyGen(msks,Y,j,0);
-// 
-// 			#ifdef VERBOSE
-// 			milliSecondsElapsed = getMilliSpan(start);
-// 			cout << "\tMessage key generation time: " << milliSecondsElapsed << endl;
-// 			#endif
-// 		}
-// 		else{
-// 			cout << "Cell j doesn't exist (there are " << n << " cells)" << endl;
-// 			return 0;
-// 		}
-// 	}
-
 	int j;
 	for(int i=0;i<sel_params.size();i++){
 		istringstream(sel_params.at(i)) >> j;
@@ -1076,5 +1109,154 @@ SecureDB::ApplyToken(string query_name,string db_name){
 	}
 	db_cts.close();
 
+	return results;
+}
+
+/**
+ * Get a token file name (query_name), the database name (db_name) and the results name (res_name).
+ *
+ * Execute the ptoken for the desiderd database
+ * and save the number of all the founded rows in a file (res_name).
+ */
+int
+SecureDB::ApplyPToken(string query_name,string db_name, string res_name){
+
+	set_parameters(query_name+"_ptok");
+
+	/* Set name for ciphertexts and messages in db */
+	string db_enc_ct = db_name+"_enc_ct";
+	int row_num=0;
+
+	IpeCt **cts;
+	GT dec_res;
+	string db_enc_msgs = db_name+"_enc_msgs";
+	string encoded,decoded;
+
+	/* Predicate key loading */
+	IpeKey *pkey;
+	pkey = load_token(query_name+"_ptok", l+1);
+
+	ifstream db_cts(db_enc_ct);
+	int n_, res_num=0;
+	ofstream results;
+	results.open(res_name);
+	while(db_cts >> n_){
+		if(n!=n_){
+			cout << "Db's parameters different from key's" << endl;
+			return -1;
+		}
+
+		cts = load_ct(&db_cts);
+		if(cts==NULL){
+			cout << "Error while loading ciphertext" << endl;
+			return -1;
+		}
+
+		#ifdef VERBOSE
+		int start = getMilliCount();
+		#endif
+
+		dec_res = ipdb->ipdb->PDecrypt(cts[0],pkey);
+
+		#ifdef VERBOSE
+		int milliSecondsElapsed = getMilliSpan(start);
+		cout << "\tPredicate decryption time: " << milliSecondsElapsed << endl;
+		#endif
+
+		if(dec_res==(GT)1){ /* Row match query */
+			results << row_num << endl;
+			res_num++;
+		}
+
+		row_num++;
+
+	}
+	results.close();
+	db_cts.close();
+
+	return res_num;
+}
+
+/**
+ * Get a token file name (query_name), the database name (db_name) and the results name (res_name).
+ *
+ * Execute the mtoken for all the rows in res_name
+ * and return all the founded results in a vector.
+ */
+vector<string>
+SecureDB::ApplyMToken(string query_name,string db_name, string res_name){
+
+	vector<int> sel_params;
+	vector<string> results;
+	IpeCt **cts;
+	GT dec_key;
+	string encoded,decoded;
+
+	set_parameters(query_name+"_mtok_l");
+
+	/* Set name for ciphertexts and messages in db */
+	string db_enc_ct = db_name+"_enc_ct";
+	string db_enc_msgs = db_name+"_enc_msgs";
+
+	/* Enumerate the keys */
+	string mtok = query_name+"_mtok";
+	int tok_num=0;
+	stringstream ss2;
+	ss2 << mtok << tok_num << "_k";
+	string tok_res = ss2.str();
+	while(ifstream(tok_res)){
+		tok_num++;
+		stringstream ss;
+		ss << mtok << tok_num << "_k";
+		tok_res = ss.str();
+	}
+
+	/* Message keys loading */
+	IpeKey **mkey[tok_num];
+
+	IpeKey *mkey_l = load_token(mtok+"_l", l+1);
+
+	for(int i=0;i<tok_num;i++){
+		stringstream ss;
+		ss << mtok << i;
+		string tok_res = ss.str();
+
+		mkey[i] = new IpeKey*[2];
+		mkey[i][0] = mkey_l;
+		mkey[i][1] = load_token(tok_res+"_k", k+1, sel_params);
+	}
+
+	ifstream res_file(res_name);
+	int row_num;
+	fstream db_cts(db_enc_ct);
+	while(res_file >> row_num){
+		cts = load_ct(&db_cts, row_num);
+		if(cts==NULL){
+			cout << "Error while loading ciphertext" << endl;
+			return results;
+		}
+
+		/* Decryption for every element in sel_params */
+		for(int i=0;i<tok_num;i++){
+			#ifdef VERBOSE
+			int start = getMilliCount();
+			#endif
+
+			dec_key = ipdb->ipdb->MDecrypt(cts,mkey[i],sel_params.at(i));
+
+			#ifdef VERBOSE
+			int milliSecondsElapsed = getMilliSpan(start);
+			cout << "\tMessage decryption time: " << milliSecondsElapsed << endl;
+			#endif
+
+			encoded = read_line_from_file(sel_params.at(i)-1+(row_num*n),db_enc_msgs);
+			decoded = base64_decode(encoded);
+			string tmp = decMsg(dec_key, decoded);
+
+			if(tmp.compare("")!=0) results.push_back(tmp);
+		}
+	}
+	db_cts.close();
+	res_file.close();
 	return results;
 }

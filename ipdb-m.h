@@ -79,6 +79,8 @@ public:
 	void EncryptRows(string, string, int);
 	int GenToken(string, int);
 	vector<string> ApplyToken(string, string);
+	int ApplyPToken(string, string, string);
+	vector<string> ApplyMToken(string, string, string);
 	/** \brief Class constructor
 	 *
 	 * m is the number of columns per row, pfc_ is the curve and order_ its order
@@ -109,6 +111,7 @@ private:
 	string stdsha256(const string);
 	void append_enc_cell_file(string, const unsigned char *, int);
 	IpeCt **load_ct(ifstream *);
+	IpeCt **load_ct(fstream *, int);
 	Big *create_query_attribute(string);
 	vector<string> get_select_params(string);
 	void save_token(IpeKey *, string, int, int);
