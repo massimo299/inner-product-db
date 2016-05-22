@@ -37,11 +37,19 @@ The following is a typical workflow:
 	* \<query\>: name of the file that contains the query;
 	* \<noise\>: the noise parameter;
 
-4. **Token execution:**
+4. **Predicate token execution:**
 
-	run command **ApplyToken** \<token\> \<encrows\>
+	run command **ApplyPToken** \<token\> \<encrows\> \<results\>
 	* \<token\>: name of the file that contains the token;
-	* \<encrows\>: name of the file that contains the encrypted rows.
+	* \<encrows\>: name of the file that contains the encrypted rows;
+	* \<results\>: name of the file in which the resulting row numbers will be stored.
+
+5. **Message token execution:**
+
+	run command **ApplyMToken** \<token\> \<encrows\> \<results\>
+	* \<token\>: name of the file that contains the token;
+	* \<encrows\>: name of the file that contains the encrypted rows;
+	* \<results\>: name of the file that contains the row numbers to decrypt.
 
 #### **File formats**
 * **Table format:**
