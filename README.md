@@ -1,4 +1,4 @@
-### **Secure Database**
+### **Multi-Client Select Operations in Encrypted Tables**
 
 This project includes a set of programs that can be used to encrypt tables (consisting of rows and columns) 
 so that the owner of the table can create tokens to allow third party users to perform queries on the 
