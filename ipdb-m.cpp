@@ -570,9 +570,14 @@ SecureDB::EncryptRows(string rows_name, string enctable_name, int rand_lim){
 			}
 			/* Encrypt the row saving it into a file called 'enctable_name'_enc_msgs */
 			#ifdef VERBOSE
-			cout << "Encrypting row " << row_num+1 << " with n=" << n << endl;
+			cout << "\tEncrypting row " << row_num+1 << " with n=" << n << endl;
+			int start = getMilliCount();
 			#endif
 			cts = ipdb->EncryptRow(msks,X0,M, rand_lim);
+			#ifdef VERBOSE
+			int milliSecondsElapsed = getMilliSpan(start);
+			cout << "\tEncrypting row time: " << milliSecondsElapsed << endl;
+			#endif
 
 			/* Save the encrypted row ciphertext in a file called 'enctable_name'_enc_ct */
 			save_cts(&rows_cts, cts);
@@ -885,9 +890,18 @@ SecureDB::GenToken(string query_name, int rand_lim){
 			return 0;
 		}
 	}
-		
+	
+	#ifdef VERBOSE
+	start = getMilliCount();
+	#endif
+	
 	mkey = ipdb->MKeyGen(msks,Y,sel_params,0);
 	
+	#ifdef VERBOSE
+	milliSecondsElapsed = getMilliSpan(start);
+	cout << "\tMessage keys generation time: " << milliSecondsElapsed << endl;
+	#endif
+
 	string ptok_file = query_name+"_ptok";
 	string mtok_file = query_name+"_mtok";
 
