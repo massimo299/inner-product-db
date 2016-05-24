@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.12"/>
-<title>Secure database: SecureDB Class Reference</title>
+<title>Secure Select: SecureDB Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -23,7 +23,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Secure database
+   <div id="projectname">Secure Select
    </div>
   </td>
  </tr>
@@ -107,6 +107,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ac48eb9810677fd34c5c59b7537bcd970"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a267eb02115e80bffd751bfe3e2fc566f"><td class="memItemLeft" align="right" valign="top">vector&lt; string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSecureDB.html#a267eb02115e80bffd751bfe3e2fc566f">ApplyToken</a> (string, string)</td></tr>
 <tr class="separator:a267eb02115e80bffd751bfe3e2fc566f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a24b57c65385caf873e389f1180d374e3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSecureDB.html#a24b57c65385caf873e389f1180d374e3">ApplyPToken</a> (string, string, string)</td></tr>
+<tr class="separator:a24b57c65385caf873e389f1180d374e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a701ae7b9972bea6b4349ff35003a7a34"><td class="memItemLeft" align="right" valign="top">vector&lt; string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSecureDB.html#a701ae7b9972bea6b4349ff35003a7a34">ApplyMToken</a> (string, string, string)</td></tr>
+<tr class="separator:a701ae7b9972bea6b4349ff35003a7a34"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab4c368e84ac078f9f598a8cd1da25ed7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSecureDB.html#ab4c368e84ac078f9f598a8cd1da25ed7">SecureDB</a> (int m, PFC *pfc_, Big order_)</td></tr>
 <tr class="memdesc:ab4c368e84ac078f9f598a8cd1da25ed7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class constructor.  <a href="#ab4c368e84ac078f9f598a8cd1da25ed7">More...</a><br /></td></tr>
 <tr class="separator:ab4c368e84ac078f9f598a8cd1da25ed7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -133,7 +137,7 @@ Public Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The secure database main class. </p>
-<p>It is useful for data owners and readers. This class can be used to generate a master key, encrypt tables and execute query on them. </p>
+<p>It is useful for data owners and readers. This class can be used to generate a master keys, encrypt tables and execute queries on them. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="ab4c368e84ac078f9f598a8cd1da25ed7"></a>
 <div class="memitem">
@@ -179,6 +183,74 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="a701ae7b9972bea6b4349ff35003a7a34"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">vector&lt; string &gt; SecureDB::ApplyMToken </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>query_name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>db_name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>res_name</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Get a token file name (query_name), the database name (db_name) and the results name (res_name).</p>
+<p>Execute the mtoken for all the rows in res_name and return all the founded results in a vector. </p>
+
+</div>
+</div>
+<a class="anchor" id="a24b57c65385caf873e389f1180d374e3"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int SecureDB::ApplyPToken </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>query_name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>db_name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>res_name</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Get a token file name (query_name), the database name (db_name) and the results name (res_name).</p>
+<p>Execute the ptoken for the desiderd database and save the number of all the founded rows in a file (res_name). </p>
+
+</div>
+</div>
 <a class="anchor" id="a267eb02115e80bffd751bfe3e2fc566f"></a>
 <div class="memitem">
 <div class="memproto">

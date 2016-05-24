@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.12"/>
-<title>Secure database: IpdbNoise Class Reference</title>
+<title>Secure Select: IpdbNoise Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -23,7 +23,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Secure database
+   <div id="projectname">Secure Select
    </div>
   </td>
  </tr>
@@ -90,7 +90,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!--header-->
 <div class="contents">
 
-<p>The inner product ammortized class with noise.  
+<p>The inner product amortized class with noise.  
  <a href="classIpdbNoise.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="ipdb-m_8h_source.html">ipdb-m.h</a>&gt;</code></p>
@@ -109,8 +109,11 @@ IpeKey *&#160;</td><td class="memItemRight" valign="bottom"><b>PKeyGen</b> (IpeM
 <tr class="memitem:a0881cb3b4e17561e4343b4fc41609037"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0881cb3b4e17561e4343b4fc41609037"></a>
 IpeKey **&#160;</td><td class="memItemRight" valign="bottom"><b>MKeyGen</b> (IpeMsk **, Big *, int, int)</td></tr>
 <tr class="separator:a0881cb3b4e17561e4343b4fc41609037"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8083deed2e41b9daa310762b324276f0"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8083deed2e41b9daa310762b324276f0"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>IpdbNoise</b> (int m, PFC *p, miracl *mi, Big o)</td></tr>
+<tr class="memitem:a3ef63f8bd504cc6b1957c404ebfc48da"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3ef63f8bd504cc6b1957c404ebfc48da"></a>
+IpeKey **&#160;</td><td class="memItemRight" valign="bottom"><b>MKeyGen</b> (IpeMsk **, Big *, vector&lt; string &gt;, int)</td></tr>
+<tr class="separator:a3ef63f8bd504cc6b1957c404ebfc48da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8083deed2e41b9daa310762b324276f0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIpdbNoise.html#a8083deed2e41b9daa310762b324276f0">IpdbNoise</a> (int m, PFC *p, miracl *mi, Big o)</td></tr>
+<tr class="memdesc:a8083deed2e41b9daa310762b324276f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class constructor.  <a href="#a8083deed2e41b9daa310762b324276f0">More...</a><br /></td></tr>
 <tr class="separator:a8083deed2e41b9daa310762b324276f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
@@ -135,8 +138,59 @@ Big&#160;</td><td class="memItemRight" valign="bottom"><b>order</b></td></tr>
 <tr class="separator:a5d4ac29dd114058d89de4acacd68462a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>The inner product ammortized class with noise. </p>
-</div><hr/>The documentation for this class was generated from the following files:<ul>
+<div class="textblock"><p>The inner product amortized class with noise. </p>
+<p>Extends the functionalities of the class <a class="el" href="classIpdb.html" title="The inner product amortized class. ">Ipdb</a> by adding a random noise parameter to the encryption and token generation steps. The system returns true in predicate decryption operations if: the token is generated with a good vector of attributes; the noise parameter used during decryption match the one used in encryption. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="a8083deed2e41b9daa310762b324276f0"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">IpdbNoise::IpdbNoise </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>m</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">PFC *&#160;</td>
+          <td class="paramname"><em>p</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">miracl *&#160;</td>
+          <td class="paramname"><em>mi</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Big&#160;</td>
+          <td class="paramname"><em>o</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Class constructor. </p>
+<p>m is the number of columns per row, mi is the pointer to a miracl object instance, p is the curve, o its order </p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="ipdb-m_8h_source.html">ipdb-m.h</a></li>
 <li>ipdb-m.cpp</li>
 </ul>

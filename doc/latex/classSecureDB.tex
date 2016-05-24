@@ -22,6 +22,10 @@ int \hyperlink{classSecureDB_ac48eb9810677fd34c5c59b7537bcd970}{Gen\+Token} (str
 \item 
 vector$<$ string $>$ \hyperlink{classSecureDB_a267eb02115e80bffd751bfe3e2fc566f}{Apply\+Token} (string, string)
 \item 
+int \hyperlink{classSecureDB_a24b57c65385caf873e389f1180d374e3}{Apply\+P\+Token} (string, string, string)
+\item 
+vector$<$ string $>$ \hyperlink{classSecureDB_a701ae7b9972bea6b4349ff35003a7a34}{Apply\+M\+Token} (string, string, string)
+\item 
 \hyperlink{classSecureDB_ab4c368e84ac078f9f598a8cd1da25ed7}{Secure\+DB} (int m, P\+FC $\ast$pfc\+\_\+, Big order\+\_\+)
 \begin{DoxyCompactList}\small\item\em Class constructor. \end{DoxyCompactList}\item 
 {\bfseries Secure\+DB} (P\+FC $\ast$pfc\+\_\+, Big order\+\_\+)\hypertarget{classSecureDB_a5ae766ecb788b9923d85f45ea96f922f}{}\label{classSecureDB_a5ae766ecb788b9923d85f45ea96f922f}
@@ -49,7 +53,7 @@ Big \hyperlink{classSecureDB_ae2cdeef405f4711ca5e17c6052c1d78a}{order}
 \subsection{Detailed Description}
 The secure database main class. 
 
-It is useful for data owners and readers. This class can be used to generate a master key, encrypt tables and execute query on them. 
+It is useful for data owners and readers. This class can be used to generate a master keys, encrypt tables and execute queries on them. 
 
 \subsection{Constructor \& Destructor Documentation}
 \index{Secure\+DB@{Secure\+DB}!Secure\+DB@{Secure\+DB}}
@@ -68,7 +72,29 @@ Class constructor.
 m is the number of columns per row, pfc\+\_\+ is the curve and order\+\_\+ its order 
 
 \subsection{Member Function Documentation}
-\index{Secure\+DB@{Secure\+DB}!Apply\+Token@{Apply\+Token}}
+\index{Secure\+DB@{Secure\+DB}!Apply\+M\+Token@{Apply\+M\+Token}}
+\index{Apply\+M\+Token@{Apply\+M\+Token}!Secure\+DB@{Secure\+DB}}
+\subsubsection[{\texorpdfstring{Apply\+M\+Token(string, string, string)}{ApplyMToken(string, string, string)}}]{\setlength{\rightskip}{0pt plus 5cm}vector$<$ string $>$ Secure\+D\+B\+::\+Apply\+M\+Token (
+\begin{DoxyParamCaption}
+\item[{string}]{query\+\_\+name, }
+\item[{string}]{db\+\_\+name, }
+\item[{string}]{res\+\_\+name}
+\end{DoxyParamCaption}
+)}\hypertarget{classSecureDB_a701ae7b9972bea6b4349ff35003a7a34}{}\label{classSecureDB_a701ae7b9972bea6b4349ff35003a7a34}
+Get a token file name (query\+\_\+name), the database name (db\+\_\+name) and the results name (res\+\_\+name).
+
+Execute the mtoken for all the rows in res\+\_\+name and return all the founded results in a vector. \index{Secure\+DB@{Secure\+DB}!Apply\+P\+Token@{Apply\+P\+Token}}
+\index{Apply\+P\+Token@{Apply\+P\+Token}!Secure\+DB@{Secure\+DB}}
+\subsubsection[{\texorpdfstring{Apply\+P\+Token(string, string, string)}{ApplyPToken(string, string, string)}}]{\setlength{\rightskip}{0pt plus 5cm}int Secure\+D\+B\+::\+Apply\+P\+Token (
+\begin{DoxyParamCaption}
+\item[{string}]{query\+\_\+name, }
+\item[{string}]{db\+\_\+name, }
+\item[{string}]{res\+\_\+name}
+\end{DoxyParamCaption}
+)}\hypertarget{classSecureDB_a24b57c65385caf873e389f1180d374e3}{}\label{classSecureDB_a24b57c65385caf873e389f1180d374e3}
+Get a token file name (query\+\_\+name), the database name (db\+\_\+name) and the results name (res\+\_\+name).
+
+Execute the ptoken for the desiderd database and save the number of all the founded rows in a file (res\+\_\+name). \index{Secure\+DB@{Secure\+DB}!Apply\+Token@{Apply\+Token}}
 \index{Apply\+Token@{Apply\+Token}!Secure\+DB@{Secure\+DB}}
 \subsubsection[{\texorpdfstring{Apply\+Token(string, string)}{ApplyToken(string, string)}}]{\setlength{\rightskip}{0pt plus 5cm}vector$<$ string $>$ Secure\+D\+B\+::\+Apply\+Token (
 \begin{DoxyParamCaption}

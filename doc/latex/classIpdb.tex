@@ -2,7 +2,7 @@
 \label{classIpdb}\index{Ipdb@{Ipdb}}
 
 
-The inner product ammortized class.  
+The inner product amortized class.  
 
 
 
@@ -24,15 +24,17 @@ Ipe\+Key $\ast$ {\bfseries P\+Key\+Gen} (Ipe\+Msk $\ast$$\ast$, Big $\ast$)\hype
 Ipe\+Key $\ast$$\ast$ {\bfseries M\+Key\+Gen} (Ipe\+Msk $\ast$$\ast$, Big $\ast$, Big $\ast$, int)\hypertarget{classIpdb_a3d07c53866927028d0dbee4a65f9130b}{}\label{classIpdb_a3d07c53866927028d0dbee4a65f9130b}
 
 \item 
+Ipe\+Key $\ast$$\ast$ {\bfseries M\+Key\+Gen} (Ipe\+Msk $\ast$$\ast$, Big $\ast$, Big $\ast$$\ast$, vector$<$ string $>$)\hypertarget{classIpdb_aaf2427cc5ac4b8f62f8c716c43e19f41}{}\label{classIpdb_aaf2427cc5ac4b8f62f8c716c43e19f41}
+
+\item 
 GT {\bfseries P\+Decrypt} (Ipe\+Ct $\ast$, Ipe\+Key $\ast$)\hypertarget{classIpdb_a791f8e59c6fe1009d4bb8fc8c59675f6}{}\label{classIpdb_a791f8e59c6fe1009d4bb8fc8c59675f6}
 
 \item 
 GT {\bfseries M\+Decrypt} (Ipe\+Ct $\ast$$\ast$, Ipe\+Key $\ast$$\ast$, int)\hypertarget{classIpdb_af3ea6b414a1273a68e563176b0456d02}{}\label{classIpdb_af3ea6b414a1273a68e563176b0456d02}
 
 \item 
-{\bfseries Ipdb} (int n\+\_\+, int l\+\_\+, int k\+\_\+, P\+FC $\ast$p, miracl $\ast$m, Big o)\hypertarget{classIpdb_af211f93d19bfc4b6656989b608aec11e}{}\label{classIpdb_af211f93d19bfc4b6656989b608aec11e}
-
-\end{DoxyCompactItemize}
+\hyperlink{classIpdb_af211f93d19bfc4b6656989b608aec11e}{Ipdb} (int n\+\_\+, int l\+\_\+, int k\+\_\+, P\+FC $\ast$p, miracl $\ast$m, Big o)
+\begin{DoxyCompactList}\small\item\em Class constructor. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
@@ -75,7 +77,28 @@ G2 {\bfseries g2}\hypertarget{classIpdb_a9ccba97ad1c9c35d93ab4f94a2c8f5c8}{}\lab
 
 
 \subsection{Detailed Description}
-The inner product ammortized class. 
+The inner product amortized class. 
+
+It uses inner product encryption (Ipe) basic class to provide methods to\+: create master keys; encrypt messages (of the type GT) with vectors of attributes (type Big); generate predicate and message tokens for specified vectors of attributes (Big); apply the tokens to decrypt the messages. 
+
+\subsection{Constructor \& Destructor Documentation}
+\index{Ipdb@{Ipdb}!Ipdb@{Ipdb}}
+\index{Ipdb@{Ipdb}!Ipdb@{Ipdb}}
+\subsubsection[{\texorpdfstring{Ipdb(int n\+\_\+, int l\+\_\+, int k\+\_\+, P\+F\+C $\ast$p, miracl $\ast$m, Big o)}{Ipdb(int n_, int l_, int k_, PFC *p, miracl *m, Big o)}}]{\setlength{\rightskip}{0pt plus 5cm}Ipdb\+::\+Ipdb (
+\begin{DoxyParamCaption}
+\item[{int}]{n\+\_\+, }
+\item[{int}]{l\+\_\+, }
+\item[{int}]{k\+\_\+, }
+\item[{P\+FC $\ast$}]{p, }
+\item[{miracl $\ast$}]{m, }
+\item[{Big}]{o}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classIpdb_af211f93d19bfc4b6656989b608aec11e}{}\label{classIpdb_af211f93d19bfc4b6656989b608aec11e}
+
+
+Class constructor. 
+
+n\+\_\+,l\+\_\+ and k\+\_\+ are the values of the three parameters for the amortized technique, m is the pointer to a miracl object instance, p is the curve, o its order 
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 

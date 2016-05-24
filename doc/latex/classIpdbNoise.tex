@@ -2,7 +2,7 @@
 \label{classIpdbNoise}\index{Ipdb\+Noise@{Ipdb\+Noise}}
 
 
-The inner product ammortized class with noise.  
+The inner product amortized class with noise.  
 
 
 
@@ -24,9 +24,11 @@ Ipe\+Key $\ast$ {\bfseries P\+Key\+Gen} (Ipe\+Msk $\ast$$\ast$, Big $\ast$, int)
 Ipe\+Key $\ast$$\ast$ {\bfseries M\+Key\+Gen} (Ipe\+Msk $\ast$$\ast$, Big $\ast$, int, int)\hypertarget{classIpdbNoise_a0881cb3b4e17561e4343b4fc41609037}{}\label{classIpdbNoise_a0881cb3b4e17561e4343b4fc41609037}
 
 \item 
-{\bfseries Ipdb\+Noise} (int m, P\+FC $\ast$p, miracl $\ast$mi, Big o)\hypertarget{classIpdbNoise_a8083deed2e41b9daa310762b324276f0}{}\label{classIpdbNoise_a8083deed2e41b9daa310762b324276f0}
+Ipe\+Key $\ast$$\ast$ {\bfseries M\+Key\+Gen} (Ipe\+Msk $\ast$$\ast$, Big $\ast$, vector$<$ string $>$, int)\hypertarget{classIpdbNoise_a3ef63f8bd504cc6b1957c404ebfc48da}{}\label{classIpdbNoise_a3ef63f8bd504cc6b1957c404ebfc48da}
 
-\end{DoxyCompactItemize}
+\item 
+\hyperlink{classIpdbNoise_a8083deed2e41b9daa310762b324276f0}{Ipdb\+Noise} (int m, P\+FC $\ast$p, miracl $\ast$mi, Big o)
+\begin{DoxyCompactList}\small\item\em Class constructor. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
@@ -51,7 +53,26 @@ Big {\bfseries order}\hypertarget{classIpdbNoise_a5d4ac29dd114058d89de4acacd6846
 
 
 \subsection{Detailed Description}
-The inner product ammortized class with noise. 
+The inner product amortized class with noise. 
+
+Extends the functionalities of the class \hyperlink{classIpdb}{Ipdb} by adding a random noise parameter to the encryption and token generation steps. The system returns true in predicate decryption operations if\+: the token is generated with a good vector of attributes; the noise parameter used during decryption match the one used in encryption. 
+
+\subsection{Constructor \& Destructor Documentation}
+\index{Ipdb\+Noise@{Ipdb\+Noise}!Ipdb\+Noise@{Ipdb\+Noise}}
+\index{Ipdb\+Noise@{Ipdb\+Noise}!Ipdb\+Noise@{Ipdb\+Noise}}
+\subsubsection[{\texorpdfstring{Ipdb\+Noise(int m, P\+F\+C $\ast$p, miracl $\ast$mi, Big o)}{IpdbNoise(int m, PFC *p, miracl *mi, Big o)}}]{\setlength{\rightskip}{0pt plus 5cm}Ipdb\+Noise\+::\+Ipdb\+Noise (
+\begin{DoxyParamCaption}
+\item[{int}]{m, }
+\item[{P\+FC $\ast$}]{p, }
+\item[{miracl $\ast$}]{mi, }
+\item[{Big}]{o}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classIpdbNoise_a8083deed2e41b9daa310762b324276f0}{}\label{classIpdbNoise_a8083deed2e41b9daa310762b324276f0}
+
+
+Class constructor. 
+
+m is the number of columns per row, mi is the pointer to a miracl object instance, p is the curve, o its order 
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 
