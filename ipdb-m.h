@@ -4,7 +4,13 @@
 #include "ipe-m.h"
 
 /**
- * \brief The inner product ammortized class.
+ * \brief The inner product amortized class.
+ *
+ * It uses inner product encryption (Ipe) basic class to provide methods to:
+ * create master keys;
+ * encrypt messages (of the type GT) with vectors of attributes (type Big);
+ * generate predicate and message tokens for specified vectors of attributes (Big);
+ * apply the tokens to decrypt the messages.
  */
 class Ipdb{
 public:
@@ -23,6 +29,12 @@ public:
 	IpeKey **MKeyGen(IpeMsk **, Big *, Big **, vector<string>);
 	GT PDecrypt(IpeCt *, IpeKey *);
 	GT MDecrypt(IpeCt **, IpeKey **, int);
+	/** \brief Class constructor
+	 *
+	 * n_,l_ and k_ are the values of the three parameters for the amortized technique,
+	 * m is the pointer to a miracl object instance,
+	 * p is the curve, o its order
+	 */
 	Ipdb(int n_, int l_, int k_, PFC *p, miracl * m, Big o){
 		n=n_;
 		l=l_;
@@ -34,7 +46,13 @@ public:
 };
 
 /**
- * \brief The inner product ammortized class with noise.
+ * \brief The inner product amortized class with noise.
+ *
+ * Extends the functionalities of the class Ipdb by adding a random noise parameter
+ * to the encryption and token generation steps.
+ * The system returns true in predicate decryption operations if:
+ * the token is generated with a good vector of attributes;
+ * the noise parameter used during decryption match the one used in encryption.
  */
 class IpdbNoise{
 public:
@@ -48,6 +66,12 @@ public:
 	IpeKey *PKeyGen(IpeMsk **, Big *, int);
 	IpeKey **MKeyGen(IpeMsk **, Big *, int, int);
 	IpeKey **MKeyGen(IpeMsk **, Big *, vector<string>, int);
+	/** \brief Class constructor
+	 *
+	 * m is the number of columns per row,
+	 * mi is the pointer to a miracl object instance,
+	 * p is the curve, o its order
+	 */
 	IpdbNoise(int m, PFC *p, miracl *mi, Big o){
 		n=m;
 		l=2*m+2;
@@ -62,7 +86,7 @@ public:
  * \brief The secure database main class.
  *
  * It is useful for data owners and readers.
- * This class can be used to generate a master key, encrypt tables and execute query on them.
+ * This class can be used to generate a master keys, encrypt tables and execute queries on them.
  */
 class SecureDB{
 public:
