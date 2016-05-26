@@ -1,0 +1,80 @@
+\hypertarget{classAOENoise}{}\section{A\+O\+E\+Noise Class Reference}
+\label{classAOENoise}\index{A\+O\+E\+Noise@{A\+O\+E\+Noise}}
+
+
+The amortized orthogonal encryption class with noise.  
+
+
+
+
+{\ttfamily \#include $<$aoe-\/m.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+O\+E\+Msk $\ast$$\ast$ {\bfseries R\+Setup} ()\hypertarget{classAOENoise_aace84ea252612135b75af802aabd48d0}{}\label{classAOENoise_aace84ea252612135b75af802aabd48d0}
+
+\item 
+O\+E\+Ct $\ast$$\ast$ {\bfseries Encrypt\+Row} (O\+E\+Msk $\ast$$\ast$, Big $\ast$, GT $\ast$, int)\hypertarget{classAOENoise_acbe578fc5c1ceb7228615bfb01819eb7}{}\label{classAOENoise_acbe578fc5c1ceb7228615bfb01819eb7}
+
+\item 
+O\+E\+Key $\ast$ {\bfseries P\+Key\+Gen} (O\+E\+Msk $\ast$$\ast$, Big $\ast$, int)\hypertarget{classAOENoise_a17522dc5432669863eadfba8e1f297ef}{}\label{classAOENoise_a17522dc5432669863eadfba8e1f297ef}
+
+\item 
+O\+E\+Key $\ast$$\ast$ {\bfseries M\+Key\+Gen} (O\+E\+Msk $\ast$$\ast$, Big $\ast$, int, int)\hypertarget{classAOENoise_a51c5548b81f351fe80afacacdc6716c4}{}\label{classAOENoise_a51c5548b81f351fe80afacacdc6716c4}
+
+\item 
+O\+E\+Key $\ast$$\ast$ {\bfseries M\+Key\+Gen} (O\+E\+Msk $\ast$$\ast$, Big $\ast$, vector$<$ string $>$, int)\hypertarget{classAOENoise_a2e29a95c839442e2e4440becab6b7384}{}\label{classAOENoise_a2e29a95c839442e2e4440becab6b7384}
+
+\item 
+\hyperlink{classAOENoise_a09b41dc882e04d61e588da49d06198a9}{A\+O\+E\+Noise} (int m, P\+FC $\ast$p, miracl $\ast$mi, Big o)
+\begin{DoxyCompactList}\small\item\em Class constructor. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+int {\bfseries n}\hypertarget{classAOENoise_a9958c324ac317477a9e20eaa619f43c3}{}\label{classAOENoise_a9958c324ac317477a9e20eaa619f43c3}
+
+\item 
+int {\bfseries l}\hypertarget{classAOENoise_a69d48da000f6becb069d0ab3bd1bce24}{}\label{classAOENoise_a69d48da000f6becb069d0ab3bd1bce24}
+
+\item 
+int {\bfseries k}\hypertarget{classAOENoise_a22d4c6d29fe7846fb4f5b3fe66f407df}{}\label{classAOENoise_a22d4c6d29fe7846fb4f5b3fe66f407df}
+
+\item 
+\hyperlink{classAOE}{A\+OE} $\ast$ {\bfseries aoe}\hypertarget{classAOENoise_a2903b460d92f60ce63b98ce26335ef61}{}\label{classAOENoise_a2903b460d92f60ce63b98ce26335ef61}
+
+\item 
+P\+FC $\ast$ {\bfseries pfc}\hypertarget{classAOENoise_a5d6f1295dc0bce01e3133c43e489e997}{}\label{classAOENoise_a5d6f1295dc0bce01e3133c43e489e997}
+
+\item 
+Big {\bfseries order}\hypertarget{classAOENoise_abaa5eb8029cca74dab0256972b2971dc}{}\label{classAOENoise_abaa5eb8029cca74dab0256972b2971dc}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+The amortized orthogonal encryption class with noise. 
+
+Extends the functionalities of the class \hyperlink{classAOE}{A\+OE} by adding a random noise parameter to the encryption and token generation steps. The system returns true in predicate decryption operations if\+: the token is generated with a good vector of attributes; the noise parameter used during decryption match the one used in encryption. 
+
+\subsection{Constructor \& Destructor Documentation}
+\index{A\+O\+E\+Noise@{A\+O\+E\+Noise}!A\+O\+E\+Noise@{A\+O\+E\+Noise}}
+\index{A\+O\+E\+Noise@{A\+O\+E\+Noise}!A\+O\+E\+Noise@{A\+O\+E\+Noise}}
+\subsubsection[{\texorpdfstring{A\+O\+E\+Noise(int m, P\+F\+C $\ast$p, miracl $\ast$mi, Big o)}{AOENoise(int m, PFC *p, miracl *mi, Big o)}}]{\setlength{\rightskip}{0pt plus 5cm}A\+O\+E\+Noise\+::\+A\+O\+E\+Noise (
+\begin{DoxyParamCaption}
+\item[{int}]{m, }
+\item[{P\+FC $\ast$}]{p, }
+\item[{miracl $\ast$}]{mi, }
+\item[{Big}]{o}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classAOENoise_a09b41dc882e04d61e588da49d06198a9}{}\label{classAOENoise_a09b41dc882e04d61e588da49d06198a9}
+
+
+Class constructor. 
+
+m is the number of columns per row, mi is the pointer to a miracl object instance, p is the curve, o its order 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+aoe-\/m.\+h\item 
+aoe-\/m.\+cpp\end{DoxyCompactItemize}

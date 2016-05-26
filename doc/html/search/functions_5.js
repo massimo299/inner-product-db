@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['loadkey',['LoadKey',['../classSecureDB.html#ac4626ebf45db1aeccd1a4698f22d92b5',1,'SecureDB']]]
+  ['secureselect',['SecureSelect',['../classSecureSelect.html#a88cd629de7214c05eb86683b058bacd5',1,'SecureSelect']]]
 ];

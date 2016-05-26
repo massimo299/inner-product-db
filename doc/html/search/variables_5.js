@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['order',['order',['../classSecureDB.html#ae2cdeef405f4711ca5e17c6052c1d78a',1,'SecureDB']]]
+  ['order',['order',['../classSecureSelect.html#ac97b5a9177b47f64f49891feb67b69b2',1,'SecureSelect']]]
 ];

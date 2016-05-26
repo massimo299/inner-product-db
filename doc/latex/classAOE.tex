@@ -1,0 +1,106 @@
+\hypertarget{classAOE}{}\section{A\+OE Class Reference}
+\label{classAOE}\index{A\+OE@{A\+OE}}
+
+
+The amortized orthogonal encryption class.  
+
+
+
+
+{\ttfamily \#include $<$aoe-\/m.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+O\+E\+Msk $\ast$$\ast$ {\bfseries Setup} ()\hypertarget{classAOE_a5541942137f6423708d83a538433f4f1}{}\label{classAOE_a5541942137f6423708d83a538433f4f1}
+
+\item 
+O\+E\+Ct $\ast$$\ast$ {\bfseries Encrypt} (O\+E\+Msk $\ast$$\ast$, Big $\ast$, Big $\ast$$\ast$, GT $\ast$)\hypertarget{classAOE_a82e280b24bb32b82ea2a720807b46a2f}{}\label{classAOE_a82e280b24bb32b82ea2a720807b46a2f}
+
+\item 
+O\+E\+Key $\ast$ {\bfseries P\+Key\+Gen} (O\+E\+Msk $\ast$$\ast$, Big $\ast$)\hypertarget{classAOE_a906b3446aeb222ae736e0b3f3713bbc5}{}\label{classAOE_a906b3446aeb222ae736e0b3f3713bbc5}
+
+\item 
+O\+E\+Key $\ast$$\ast$ {\bfseries M\+Key\+Gen} (O\+E\+Msk $\ast$$\ast$, Big $\ast$, Big $\ast$, int)\hypertarget{classAOE_a51e0488fcfb885ff9e896beb1c9cc6ac}{}\label{classAOE_a51e0488fcfb885ff9e896beb1c9cc6ac}
+
+\item 
+O\+E\+Key $\ast$$\ast$ {\bfseries M\+Key\+Gen} (O\+E\+Msk $\ast$$\ast$, Big $\ast$, Big $\ast$$\ast$, vector$<$ string $>$)\hypertarget{classAOE_acccc5c46c33a8c835604ed9a0be30115}{}\label{classAOE_acccc5c46c33a8c835604ed9a0be30115}
+
+\item 
+GT {\bfseries P\+Decrypt} (O\+E\+Ct $\ast$, O\+E\+Key $\ast$)\hypertarget{classAOE_a616c7b95e29156c8f2b6ecdd962d4a86}{}\label{classAOE_a616c7b95e29156c8f2b6ecdd962d4a86}
+
+\item 
+GT {\bfseries M\+Decrypt} (O\+E\+Ct $\ast$$\ast$, O\+E\+Key $\ast$$\ast$, int)\hypertarget{classAOE_a2734fc4f2fa9aeef2d36c85a27528842}{}\label{classAOE_a2734fc4f2fa9aeef2d36c85a27528842}
+
+\item 
+\hyperlink{classAOE_a6950dbd129bb9eb6ff919004d4482141}{A\+OE} (int n\+\_\+, int l\+\_\+, int k\+\_\+, P\+FC $\ast$p, miracl $\ast$m, Big o)
+\begin{DoxyCompactList}\small\item\em Class constructor. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+int {\bfseries n}\hypertarget{classAOE_ad58be8b79a382b9ff24ae3e7c784c568}{}\label{classAOE_ad58be8b79a382b9ff24ae3e7c784c568}
+
+\item 
+int {\bfseries l}\hypertarget{classAOE_ac3d9eb7e853fe95c1ddc489ef7d21915}{}\label{classAOE_ac3d9eb7e853fe95c1ddc489ef7d21915}
+
+\item 
+int {\bfseries k}\hypertarget{classAOE_ac1da0894513c47f77a7096bf0f982e05}{}\label{classAOE_ac1da0894513c47f77a7096bf0f982e05}
+
+\item 
+P\+FC $\ast$ {\bfseries pfc}\hypertarget{classAOE_aa6b38b90c0de109ac06699808284b643}{}\label{classAOE_aa6b38b90c0de109ac06699808284b643}
+
+\item 
+miracl $\ast$ {\bfseries mip}\hypertarget{classAOE_a65159f980bccc5b21da05c154cb8c3d0}{}\label{classAOE_a65159f980bccc5b21da05c154cb8c3d0}
+
+\item 
+Big {\bfseries order}\hypertarget{classAOE_abb473de4ed8d8294e5bb5bc4d26ade92}{}\label{classAOE_abb473de4ed8d8294e5bb5bc4d26ade92}
+
+\item 
+Big {\bfseries omega}\hypertarget{classAOE_a5bcf01ddc1f7a6962c391d60bed61975}{}\label{classAOE_a5bcf01ddc1f7a6962c391d60bed61975}
+
+\item 
+Big {\bfseries ab1} \mbox{[}2\mbox{]}\hypertarget{classAOE_ab7aba1ddc9db5600ba8c6865abce6701}{}\label{classAOE_ab7aba1ddc9db5600ba8c6865abce6701}
+
+\item 
+Big {\bfseries ab2} \mbox{[}2\mbox{]}\hypertarget{classAOE_a01feefdc255058f8437cf337dbe1e887}{}\label{classAOE_a01feefdc255058f8437cf337dbe1e887}
+
+\item 
+OE $\ast$ {\bfseries oe}\hypertarget{classAOE_a428ebbb7d1a17a6cef428103345f2b36}{}\label{classAOE_a428ebbb7d1a17a6cef428103345f2b36}
+
+\item 
+G1 {\bfseries g}\hypertarget{classAOE_a47a57d1c8f9a511317433527a49b1af5}{}\label{classAOE_a47a57d1c8f9a511317433527a49b1af5}
+
+\item 
+G2 {\bfseries g2}\hypertarget{classAOE_aefc9e7587dca527afbfac4c322b1c996}{}\label{classAOE_aefc9e7587dca527afbfac4c322b1c996}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+The amortized orthogonal encryption class. 
+
+It uses orthogonal encryption basic class (OE) to provide methods to\+: create master keys; encrypt messages (of the group target type GT) with vectors of attributes (type Big); generate predicate and message tokens for specified vectors of attributes; apply the tokens to decrypt the messages. 
+
+\subsection{Constructor \& Destructor Documentation}
+\index{A\+OE@{A\+OE}!A\+OE@{A\+OE}}
+\index{A\+OE@{A\+OE}!A\+OE@{A\+OE}}
+\subsubsection[{\texorpdfstring{A\+O\+E(int n\+\_\+, int l\+\_\+, int k\+\_\+, P\+F\+C $\ast$p, miracl $\ast$m, Big o)}{AOE(int n_, int l_, int k_, PFC *p, miracl *m, Big o)}}]{\setlength{\rightskip}{0pt plus 5cm}A\+O\+E\+::\+A\+OE (
+\begin{DoxyParamCaption}
+\item[{int}]{n\+\_\+, }
+\item[{int}]{l\+\_\+, }
+\item[{int}]{k\+\_\+, }
+\item[{P\+FC $\ast$}]{p, }
+\item[{miracl $\ast$}]{m, }
+\item[{Big}]{o}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classAOE_a6950dbd129bb9eb6ff919004d4482141}{}\label{classAOE_a6950dbd129bb9eb6ff919004d4482141}
+
+
+Class constructor. 
+
+n\+\_\+,l\+\_\+ and k\+\_\+ are the values of the three parameters for the amortized technique, m is the pointer to a miracl object instance, p is the curve, o its order 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+aoe-\/m.\+h\item 
+aoe-\/m.\+cpp\end{DoxyCompactItemize}

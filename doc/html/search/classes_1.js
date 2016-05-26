@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['securedb',['SecureDB',['../classSecureDB.html',1,'']]]
+  ['secureselect',['SecureSelect',['../classSecureSelect.html',1,'']]]
 ];
