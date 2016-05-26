@@ -5,7 +5,7 @@
 #include <fstream>
 
 #include "pairing_3.h"
-#include "ipdb-m.h"
+#include "aoe-m.h"
 
 #include <sys/timeb.h>
 
@@ -36,12 +36,12 @@ main(int argc, char *argv[]){
 
 	PFC pfc(AES_SECURITY);
 
-	SecureDB *db=NULL;
+	SecureSelect *db=NULL;
 
 	int m=atoi(argv[1]);
 	string key_name(argv[2]);
 
-	db = new SecureDB(m,&pfc,pfc.order());
+	db = new SecureSelect(m,&pfc,pfc.order());
 	#ifdef VERBOSE
 	int start = getMilliCount();
 	#endif

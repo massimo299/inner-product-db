@@ -5,7 +5,7 @@
 #include <fstream>
 
 #include "pairing_3.h"
-#include "ipdb-m.h"
+#include "aoe-m.h"
 
 #include <sys/timeb.h>
 
@@ -39,7 +39,7 @@ main(int argc, char *argv[]){
 
 	PFC pfc(AES_SECURITY);
 
-	SecureDB *db=NULL;
+	SecureSelect *db=NULL;
 
 	int m=0;
 	string key_file(argv[1]);
@@ -47,7 +47,7 @@ main(int argc, char *argv[]){
 	string enctable_name(argv[3]);
 	int rand_lim = atoi(argv[4]);
 
-	db = new SecureDB(&pfc,pfc.order());
+	db = new SecureSelect(&pfc,pfc.order());
 	if(!db->LoadKey(key_file))
 		return 0;
 
