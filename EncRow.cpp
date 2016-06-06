@@ -37,6 +37,7 @@ main(int argc, char *argv[]){
 	/** Set the random seed for noise parameter generation */
 	srand(time(NULL));
 
+	mr_init_threading();
 	PFC pfc(AES_SECURITY);
 
 	SecureSelect *db=NULL;

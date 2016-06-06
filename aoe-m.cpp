@@ -8,6 +8,8 @@
 #include "base64.h"
 #include "aoe-m.h"
 #include <sys/timeb.h>
+#include <pthread.h>
+#include <queue> 
 
 //#define VERBOSE
 
@@ -764,6 +766,16 @@ SecureSelect::GotoLine(fstream& file, unsigned int num)
     return file;
 }
 
+ifstream&
+SecureSelect::GotoLine(ifstream& file, unsigned int num)
+{
+    file.seekg(std::ios::beg);
+    for(int i=0; i < num; ++i){
+        file.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
+    }
+    return file;
+}
+
 /**
  * Read and return line number lnum from file fname.
  */
@@ -1277,4 +1289,161 @@ SecureSelect::ApplyMToken(string query_name,string db_name, string res_name){
 	db_cts.close();
 	res_file.close();
 	return results;
+}
+
+struct thread_data{
+	int  thread_id;
+	int num_threads;
+	int num_lines;
+	string db_enc_ct;
+	string res_name;
+	OEKey *pkey;
+	SecureSelect *sec_sel;
+	vector<string> results;
+};
+
+void *applyPTokenThread(void *threadarg)
+{
+	PFC pfc(AES_SECURITY);
+	vector<int> *results = new vector<int>;
+	int err = -1;
+	struct thread_data *my_data;
+
+	my_data = (struct thread_data *) threadarg;
+	int tid = my_data->thread_id;
+
+	int starting_row = ((my_data->num_lines/my_data->num_threads)*my_data->thread_id);
+	OECt **cts;
+	GT dec_res;
+
+	int n = my_data->sec_sel->n;
+
+	ifstream db_cts(my_data->db_enc_ct);
+	int n_, row_num=starting_row;
+	int l=2*n+2, k=2;
+	my_data->sec_sel->GotoLine(db_cts, starting_row*(10+4*l+4*n*k+7*n));
+
+	while(row_num<((my_data->num_lines/my_data->num_threads)*(tid+1))){
+		db_cts >> n_;
+		if(n!=n_){
+			cout << "Db's parameters different from key's" << endl;
+			
+			pthread_exit(&err);
+		}
+		#ifdef VERBOSE
+		cout << "Thread id: " << tid << " Row: " << row_num+1 << endl;
+		#endif
+
+		cts = my_data->sec_sel->load_ct(&db_cts);
+		if(cts==NULL){
+			cout << "Error while loading ciphertext" << endl;
+			pthread_exit(&err);
+		}
+
+		#ifdef VERBOSE
+		int start = getMilliCount();
+		#endif
+
+		dec_res = my_data->sec_sel->aoen->aoe->PDecrypt(cts[0],my_data->pkey);
+
+		#ifdef VERBOSE
+		int milliSecondsElapsed = getMilliSpan(start);
+		cout << "\tPredicate decryption time: " << milliSecondsElapsed << endl;
+		#endif
+
+		if(dec_res==(GT)1) /* Row match query */
+			results->push_back(row_num);
+
+		row_num++;
+
+	}
+	db_cts.close();
+
+	pthread_exit(results);
+}
+
+/**
+ * Multi-thread version of ApplyPToken.
+ *
+ * num_threads is the number of threads in which the decryption will be divided.
+ */
+int
+SecureSelect::ApplyPTokenMT(string query_name,string db_name, string res_name, int num_threads){
+
+	set_parameters(query_name+"_ptok");
+
+	/* Set name for ciphertexts in db */
+	string db_enc_ct = db_name+"_enc_ct";
+	int res_num = 0;
+
+	/* Predicate key loading */
+	OEKey *pkey;
+	pkey = load_token(query_name+"_ptok", l+1);
+
+	/* Counting number of rows in the db */
+	ifstream db_enc_msgs(db_name+"_enc_msgs");
+	string line;
+	int num_lines = 0;
+	while(getline(db_enc_msgs,line))
+		num_lines++;
+	db_enc_msgs.close();
+	num_lines = num_lines/n;
+	int remaining_lines = num_lines%num_threads;
+	num_lines = num_lines-remaining_lines;
+
+	int rc;
+	pthread_t threads[num_threads];
+	pthread_attr_t attr;
+	void *status;
+	struct thread_data td[num_threads];
+
+	// Initialize and set thread joinable
+	pthread_attr_init(&attr);
+	pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
+
+	for(int i=0;i<num_threads;i++){
+		#ifdef VERBOSE
+		cout << "ApplyPTokenMT() : creating thread, " << i << endl;
+		#endif
+
+		td[i].thread_id = i;
+		td[i].num_threads = num_threads;
+		td[i].num_lines = num_lines;
+		td[i].db_enc_ct = db_enc_ct;
+		td[i].res_name = res_name;
+		td[i].pkey = pkey;
+		td[i].sec_sel = this;
+		rc = pthread_create(&threads[i], NULL, applyPTokenThread, (void *)&td[i] );
+		if (rc){
+			cout << "Error:unable to create thread," << rc << endl;
+			return -1;
+		}
+	}
+
+	// Free attribute and wait for the other threads
+	ofstream results(res_name);
+	pthread_attr_destroy(&attr);
+	for(int i=0; i < num_threads; i++ ){
+		rc = pthread_join(threads[i], &status);
+		if (rc){
+			cout << "Error:unable to join," << rc << endl;
+			return -1;
+		}
+		int err = *(int *) status;
+		if(err == -1)
+			return -1;
+
+		vector<int> *res_thread = (vector<int> *) status;
+		res_num += res_thread->size();
+		for(int j=0;j<res_thread->size();j++)
+			results << res_thread->at(j) << endl;
+
+		#ifdef VERBOSE
+		cout << "Main: completed thread id :" << i ;
+		cout << "  exiting with " << res_thread->size() << " results" << endl;
+		#endif
+	}
+	results.close();
+
+	return res_num;
 }

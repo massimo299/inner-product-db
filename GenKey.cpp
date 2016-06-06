@@ -34,6 +34,7 @@ main(int argc, char *argv[]){
         	return 1;
 	}
 
+	mr_init_threading();
 	PFC pfc(AES_SECURITY);
 
 	SecureSelect *db=NULL;

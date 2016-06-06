@@ -1,4 +1,5 @@
 #include <vector>
+#include <queue> 
 
 #include "pairing_3.h"
 #include "oe-m.h"
@@ -104,7 +105,10 @@ public:
 	int GenToken(string, int);
 	vector<string> ApplyToken(string, string);
 	int ApplyPToken(string, string, string);
+	int ApplyPTokenMT(string, string, string, int);
 	vector<string> ApplyMToken(string, string, string);
+	ifstream &GotoLine(ifstream&, unsigned int);
+	OECt **load_ct(ifstream *);
 	/** \brief Class constructor
 	 *
 	 * m is the number of columns per row,
@@ -135,13 +139,12 @@ private:
 	void encMsg(GT, string, string);
 	string stdsha256(const string);
 	void append_enc_cell_file(string, const unsigned char *, int);
-	OECt **load_ct(ifstream *);
+	fstream &GotoLine(fstream&, unsigned int);
 	OECt **load_ct(fstream *, int);
 	Big *create_query_attribute(string);
 	vector<string> get_select_params(string);
 	void save_token(OEKey *, string, int, int);
 	string read_line_from_file(int, string);
-	fstream &GotoLine(fstream&, unsigned int);
 	string decMsg(GT M, string Msg);
 	void set_parameters(string);
 	OEKey *load_token(string, int);
