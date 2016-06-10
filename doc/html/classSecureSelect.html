@@ -112,11 +112,25 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a1a556c61d392fa9d2dfd1eb6684bafc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4b912c3407b0664ae37d2ccfce4eafc5"><td class="memItemLeft" align="right" valign="top">vector&lt; string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSecureSelect.html#a4b912c3407b0664ae37d2ccfce4eafc5">ApplyMToken</a> (string, string, string)</td></tr>
 <tr class="separator:a4b912c3407b0664ae37d2ccfce4eafc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a168537e2cf5070fe9b137239a2d6155e"><td class="memItemLeft" align="right" valign="top">vector&lt; string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSecureSelect.html#a168537e2cf5070fe9b137239a2d6155e">ApplyMTokenMT</a> (string, string, string, int)</td></tr>
+<tr class="separator:a168537e2cf5070fe9b137239a2d6155e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a177b3724ce3e8ea4695b2950546d596d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a177b3724ce3e8ea4695b2950546d596d"></a>
 ifstream &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>GotoLine</b> (ifstream &amp;, unsigned int)</td></tr>
 <tr class="separator:a177b3724ce3e8ea4695b2950546d596d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2163cc84d91843d5ba52876cf75d9d83"><td class="memItemLeft" align="right" valign="top">OECt **&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSecureSelect.html#a2163cc84d91843d5ba52876cf75d9d83">load_ct</a> (ifstream *)</td></tr>
 <tr class="separator:a2163cc84d91843d5ba52876cf75d9d83"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:affb3955cbfae50ba7bac4c487aef0113"><td class="memItemLeft" align="right" valign="top">OECt **&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSecureSelect.html#affb3955cbfae50ba7bac4c487aef0113">load_ct</a> (fstream *, int)</td></tr>
+<tr class="separator:affb3955cbfae50ba7bac4c487aef0113"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a772ad7704ae82ada1dfbbafdde5def20"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a772ad7704ae82ada1dfbbafdde5def20"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>getMilliCount</b> ()</td></tr>
+<tr class="separator:a772ad7704ae82ada1dfbbafdde5def20"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8b3934a352f33f8ca62d6ebe13e1c530"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8b3934a352f33f8ca62d6ebe13e1c530"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>getMilliSpan</b> (int)</td></tr>
+<tr class="separator:a8b3934a352f33f8ca62d6ebe13e1c530"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf030b491e451b677f574098c9710327"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSecureSelect.html#adf030b491e451b677f574098c9710327">read_line_from_file</a> (int, string)</td></tr>
+<tr class="separator:adf030b491e451b677f574098c9710327"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a58b6ca8e574976a632d8f862b939b877"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSecureSelect.html#a58b6ca8e574976a632d8f862b939b877">decMsg</a> (GT M, string Msg)</td></tr>
+<tr class="separator:a58b6ca8e574976a632d8f862b939b877"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a88cd629de7214c05eb86683b058bacd5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSecureSelect.html#a88cd629de7214c05eb86683b058bacd5">SecureSelect</a> (int m, PFC *pfc_, Big order_)</td></tr>
 <tr class="memdesc:a88cd629de7214c05eb86683b058bacd5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class constructor.  <a href="#a88cd629de7214c05eb86683b058bacd5">More...</a><br/></td></tr>
 <tr class="separator:a88cd629de7214c05eb86683b058bacd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -223,6 +237,46 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a168537e2cf5070fe9b137239a2d6155e"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">vector&lt; string &gt; SecureSelect::ApplyMTokenMT </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>query_name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>db_name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>res_name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>num_threads</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Multi-thread version of ApplyMToken.</p>
+<p>num_threads is the number of threads in which the decryption will be divided. </p>
+
+</div>
+</div>
 <a class="anchor" id="aab33712ef6fbbe6922a2d8156b88dc27"></a>
 <div class="memitem">
 <div class="memproto">
@@ -322,6 +376,36 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p>Get a token file name (query_name) and the database name (db_name).</p>
 <p>Execute the query for the desiderd database and return all the founded results in a vector. </p>
+
+</div>
+</div>
+<a class="anchor" id="a58b6ca8e574976a632d8f862b939b877"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string SecureSelect::decMsg </td>
+          <td>(</td>
+          <td class="paramtype">GT&#160;</td>
+          <td class="paramname"><em>M</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>Msg</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Get an aes key (M) and a message (Msg), retrieve the real key from M and decrypt Msg.</p>
+<p>Return the decryption result if the sha256 from Msg conicide with the original one, an empty string othewise. </p>
+<p>Decrypt using openssl</p>
+<p>Check with sha256 if the decryption were good </p>
 
 </div>
 </div>
@@ -425,6 +509,35 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="affb3955cbfae50ba7bac4c487aef0113"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">OECt ** SecureSelect::load_ct </td>
+          <td>(</td>
+          <td class="paramtype">fstream *&#160;</td>
+          <td class="paramname"><em>inputFile</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>row_num</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Load the ciphertext for the row number row_num stored in inputFile, return the loaded ciphertext. </p>
+<p>Load ciphertext of length l(+1)</p>
+<p>Load ciphertexts of length k(+1) </p>
+
+</div>
+</div>
 <a class="anchor" id="ad7a2125393de550771e4e9177a1552b3"></a>
 <div class="memitem">
 <div class="memproto">
@@ -440,6 +553,33 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p>Load a previously created key, stored in key_name.</p>
 <p>Put it in msks variable and return true if everything is ok. </p>
+
+</div>
+</div>
+<a class="anchor" id="adf030b491e451b677f574098c9710327"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string SecureSelect::read_line_from_file </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>lnum</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>fname</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Read and return line number lnum from file fname. </p>
 
 </div>
 </div>

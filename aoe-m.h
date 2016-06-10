@@ -107,8 +107,14 @@ public:
 	int ApplyPToken(string, string, string);
 	int ApplyPTokenMT(string, string, string, int);
 	vector<string> ApplyMToken(string, string, string);
+	vector<string> ApplyMTokenMT(string, string, string, int);
 	ifstream &GotoLine(ifstream&, unsigned int);
 	OECt **load_ct(ifstream *);
+	OECt **load_ct(fstream *, int);
+	int getMilliCount();
+	int getMilliSpan(int);
+	string read_line_from_file(int, string);
+	string decMsg(GT M, string Msg);
 	/** \brief Class constructor
 	 *
 	 * m is the number of columns per row,
@@ -140,15 +146,10 @@ private:
 	string stdsha256(const string);
 	void append_enc_cell_file(string, const unsigned char *, int);
 	fstream &GotoLine(fstream&, unsigned int);
-	OECt **load_ct(fstream *, int);
 	Big *create_query_attribute(string);
 	vector<string> get_select_params(string);
 	void save_token(OEKey *, string, int, int);
-	string read_line_from_file(int, string);
-	string decMsg(GT M, string Msg);
 	void set_parameters(string);
 	OEKey *load_token(string, int);
 	OEKey *load_token(string, int, vector<int>&);
-	int getMilliCount();
-	int getMilliSpan(int);
 };

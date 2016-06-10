@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['gentoken',['GenToken',['../classSecureSelect.html#a88e8f870930dfbeae24d355412b1d0a3',1,'SecureSelect']]]
+  ['encryptrows',['EncryptRows',['../classSecureSelect.html#ada64a34744ec0598327f8e926c7fa2d6',1,'SecureSelect']]]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['securedb',['SecureDB',['../classSecureDB.html#ab4c368e84ac078f9f598a8cd1da25ed7',1,'SecureDB']]]
+  ['read_5fline_5ffrom_5ffile',['read_line_from_file',['../classSecureSelect.html#adf030b491e451b677f574098c9710327',1,'SecureSelect']]]
 ];

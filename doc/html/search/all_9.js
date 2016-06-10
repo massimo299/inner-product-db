@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['secureselect',['SecureSelect',['../classSecureSelect.html',1,'SecureSelect'],['../classSecureSelect.html#a88cd629de7214c05eb86683b058bacd5',1,'SecureSelect::SecureSelect()']]]
+  ['pfc',['pfc',['../classSecureSelect.html#acd8fd34bdde543ca9711ac5e266a094d',1,'SecureSelect']]]
 ];

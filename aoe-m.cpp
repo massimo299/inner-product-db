@@ -1296,8 +1296,12 @@ struct thread_data{
 	int num_threads;
 	int num_lines;
 	string db_enc_ct;
+	string db_enc_msgs;
+	vector<int> sel_params;
+	int tok_num;
 	string res_name;
 	OEKey *pkey;
+	OEKey ***mkey;
 	SecureSelect *sec_sel;
 	vector<string> results;
 };
@@ -1312,7 +1316,7 @@ void *applyPTokenThread(void *threadarg)
 	my_data = (struct thread_data *) threadarg;
 	int tid = my_data->thread_id;
 
-	int starting_row = ((my_data->num_lines/my_data->num_threads)*my_data->thread_id);
+	int starting_row = ((my_data->num_lines/my_data->num_threads)*tid);
 	OECt **cts;
 	GT dec_res;
 
@@ -1341,13 +1345,13 @@ void *applyPTokenThread(void *threadarg)
 		}
 
 		#ifdef VERBOSE
-		int start = getMilliCount();
+		int start = my_data->sec_sel->getMilliCount();
 		#endif
 
 		dec_res = my_data->sec_sel->aoen->aoe->PDecrypt(cts[0],my_data->pkey);
 
 		#ifdef VERBOSE
-		int milliSecondsElapsed = getMilliSpan(start);
+		int milliSecondsElapsed = my_data->sec_sel->getMilliSpan(start);
 		cout << "\tPredicate decryption time: " << milliSecondsElapsed << endl;
 		#endif
 
@@ -1397,10 +1401,11 @@ SecureSelect::ApplyPTokenMT(string query_name,string db_name, string res_name, i
 	void *status;
 	struct thread_data td[num_threads];
 
-	// Initialize and set thread joinable
+	/* Initialize and set thread joinable */
 	pthread_attr_init(&attr);
 	pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
 
+	/* Execute threads */
 	for(int i=0;i<num_threads;i++){
 		#ifdef VERBOSE
 		cout << "ApplyPTokenMT() : creating thread, " << i << endl;
@@ -1420,7 +1425,7 @@ SecureSelect::ApplyPTokenMT(string query_name,string db_name, string res_name, i
 		}
 	}
 
-	// Free attribute and wait for the other threads
+	/* Free attribute and wait for threads results */
 	ofstream results(res_name);
 	pthread_attr_destroy(&attr);
 	for(int i=0; i < num_threads; i++ ){
@@ -1443,7 +1448,265 @@ SecureSelect::ApplyPTokenMT(string query_name,string db_name, string res_name, i
 		cout << "  exiting with " << res_thread->size() << " results" << endl;
 		#endif
 	}
+
+	/* Apply ptoken on remaining lines */
+	ifstream db_cts(db_enc_ct);
+	GotoLine(db_cts, (num_lines)*(10+4*l+4*n*k+7*n));
+	int n_;
+	OECt **cts;
+	GT dec_res;
+	for(int i=0;i<remaining_lines;i++){
+		db_cts >> n_;
+		if(n!=n_){
+			cout << "Db's parameters different from key's" << endl;
+			
+			return res_num;
+		}
+		#ifdef VERBOSE
+		cout << "Thread id: Main Row: " << num_lines+1+i << endl;
+		#endif
+
+		cts = load_ct(&db_cts);
+		if(cts==NULL){
+			cout << "Error while loading ciphertext" << endl;
+			return res_num;
+		}
+
+		#ifdef VERBOSE
+		int start = getMilliCount();
+		#endif
+
+		dec_res = aoen->aoe->PDecrypt(cts[0],pkey);
+
+		#ifdef VERBOSE
+		int milliSecondsElapsed = getMilliSpan(start);
+		cout << "\tPredicate decryption time: " << milliSecondsElapsed << endl;
+		#endif
+
+		if(dec_res==(GT)1){ /* Row match query */
+			results << num_lines+i << endl;
+			res_num++;
+		}
+	}
+	db_cts.close();
+
 	results.close();
 
 	return res_num;
+}
+
+void *applyMTokenThread(void *threadarg){
+	PFC pfc(AES_SECURITY);
+	vector<string> *results = new vector<string>;
+	int err = -1;
+	struct thread_data *my_data;
+
+	my_data = (struct thread_data *) threadarg;
+	int tid = my_data->thread_id;
+
+	int starting_line = ((my_data->num_lines/my_data->num_threads)*tid);
+	OECt **cts;
+	GT dec_key;
+	string encoded, decoded;
+
+	ifstream res_file(my_data->res_name);
+	my_data->sec_sel->GotoLine(res_file,starting_line);
+	int line_num = starting_line;
+	fstream db_cts(my_data->db_enc_ct);
+	int row_num;
+	while(line_num<((my_data->num_lines/my_data->num_threads)*(tid+1))){
+		res_file >> row_num;
+		cts = my_data->sec_sel->load_ct(&db_cts, row_num);
+		if(cts==NULL){
+			cout << "Error while loading ciphertext" << endl;
+			pthread_exit(&err);
+		}
+
+		#ifdef VERBOSE
+		cout << "Thread id: " << tid << " Row: " << row_num+1 << " Line: " << line_num+1 << endl;
+		#endif
+
+		/* Decryption for every element in sel_params */
+		for(int i=0;i<my_data->tok_num;i++){
+			#ifdef VERBOSE
+			int start = my_data->sec_sel->getMilliCount();
+			#endif
+
+			dec_key = my_data->sec_sel->aoen->aoe->MDecrypt(cts,my_data->mkey[i],my_data->sel_params.at(i));
+
+			#ifdef VERBOSE
+			int milliSecondsElapsed = my_data->sec_sel->getMilliSpan(start);
+			cout << "\tMessage decryption time: " << milliSecondsElapsed << endl;
+			#endif
+
+			encoded = my_data->sec_sel->read_line_from_file(my_data->sel_params.at(i)-1+(row_num*(my_data->sec_sel->n)),my_data->db_enc_msgs);
+			decoded = base64_decode(encoded);
+			string tmp = my_data->sec_sel->decMsg(dec_key, decoded);
+
+			if(tmp.compare("")!=0)
+				results->push_back(tmp);
+		}
+		line_num++;
+	}
+	db_cts.close();
+	res_file.close();
+
+	pthread_exit(results);
+}
+
+/**
+ * Multi-thread version of ApplyMToken.
+ *
+ * num_threads is the number of threads in which the decryption will be divided.
+ */
+vector<string>
+SecureSelect::ApplyMTokenMT(string query_name,string db_name, string res_name, int num_threads){
+
+	set_parameters(query_name+"_mtok_l");
+
+	vector<int> sel_params;
+	vector<string> results;
+	string encoded,decoded;
+
+	/* Set name for ciphertexts and messages in db */
+	string db_enc_ct = db_name+"_enc_ct";
+	string db_enc_msgs = db_name+"_enc_msgs";
+
+	/* Enumerate the message keys */
+	string mtok = query_name+"_mtok";
+	int tok_num=0;
+	stringstream ss2;
+	ss2 << mtok << tok_num << "_k";
+	string tok_res = ss2.str();
+	while(ifstream(tok_res)){
+		tok_num++;
+		stringstream ss;
+		ss << mtok << tok_num << "_k";
+		tok_res = ss.str();
+	}
+
+	/* Message keys loading */
+	OEKey **mkey[tok_num];
+
+	OEKey *mkey_l = load_token(mtok+"_l", l+1);
+
+	for(int i=0;i<tok_num;i++){
+		stringstream ss;
+		ss << mtok << i;
+		string tok_res = ss.str();
+
+		mkey[i] = new OEKey*[2];
+		mkey[i][0] = mkey_l;
+		mkey[i][1] = load_token(tok_res+"_k", k+1, sel_params);
+	}
+
+	/* Counting number of rows in the results file */
+	ifstream res_f(res_name);
+	string line;
+	int num_res = 0;
+	while(getline(res_f,line))
+		num_res++;
+	res_f.close();
+	int remaining_res = num_res%num_threads;
+	num_res = num_res-remaining_res;
+
+	int rc;
+	pthread_t threads[num_threads];
+	pthread_attr_t attr;
+	void *status;
+	struct thread_data td[num_threads];
+
+	// Initialize and set thread joinable
+	pthread_attr_init(&attr);
+	pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
+
+	/* Execute threads */
+	for(int i=0;i<num_threads;i++){
+		#ifdef VERBOSE
+		cout << "ApplyPTokenMT() : creating thread, " << i << endl;
+		#endif
+
+		td[i].thread_id = i;
+		td[i].num_threads = num_threads;
+		td[i].num_lines = num_res;
+		td[i].db_enc_ct = db_enc_ct;
+		td[i].db_enc_msgs = db_enc_msgs;
+		td[i].sel_params = sel_params;
+		td[i].tok_num = tok_num;
+		td[i].res_name = res_name;
+		td[i].mkey = mkey;
+		td[i].sec_sel = this;
+		rc = pthread_create(&threads[i], NULL, applyMTokenThread, (void *)&td[i] );
+		if (rc){
+			cout << "Error:unable to create thread," << rc << endl;
+			return results;
+		}
+	}
+
+	/* Free attribute and wait for threads results */
+	pthread_attr_destroy(&attr);
+	for(int i=0; i < num_threads; i++ ){
+		rc = pthread_join(threads[i], &status);
+		if (rc){
+			cout << "Error:unable to join," << rc << endl;
+			return results;
+		}
+		int err = *(int *) status;
+		if(err == -1)
+			return results;
+
+		vector<string> *res_thread = (vector<string> *) status;
+		results.insert(results.end(), res_thread->begin(), res_thread->end());
+
+		#ifdef VERBOSE
+		cout << "Main: completed thread id :" << i ;
+		cout << "  exiting with " << res_thread->size() << " results" << endl;
+		#endif
+	}
+
+	/* Apply mtoken on remaining lines */
+	fstream db_cts(db_enc_ct);
+	ifstream res_file(res_name);
+	GotoLine(res_file, num_res);
+	OECt **cts;
+	GT dec_key;
+	int row_num;
+	for(int j=0;j<remaining_res;j++){
+		res_file >> row_num;
+
+		cts = load_ct(&db_cts, row_num);
+		if(cts==NULL){
+			cout << "Error while loading ciphertext" << endl;
+			return results;
+		}
+
+		#ifdef VERBOSE
+		cout << "Thread id: Main Row: " << num_res+1+j << endl;
+		#endif
+
+		/* Decryption for every element in sel_params */
+		for(int i=0;i<tok_num;i++){
+			#ifdef VERBOSE
+			int start = getMilliCount();
+			#endif
+
+			dec_key = aoen->aoe->MDecrypt(cts,mkey[i],sel_params.at(i));
+
+			#ifdef VERBOSE
+			int milliSecondsElapsed = getMilliSpan(start);
+			cout << "\tMessage decryption time: " << milliSecondsElapsed << endl;
+			#endif
+
+			encoded = read_line_from_file(sel_params.at(i)-1+(row_num*n),db_enc_msgs);
+			decoded = base64_decode(encoded);
+			string tmp = decMsg(dec_key, decoded);
+
+			if(tmp.compare("")!=0)
+				results.push_back(tmp);
+		}
+	}
+	db_cts.close();
+	res_file.close();
+
+	return results;
 }

@@ -29,10 +29,24 @@ int \hyperlink{classSecureSelect_a1a556c61d392fa9d2dfd1eb6684bafc1}{Apply\-P\-To
 \item 
 vector$<$ string $>$ \hyperlink{classSecureSelect_a4b912c3407b0664ae37d2ccfce4eafc5}{Apply\-M\-Token} (string, string, string)
 \item 
+vector$<$ string $>$ \hyperlink{classSecureSelect_a168537e2cf5070fe9b137239a2d6155e}{Apply\-M\-Token\-M\-T} (string, string, string, int)
+\item 
 \hypertarget{classSecureSelect_a177b3724ce3e8ea4695b2950546d596d}{ifstream \& {\bfseries Goto\-Line} (ifstream \&, unsigned int)}\label{classSecureSelect_a177b3724ce3e8ea4695b2950546d596d}
 
 \item 
 O\-E\-Ct $\ast$$\ast$ \hyperlink{classSecureSelect_a2163cc84d91843d5ba52876cf75d9d83}{load\-\_\-ct} (ifstream $\ast$)
+\item 
+O\-E\-Ct $\ast$$\ast$ \hyperlink{classSecureSelect_affb3955cbfae50ba7bac4c487aef0113}{load\-\_\-ct} (fstream $\ast$, int)
+\item 
+\hypertarget{classSecureSelect_a772ad7704ae82ada1dfbbafdde5def20}{int {\bfseries get\-Milli\-Count} ()}\label{classSecureSelect_a772ad7704ae82ada1dfbbafdde5def20}
+
+\item 
+\hypertarget{classSecureSelect_a8b3934a352f33f8ca62d6ebe13e1c530}{int {\bfseries get\-Milli\-Span} (int)}\label{classSecureSelect_a8b3934a352f33f8ca62d6ebe13e1c530}
+
+\item 
+string \hyperlink{classSecureSelect_adf030b491e451b677f574098c9710327}{read\-\_\-line\-\_\-from\-\_\-file} (int, string)
+\item 
+string \hyperlink{classSecureSelect_a58b6ca8e574976a632d8f862b939b877}{dec\-Msg} (G\-T M, string Msg)
 \item 
 \hyperlink{classSecureSelect_a88cd629de7214c05eb86683b058bacd5}{Secure\-Select} (int m, P\-F\-C $\ast$pfc\-\_\-, Big order\-\_\-)
 \begin{DoxyCompactList}\small\item\em Class constructor. \end{DoxyCompactList}\item 
@@ -91,7 +105,19 @@ m is the number of columns per row, pfc\-\_\- is the curve, order\-\_\- its orde
 )}}\label{classSecureSelect_a4b912c3407b0664ae37d2ccfce4eafc5}
 Get a token file name (query\-\_\-name), the database name (db\-\_\-name) and the results name (res\-\_\-name).
 
-Execute the mtoken for all the rows in res\-\_\-name and return all the founded results in a vector. \hypertarget{classSecureSelect_aab33712ef6fbbe6922a2d8156b88dc27}{\index{Secure\-Select@{Secure\-Select}!Apply\-P\-Token@{Apply\-P\-Token}}
+Execute the mtoken for all the rows in res\-\_\-name and return all the founded results in a vector. \hypertarget{classSecureSelect_a168537e2cf5070fe9b137239a2d6155e}{\index{Secure\-Select@{Secure\-Select}!Apply\-M\-Token\-M\-T@{Apply\-M\-Token\-M\-T}}
+\index{Apply\-M\-Token\-M\-T@{Apply\-M\-Token\-M\-T}!SecureSelect@{Secure\-Select}}
+\subsubsection[{Apply\-M\-Token\-M\-T}]{\setlength{\rightskip}{0pt plus 5cm}vector$<$ string $>$ Secure\-Select\-::\-Apply\-M\-Token\-M\-T (
+\begin{DoxyParamCaption}
+\item[{string}]{query\-\_\-name, }
+\item[{string}]{db\-\_\-name, }
+\item[{string}]{res\-\_\-name, }
+\item[{int}]{num\-\_\-threads}
+\end{DoxyParamCaption}
+)}}\label{classSecureSelect_a168537e2cf5070fe9b137239a2d6155e}
+Multi-\/thread version of Apply\-M\-Token.
+
+num\-\_\-threads is the number of threads in which the decryption will be divided. \hypertarget{classSecureSelect_aab33712ef6fbbe6922a2d8156b88dc27}{\index{Secure\-Select@{Secure\-Select}!Apply\-P\-Token@{Apply\-P\-Token}}
 \index{Apply\-P\-Token@{Apply\-P\-Token}!SecureSelect@{Secure\-Select}}
 \subsubsection[{Apply\-P\-Token}]{\setlength{\rightskip}{0pt plus 5cm}int Secure\-Select\-::\-Apply\-P\-Token (
 \begin{DoxyParamCaption}
@@ -124,7 +150,19 @@ num\-\_\-threads is the number of threads in which the decryption will be divide
 )}}\label{classSecureSelect_a55312fbd535adba75ba328d060faff35}
 Get a token file name (query\-\_\-name) and the database name (db\-\_\-name).
 
-Execute the query for the desiderd database and return all the founded results in a vector. \hypertarget{classSecureSelect_ada64a34744ec0598327f8e926c7fa2d6}{\index{Secure\-Select@{Secure\-Select}!Encrypt\-Rows@{Encrypt\-Rows}}
+Execute the query for the desiderd database and return all the founded results in a vector. \hypertarget{classSecureSelect_a58b6ca8e574976a632d8f862b939b877}{\index{Secure\-Select@{Secure\-Select}!dec\-Msg@{dec\-Msg}}
+\index{dec\-Msg@{dec\-Msg}!SecureSelect@{Secure\-Select}}
+\subsubsection[{dec\-Msg}]{\setlength{\rightskip}{0pt plus 5cm}string Secure\-Select\-::dec\-Msg (
+\begin{DoxyParamCaption}
+\item[{G\-T}]{M, }
+\item[{string}]{Msg}
+\end{DoxyParamCaption}
+)}}\label{classSecureSelect_a58b6ca8e574976a632d8f862b939b877}
+Get an aes key (M) and a message (Msg), retrieve the real key from M and decrypt Msg.
+
+Return the decryption result if the sha256 from Msg conicide with the original one, an empty string othewise. Decrypt using openssl
+
+Check with sha256 if the decryption were good \hypertarget{classSecureSelect_ada64a34744ec0598327f8e926c7fa2d6}{\index{Secure\-Select@{Secure\-Select}!Encrypt\-Rows@{Encrypt\-Rows}}
 \index{Encrypt\-Rows@{Encrypt\-Rows}!SecureSelect@{Secure\-Select}}
 \subsubsection[{Encrypt\-Rows}]{\setlength{\rightskip}{0pt plus 5cm}void Secure\-Select\-::\-Encrypt\-Rows (
 \begin{DoxyParamCaption}
@@ -165,6 +203,16 @@ Create n+1 master keys and store them in a file called key\-\_\-name. \hypertarg
 )}}\label{classSecureSelect_a2163cc84d91843d5ba52876cf75d9d83}
 Load the ciphertext for a row stored in input\-File, return the loaded ciphertext. Load ciphertext of length l(+1)
 
+Load ciphertexts of length k(+1) \hypertarget{classSecureSelect_affb3955cbfae50ba7bac4c487aef0113}{\index{Secure\-Select@{Secure\-Select}!load\-\_\-ct@{load\-\_\-ct}}
+\index{load\-\_\-ct@{load\-\_\-ct}!SecureSelect@{Secure\-Select}}
+\subsubsection[{load\-\_\-ct}]{\setlength{\rightskip}{0pt plus 5cm}O\-E\-Ct $\ast$$\ast$ Secure\-Select\-::load\-\_\-ct (
+\begin{DoxyParamCaption}
+\item[{fstream $\ast$}]{input\-File, }
+\item[{int}]{row\-\_\-num}
+\end{DoxyParamCaption}
+)}}\label{classSecureSelect_affb3955cbfae50ba7bac4c487aef0113}
+Load the ciphertext for the row number row\-\_\-num stored in input\-File, return the loaded ciphertext. Load ciphertext of length l(+1)
+
 Load ciphertexts of length k(+1) \hypertarget{classSecureSelect_ad7a2125393de550771e4e9177a1552b3}{\index{Secure\-Select@{Secure\-Select}!Load\-Key@{Load\-Key}}
 \index{Load\-Key@{Load\-Key}!SecureSelect@{Secure\-Select}}
 \subsubsection[{Load\-Key}]{\setlength{\rightskip}{0pt plus 5cm}bool Secure\-Select\-::\-Load\-Key (
@@ -174,7 +222,15 @@ Load ciphertexts of length k(+1) \hypertarget{classSecureSelect_ad7a2125393de550
 )}}\label{classSecureSelect_ad7a2125393de550771e4e9177a1552b3}
 Load a previously created key, stored in key\-\_\-name.
 
-Put it in msks variable and return true if everything is ok. 
+Put it in msks variable and return true if everything is ok. \hypertarget{classSecureSelect_adf030b491e451b677f574098c9710327}{\index{Secure\-Select@{Secure\-Select}!read\-\_\-line\-\_\-from\-\_\-file@{read\-\_\-line\-\_\-from\-\_\-file}}
+\index{read\-\_\-line\-\_\-from\-\_\-file@{read\-\_\-line\-\_\-from\-\_\-file}!SecureSelect@{Secure\-Select}}
+\subsubsection[{read\-\_\-line\-\_\-from\-\_\-file}]{\setlength{\rightskip}{0pt plus 5cm}string Secure\-Select\-::read\-\_\-line\-\_\-from\-\_\-file (
+\begin{DoxyParamCaption}
+\item[{int}]{lnum, }
+\item[{string}]{fname}
+\end{DoxyParamCaption}
+)}}\label{classSecureSelect_adf030b491e451b677f574098c9710327}
+Read and return line number lnum from file fname. 
 
 \subsection{Member Data Documentation}
 \hypertarget{classSecureSelect_ace499f63f2609b19c429bee5638db42d}{\index{Secure\-Select@{Secure\-Select}!aoen@{aoen}}

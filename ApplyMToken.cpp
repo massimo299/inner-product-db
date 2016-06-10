@@ -28,9 +28,9 @@ int getMilliSpan(int nTimeStart){
 main(int argc, char *argv[]){
 
 	/** Check the number of parameters */
-	if (argc < 4) {
+	if (argc < 5) {
 		/** Tell the user how to run the program */
-		cerr << "Usage: " << argv[0] << " token encrows results" << endl;
+		cerr << "Usage: " << argv[0] << " token encrows results num_threads" << endl;
         	return 1;
 	}
 
@@ -43,6 +43,7 @@ main(int argc, char *argv[]){
 	string query_name(argv[1]);
 	string enctable_name(argv[2]);
 	string results_name(argv[3]);
+	int num_threads = atoi(argv[4]);
 
 	db = new SecureSelect(&pfc,pfc.order());
 
@@ -64,7 +65,8 @@ main(int argc, char *argv[]){
 	#ifdef VERBOSE
 	int start = getMilliCount();
 	#endif
-	vector<string> query_results = db->ApplyMToken(query_name, enctable_name, results_name);
+	vector<string> query_results = db->ApplyMTokenMT(query_name, enctable_name, results_name, num_threads);
+//	vector<string> query_results = db->ApplyMToken(query_name, enctable_name, results_name);
 	#ifdef VERBOSE
 	int milliSecondsElapsed = getMilliSpan(start);
 	cout << "\texec time " << milliSecondsElapsed << endl;
