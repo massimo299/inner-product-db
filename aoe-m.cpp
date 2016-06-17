@@ -489,9 +489,16 @@ SecureSelect::append_enc_cell_file(string fname, const unsigned char *Msg, int e
 void
 SecureSelect::encMsg(GT M, string Msg, string fname)
 {
-	Big aes_key_big = pfc->hash_to_aes_key(M);
 	char aes_key_char[128/8];
-	aes_key_char << aes_key_big;
+
+	// original method
+//	Big aes_key_big = pfc->hash_to_aes_key(M);
+//	aes_key_char << aes_key_big;
+
+	// to use when 'hash_to_aes_key' gives segmentation fault
+	stringstream ss; ss << M;
+	string s = ss.str().substr(6,16);
+	for (int i=0;i<16;i++) aes_key_char[i] = s[i];
 
 	/** Encrypt using openssl cbc */
 	/** init vector */
@@ -800,9 +807,16 @@ SecureSelect::read_line_from_file(int lnum, string fname)
 string
 SecureSelect::decMsg(GT M, string Msg){
 
-	Big aes_key_big = pfc->hash_to_aes_key(M);
 	char aes_key_char[128/8];
-	aes_key_char << aes_key_big;
+
+	// original method
+//	Big aes_key_big = pfc->hash_to_aes_key(M);
+//	aes_key_char << aes_key_big;
+
+	// to use when 'hash_to_aes_key' gives segmentation fault
+	stringstream ss; ss << M;
+	string s = ss.str().substr(6,16);
+	for (int i=0;i<16;i++) aes_key_char[i] = s[i];
 
 	/** Decrypt using openssl */
 	/* init vector */
