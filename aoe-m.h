@@ -102,6 +102,7 @@ public:
 	void KeyGen(string);
 	bool LoadKey(string);
 	void EncryptRows(string, string, int);
+	void EncryptRowsMT(string, string, int, int);
 	int GenToken(string, int);
 	vector<string> ApplyToken(string, string);
 	int ApplyPToken(string, string, string);
@@ -114,7 +115,11 @@ public:
 	int getMilliCount();
 	int getMilliSpan(int);
 	string read_line_from_file(int, string);
+	string encMsg(GT, string);
 	string decMsg(GT M, string Msg);
+	string *create_row(string, int);
+
+void save_cts(ofstream *, OECt **);
 	/** \brief Class constructor
 	 *
 	 * m is the number of columns per row,
@@ -140,8 +145,7 @@ private:
 	void saveMsks(string, OEMsk **);
 	vector<string> &split(const string&, char, vector<string>&);
 	vector<string> split(const string&, char);
-	string *create_row(string, int);
-	void save_cts(ofstream *, OECt **);
+	
 	void encMsg(GT, string, string);
 	string stdsha256(const string);
 	void append_enc_cell_file(string, const unsigned char *, int);

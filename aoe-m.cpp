@@ -170,7 +170,7 @@ AOENoise::EncryptRow(OEMsk **msks, Big *A, GT *M, int rand_lim){
 		X[i][2]=i+1;
 	}
 	X0[l-1]=1;
-	
+
 	return aoe->Encrypt(msks,X0,X,M);
 }
 
@@ -523,6 +523,46 @@ SecureSelect::encMsg(GT M, string Msg, string fname)
 	AES_cbc_encrypt((const unsigned char *)Msg.c_str(), enc_out, inputslength, &enc_key, iv_enc, AES_ENCRYPT);
 
 	append_enc_cell_file(fname,enc_out, encslength);
+
+}
+
+string
+SecureSelect::encMsg(GT M, string Msg)
+{
+	char aes_key_char[128/8];
+
+	// original method
+//	Big aes_key_big = pfc->hash_to_aes_key(M);
+//	aes_key_char << aes_key_big;
+
+	// to use when 'hash_to_aes_key' gives segmentation fault
+	stringstream ss; ss << M;
+	string s = ss.str().substr(6,16);
+	for (int i=0;i<16;i++) aes_key_char[i] = s[i];
+
+	/** Encrypt using openssl cbc */
+	/** init vector */
+	unsigned char iv_enc[AES_BLOCK_SIZE];
+	for(int i=0;i<AES_BLOCK_SIZE;i++)
+		iv_enc[i]=0;
+
+	/** Create sha256 for Msg and add first 128 bit at the end of it */
+	string sha = stdsha256(Msg);
+	sha = base64_encode((const unsigned char*)sha.c_str(),sha.size());
+	sha = sha.substr(0,16);
+	Msg = Msg+sha;
+
+	size_t inputslength = Msg.size();
+	const size_t encslength = ((inputslength + AES_BLOCK_SIZE) / AES_BLOCK_SIZE) * AES_BLOCK_SIZE;
+	unsigned char enc_out[encslength];
+	memset(enc_out, 0, sizeof(enc_out));
+
+	/** Execute aes-cbc-128 */
+	AES_KEY enc_key;
+	AES_set_encrypt_key((const unsigned char *)aes_key_char, 128, &enc_key);
+	AES_cbc_encrypt((const unsigned char *)Msg.c_str(), enc_out, inputslength, &enc_key, iv_enc, AES_ENCRYPT);
+
+	return base64_encode(enc_out,encslength);
 
 }
 
@@ -1309,16 +1349,245 @@ struct thread_data{
 	int  thread_id;
 	int num_threads;
 	int num_lines;
+	string rows_name;
 	string db_enc_ct;
 	string db_enc_msgs;
 	vector<int> sel_params;
 	int tok_num;
 	string res_name;
+	OEMsk **msks;
+	int rand_lim;
 	OEKey *pkey;
 	OEKey ***mkey;
 	SecureSelect *sec_sel;
 	vector<string> results;
+	pthread_t to_wait_thread;
 };
+
+void *encryptRowsThread(void *threadarg)
+{
+	PFC pfc(AES_SECURITY);
+	vector<OECt **> cts_results;
+	vector<string> enc_rows_results;
+	int err = -1, ok = 1;
+	struct thread_data *my_data;
+
+	my_data = (struct thread_data *) threadarg;
+	int tid = my_data->thread_id;
+	int n = my_data->sec_sel->n;
+
+	int starting_row = ((my_data->num_lines/my_data->num_threads)*tid);
+	string line, *row, cell;
+	hash<string> hash_fn;
+	size_t str_hash;
+	Big X0[n];
+	GT M[n];
+	G1 tmpg1;
+	G2 tmpg2;
+
+	ifstream rows(my_data->rows_name);
+	int n_, row_num=starting_row;
+	int l=2*n+2, k=2;
+	my_data->sec_sel->GotoLine(rows, starting_row);
+
+	AOENoise *aoen = new AOENoise(n,&pfc,get_mip(),pfc.order());
+	aoen->aoe->omega = my_data->sec_sel->aoen->aoe->omega;
+	aoen->aoe->ab1[0] = my_data->sec_sel->aoen->aoe->ab1[0]; aoen->aoe->ab1[1] = my_data->sec_sel->aoen->aoe->ab1[1];
+	aoen->aoe->ab2[0] = my_data->sec_sel->aoen->aoe->ab2[0]; aoen->aoe->ab2[1] = my_data->sec_sel->aoen->aoe->ab2[1];
+	aoen->aoe->g = my_data->sec_sel->aoen->aoe->g; aoen->aoe->g2 = my_data->sec_sel->aoen->aoe->g2;
+	aoen->aoe->oe = new OE(l+1,&pfc,get_mip(),pfc.order());
+	/* Read file row by row */
+	for(int i=0;i<(my_data->num_lines/my_data->num_threads);i++){
+		getline(rows, line);
+		row=my_data->sec_sel->create_row(line,n);
+
+		if(row!=NULL){
+			/* Create X0 attribute */
+			for(int j=0;j<n;j++){
+				cell = row[j];
+		   		str_hash = hash_fn(cell);
+				X0[j]=str_hash;
+			}
+			/* Create n M keys (random) to use as aes key, encrypt and store the row */
+			for(int j=0;j<n;j++){
+				pfc.random(tmpg1); pfc.random(tmpg2);
+				M[j] = pfc.pairing(tmpg2,tmpg1);
+				enc_rows_results.push_back(my_data->sec_sel->encMsg(M[j],row[j]));
+			}
+			/* Encrypt the n keys and write them in the file */
+			#ifdef VERBOSE
+			cout << "Thread id: " << tid << " Encrypting row " << row_num+1 << " with n=" << n << endl;
+			int start = my_data->sec_sel->getMilliCount();
+			#endif
+			cts_results.push_back(aoen->EncryptRow(my_data->msks,X0,M, my_data->rand_lim));
+			#ifdef VERBOSE
+			int milliSecondsElapsed = my_data->sec_sel->getMilliSpan(start);
+			cout << "Thread id: " << tid << " Encrypting row time: " << milliSecondsElapsed << endl;
+			#endif
+			row_num++;
+		}
+		else{
+			cout << "Error while reading a row" << endl;
+			pthread_exit(&err);
+		}
+	}
+	rows.close();
+
+	/* Waiting for the previous thread to finish */
+	void *status;
+	int rc;
+	if(tid != 0){
+		rc=pthread_join(my_data->to_wait_thread, &status);
+		if (rc){
+			cout << "Error:unable to join," << rc << endl;
+			pthread_exit(&err);
+		}
+		int err = *(int *) status;
+		if(err==-1)
+			pthread_exit(&err);
+	}
+
+	/* Writing outputs to files */
+	ofstream rec("data/row_8_enc_ct",ios::app);
+	ofstream rem("data/row_8_enc_msgs",ios::app);
+	for(int j=0;j<cts_results.size();j++){
+		my_data->sec_sel->save_cts(&rec, cts_results.at(j));
+		for(int num=0;num<n;num++)
+			rem << enc_rows_results.at((j*n)+num) << endl;
+	}
+	rec.close();
+	rem.close();
+
+	pthread_exit(&ok);
+}
+
+/**
+ * Multi-thread version of EncryptRows.
+ *
+ * num_threads is the number of threads in which the encryption will be divided.
+ */
+void
+SecureSelect::EncryptRowsMT(string rows_name, string enctable_name, int rand_lim, int num_threads){
+
+	/* Check if rows file exists */
+	if (!ifstream(rows_name)){
+		cout << "Rows file doesn't exist" << endl;
+		return;
+	}
+
+	/* Counting the number of rows */
+	fstream rows(rows_name);
+	string line;
+	int num_lines = 0;
+	while(getline(rows,line))
+		num_lines++;
+	rows.close();
+	int remaining_lines = num_lines%num_threads;
+	num_lines = num_lines-remaining_lines;
+
+	int rc;
+	pthread_t threads[num_threads];
+	pthread_attr_t attr;
+	void *status;
+	struct thread_data td[num_threads];
+
+	/* Initialize and set thread joinable */
+	pthread_attr_init(&attr);
+	pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
+
+	/* Execute threads */
+	for(int i=0;i<num_threads;i++){
+		#ifdef VERBOSE
+		cout << "EncryptRowsMT() : creating thread, " << i << endl;
+		#endif
+
+		td[i].thread_id = i;
+		td[i].num_threads = num_threads;
+		td[i].num_lines = num_lines;
+		td[i].rows_name = rows_name;
+		td[i].msks = msks;
+		td[i].rand_lim = rand_lim;
+		if(i>0) td[i].to_wait_thread = threads[i-1];
+		td[i].sec_sel = this;
+		rc = pthread_create(&threads[i], NULL, encryptRowsThread, (void *)&td[i] );
+		if (rc){
+			cout << "Error:unable to create thread," << rc << endl;
+			return ;
+		}
+	}
+
+	/* Set encrypted rows file name */
+	string rows_enc_msgs = enctable_name+"_enc_msgs";
+
+	/* Set ciphertexts file name */
+	string rows_enc_ct = enctable_name+"_enc_ct";
+
+	/* Free attribute and wait for threads results */
+	pthread_attr_destroy(&attr);
+
+	rc = pthread_join(threads[num_threads-1], &status);
+	if (rc){
+		cout << "Error:unable to join," << rc << endl;
+		return ;
+	}
+	int err = *(int *) status;
+	if(err == -1)
+		return ;
+
+	/* Encrypting reamining lines */
+	ofstream rec(rows_enc_ct, ios::app);
+	if(remaining_lines>0){
+		ifstream rows(rows_name);
+		GotoLine(rows, num_lines);
+		string *row, cell;
+		OECt **cts;
+		hash<string> hash_fn;
+		size_t str_hash;
+		Big X0[n];
+		GT M[n];
+		G1 tmpg1;
+		G2 tmpg2;
+		int row_num = num_lines;
+		for(int i=0;i<remaining_lines;i++){
+			getline(rows,line);
+			row=create_row(line,n);
+
+			if(row!=NULL){
+				/* Create X0 attribute */
+				for(int i=0;i<n;i++){
+					cell = row[i];
+			   		str_hash = hash_fn(cell);
+					X0[i]=str_hash;
+				}
+				/* Create n M keys (random) to use as aes key, encrypt and store the row */
+				for(int i=0;i<n;i++){
+					pfc->random(tmpg1); pfc->random(tmpg2);
+					M[i] = pfc->pairing(tmpg2,tmpg1);
+					encMsg(M[i],row[i], rows_enc_msgs);
+				}
+				/* Encrypt the n keys and write them in the file */
+				#ifdef VERBOSE
+				cout << "\tEncrypting row " << row_num+1 << " with n=" << n << endl;
+				int start = getMilliCount();
+				#endif
+				cts = aoen->EncryptRow(msks,X0,M, rand_lim);
+				#ifdef VERBOSE
+				int milliSecondsElapsed = getMilliSpan(start);
+				cout << "\tEncrypting row time: " << milliSecondsElapsed << endl;
+				#endif
+
+				save_cts(&rec, cts);
+				row_num++;
+			}
+			else{
+				cout << "Error while reading a row" << endl;
+				return;
+			}
+		}
+	}
+
+	rec.close();
+}
 
 void *applyPTokenThread(void *threadarg)
 {
