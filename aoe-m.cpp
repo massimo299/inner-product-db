@@ -1448,8 +1448,8 @@ void *encryptRowsThread(void *threadarg)
 	}
 
 	/* Writing outputs to files */
-	ofstream rec("data/row_8_enc_ct",ios::app);
-	ofstream rem("data/row_8_enc_msgs",ios::app);
+	ofstream rec(my_data->db_enc_ct,ios::app);
+	ofstream rem(my_data->db_enc_msgs,ios::app);
 	for(int j=0;j<cts_results.size();j++){
 		my_data->sec_sel->save_cts(&rec, cts_results.at(j));
 		for(int num=0;num<n;num++)
@@ -1491,6 +1491,12 @@ SecureSelect::EncryptRowsMT(string rows_name, string enctable_name, int rand_lim
 	void *status;
 	struct thread_data td[num_threads];
 
+	/* Set encrypted rows file name */
+	string rows_enc_msgs = enctable_name+"_enc_msgs";
+
+	/* Set ciphertexts file name */
+	string rows_enc_ct = enctable_name+"_enc_ct";
+
 	/* Initialize and set thread joinable */
 	pthread_attr_init(&attr);
 	pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
@@ -1505,6 +1511,8 @@ SecureSelect::EncryptRowsMT(string rows_name, string enctable_name, int rand_lim
 		td[i].num_threads = num_threads;
 		td[i].num_lines = num_lines;
 		td[i].rows_name = rows_name;
+		td[i].db_enc_ct = rows_enc_ct;
+		td[i].db_enc_msgs = rows_enc_msgs;
 		td[i].msks = msks;
 		td[i].rand_lim = rand_lim;
 		if(i>0) td[i].to_wait_thread = threads[i-1];
@@ -1515,12 +1523,6 @@ SecureSelect::EncryptRowsMT(string rows_name, string enctable_name, int rand_lim
 			return ;
 		}
 	}
-
-	/* Set encrypted rows file name */
-	string rows_enc_msgs = enctable_name+"_enc_msgs";
-
-	/* Set ciphertexts file name */
-	string rows_enc_ct = enctable_name+"_enc_ct";
 
 	/* Free attribute and wait for threads results */
 	pthread_attr_destroy(&attr);
