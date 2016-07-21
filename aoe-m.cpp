@@ -956,7 +956,7 @@ SecureSelect::GenToken(string query_name, int rand_lim){
 	for(int i=0;i<sel_params.size();i++){
 		istringstream(sel_params.at(i)) >> j;
 		if(!(j>=1 && j<=n)){
-			cout << "Cell j doesn't exist (there are " << n << " cells)" << endl;
+			cout << "Cell" << j << " doesn't exist (there are " << n << " cells)" << endl;
 			return 0;
 		}
 	}
