@@ -118,8 +118,8 @@ public:
 	string encMsg(GT, string);
 	string decMsg(GT M, string Msg);
 	string *create_row(string, int);
+	void save_cts(ofstream *, OECt **);
 
-void save_cts(ofstream *, OECt **);
 	/** \brief Class constructor
 	 *
 	 * m is the number of columns per row,

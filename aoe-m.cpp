@@ -308,7 +308,14 @@ SecureSelect::saveMsks(string fname, OEMsk **msks)
  */
 void
 SecureSelect::KeyGen(string key_name){
+	#ifdef VERBOSE
+	int start = getMilliCount();
+	#endif
 	msks = aoen->RSetup();
+	#ifdef VERBOSE
+	int milliSecondsElapsed = getMilliSpan(start);
+	cout << "\tSetup exec time " << milliSecondsElapsed << endl;
+	#endif
 	saveMsks(key_name,msks);
 }
 
