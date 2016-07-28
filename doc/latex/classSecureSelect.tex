@@ -1,6 +1,5 @@
-\hypertarget{classSecureSelect}{\section{Secure\-Select Class Reference}
-\label{classSecureSelect}\index{Secure\-Select@{Secure\-Select}}
-}
+\hypertarget{classSecureSelect}{}\section{Secure\+Select Class Reference}
+\label{classSecureSelect}\index{Secure\+Select@{Secure\+Select}}
 
 
 The secure select main class.  
@@ -8,55 +7,63 @@ The secure select main class.
 
 
 
-{\ttfamily \#include $<$aoe-\/m.\-h$>$}
+{\ttfamily \#include $<$aoe-\/m.\+h$>$}
 
 \subsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-void \hyperlink{classSecureSelect_a72c8b1ac19619a6eeaa722f766e53b3f}{Key\-Gen} (string)
+void \hyperlink{classSecureSelect_a72c8b1ac19619a6eeaa722f766e53b3f}{Key\+Gen} (string)
 \item 
-bool \hyperlink{classSecureSelect_ad7a2125393de550771e4e9177a1552b3}{Load\-Key} (string)
+bool \hyperlink{classSecureSelect_ad7a2125393de550771e4e9177a1552b3}{Load\+Key} (string)
 \item 
-void \hyperlink{classSecureSelect_ada64a34744ec0598327f8e926c7fa2d6}{Encrypt\-Rows} (string, string, int)
+void \hyperlink{classSecureSelect_ada64a34744ec0598327f8e926c7fa2d6}{Encrypt\+Rows} (string, string, int)
 \item 
-int \hyperlink{classSecureSelect_a88e8f870930dfbeae24d355412b1d0a3}{Gen\-Token} (string, int)
+void \hyperlink{classSecureSelect_a8f760c424f6dc8277230be2f056dd1cc}{Encrypt\+Rows\+MT} (string, string, int, int)
 \item 
-vector$<$ string $>$ \hyperlink{classSecureSelect_a55312fbd535adba75ba328d060faff35}{Apply\-Token} (string, string)
+int \hyperlink{classSecureSelect_a88e8f870930dfbeae24d355412b1d0a3}{Gen\+Token} (string, int)
 \item 
-int \hyperlink{classSecureSelect_aab33712ef6fbbe6922a2d8156b88dc27}{Apply\-P\-Token} (string, string, string)
+vector$<$ string $>$ \hyperlink{classSecureSelect_a55312fbd535adba75ba328d060faff35}{Apply\+Token} (string, string)
 \item 
-int \hyperlink{classSecureSelect_a1a556c61d392fa9d2dfd1eb6684bafc1}{Apply\-P\-Token\-M\-T} (string, string, string, int)
+int \hyperlink{classSecureSelect_aab33712ef6fbbe6922a2d8156b88dc27}{Apply\+P\+Token} (string, string, string)
 \item 
-vector$<$ string $>$ \hyperlink{classSecureSelect_a4b912c3407b0664ae37d2ccfce4eafc5}{Apply\-M\-Token} (string, string, string)
+int \hyperlink{classSecureSelect_a1a556c61d392fa9d2dfd1eb6684bafc1}{Apply\+P\+Token\+MT} (string, string, string, int)
 \item 
-vector$<$ string $>$ \hyperlink{classSecureSelect_a168537e2cf5070fe9b137239a2d6155e}{Apply\-M\-Token\-M\-T} (string, string, string, int)
+vector$<$ string $>$ \hyperlink{classSecureSelect_a4b912c3407b0664ae37d2ccfce4eafc5}{Apply\+M\+Token} (string, string, string)
 \item 
-\hypertarget{classSecureSelect_a177b3724ce3e8ea4695b2950546d596d}{ifstream \& {\bfseries Goto\-Line} (ifstream \&, unsigned int)}\label{classSecureSelect_a177b3724ce3e8ea4695b2950546d596d}
+vector$<$ string $>$ \hyperlink{classSecureSelect_a168537e2cf5070fe9b137239a2d6155e}{Apply\+M\+Token\+MT} (string, string, string, int)
+\item 
+ifstream \& {\bfseries Goto\+Line} (ifstream \&, unsigned int)\hypertarget{classSecureSelect_a177b3724ce3e8ea4695b2950546d596d}{}\label{classSecureSelect_a177b3724ce3e8ea4695b2950546d596d}
 
 \item 
-O\-E\-Ct $\ast$$\ast$ \hyperlink{classSecureSelect_a2163cc84d91843d5ba52876cf75d9d83}{load\-\_\-ct} (ifstream $\ast$)
+O\+E\+Ct $\ast$$\ast$ \hyperlink{classSecureSelect_a2163cc84d91843d5ba52876cf75d9d83}{load\+\_\+ct} (ifstream $\ast$)
 \item 
-O\-E\-Ct $\ast$$\ast$ \hyperlink{classSecureSelect_affb3955cbfae50ba7bac4c487aef0113}{load\-\_\-ct} (fstream $\ast$, int)
+O\+E\+Ct $\ast$$\ast$ \hyperlink{classSecureSelect_affb3955cbfae50ba7bac4c487aef0113}{load\+\_\+ct} (fstream $\ast$, int)
 \item 
-\hypertarget{classSecureSelect_a772ad7704ae82ada1dfbbafdde5def20}{int {\bfseries get\-Milli\-Count} ()}\label{classSecureSelect_a772ad7704ae82ada1dfbbafdde5def20}
+int {\bfseries get\+Milli\+Count} ()\hypertarget{classSecureSelect_a772ad7704ae82ada1dfbbafdde5def20}{}\label{classSecureSelect_a772ad7704ae82ada1dfbbafdde5def20}
 
 \item 
-\hypertarget{classSecureSelect_a8b3934a352f33f8ca62d6ebe13e1c530}{int {\bfseries get\-Milli\-Span} (int)}\label{classSecureSelect_a8b3934a352f33f8ca62d6ebe13e1c530}
+int {\bfseries get\+Milli\+Span} (int)\hypertarget{classSecureSelect_a8b3934a352f33f8ca62d6ebe13e1c530}{}\label{classSecureSelect_a8b3934a352f33f8ca62d6ebe13e1c530}
 
 \item 
-string \hyperlink{classSecureSelect_adf030b491e451b677f574098c9710327}{read\-\_\-line\-\_\-from\-\_\-file} (int, string)
+string \hyperlink{classSecureSelect_adf030b491e451b677f574098c9710327}{read\+\_\+line\+\_\+from\+\_\+file} (int, string)
 \item 
-string \hyperlink{classSecureSelect_a58b6ca8e574976a632d8f862b939b877}{dec\-Msg} (G\-T M, string Msg)
+string \hyperlink{classSecureSelect_a9debad6f3844b3310e359437daee5289}{enc\+Msg} (GT, string)
 \item 
-\hyperlink{classSecureSelect_a88cd629de7214c05eb86683b058bacd5}{Secure\-Select} (int m, P\-F\-C $\ast$pfc\-\_\-, Big order\-\_\-)
+string \hyperlink{classSecureSelect_a58b6ca8e574976a632d8f862b939b877}{dec\+Msg} (GT M, string Msg)
+\item 
+string $\ast$ \hyperlink{classSecureSelect_ad7d812d5cb93f4a0cd93754532c22fcf}{create\+\_\+row} (string, int)
+\item 
+void \hyperlink{classSecureSelect_ac0281d1df5b3f12e05d992f684f24e01}{save\+\_\+cts} (ofstream $\ast$, O\+E\+Ct $\ast$$\ast$)
+\item 
+\hyperlink{classSecureSelect_a88cd629de7214c05eb86683b058bacd5}{Secure\+Select} (int m, P\+FC $\ast$pfc\+\_\+, Big order\+\_\+)
 \begin{DoxyCompactList}\small\item\em Class constructor. \end{DoxyCompactList}\item 
-\hypertarget{classSecureSelect_a3270108d70fee40d40a28ebccee7ed2a}{{\bfseries Secure\-Select} (P\-F\-C $\ast$pfc\-\_\-, Big order\-\_\-)}\label{classSecureSelect_a3270108d70fee40d40a28ebccee7ed2a}
+{\bfseries Secure\+Select} (P\+FC $\ast$pfc\+\_\+, Big order\+\_\+)\hypertarget{classSecureSelect_a3270108d70fee40d40a28ebccee7ed2a}{}\label{classSecureSelect_a3270108d70fee40d40a28ebccee7ed2a}
 
 \end{DoxyCompactItemize}
 \subsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
-\hyperlink{classAOENoise}{A\-O\-E\-Noise} $\ast$ \hyperlink{classSecureSelect_ace499f63f2609b19c429bee5638db42d}{aoen}
+\hyperlink{classAOENoise}{A\+O\+E\+Noise} $\ast$ \hyperlink{classSecureSelect_ace499f63f2609b19c429bee5638db42d}{aoen}
 \item 
 int \hyperlink{classSecureSelect_a0834ef0de36dad948cec8d54fc89aada}{n}
 \item 
@@ -64,9 +71,9 @@ int \hyperlink{classSecureSelect_a010ed62263ff19f8b07dfaa298962f24}{l}
 \item 
 int \hyperlink{classSecureSelect_aa9172d68f4a5f9aef784703878e2c352}{k}
 \item 
-O\-E\-Msk $\ast$$\ast$ \hyperlink{classSecureSelect_a8f1233a931a2dce84a7f9588721d8301}{msks}
+O\+E\+Msk $\ast$$\ast$ \hyperlink{classSecureSelect_a8f1233a931a2dce84a7f9588721d8301}{msks}
 \item 
-P\-F\-C $\ast$ \hyperlink{classSecureSelect_acd8fd34bdde543ca9711ac5e266a094d}{pfc}
+P\+FC $\ast$ \hyperlink{classSecureSelect_acd8fd34bdde543ca9711ac5e266a094d}{pfc}
 \item 
 Big \hyperlink{classSecureSelect_ac97b5a9177b47f64f49891feb67b69b2}{order}
 \end{DoxyCompactItemize}
@@ -78,185 +85,229 @@ The secure select main class.
 It is useful for data owners and readers. This class can be used to generate a master keys, encrypt tables and execute queries on them. 
 
 \subsection{Constructor \& Destructor Documentation}
-\hypertarget{classSecureSelect_a88cd629de7214c05eb86683b058bacd5}{\index{Secure\-Select@{Secure\-Select}!Secure\-Select@{Secure\-Select}}
-\index{Secure\-Select@{Secure\-Select}!SecureSelect@{Secure\-Select}}
-\subsubsection[{Secure\-Select}]{\setlength{\rightskip}{0pt plus 5cm}Secure\-Select\-::\-Secure\-Select (
+\index{Secure\+Select@{Secure\+Select}!Secure\+Select@{Secure\+Select}}
+\index{Secure\+Select@{Secure\+Select}!Secure\+Select@{Secure\+Select}}
+\subsubsection[{\texorpdfstring{Secure\+Select(int m, P\+F\+C $\ast$pfc\+\_\+, Big order\+\_\+)}{SecureSelect(int m, PFC *pfc_, Big order_)}}]{\setlength{\rightskip}{0pt plus 5cm}Secure\+Select\+::\+Secure\+Select (
 \begin{DoxyParamCaption}
 \item[{int}]{m, }
-\item[{P\-F\-C $\ast$}]{pfc\-\_\-, }
-\item[{Big}]{order\-\_\-}
+\item[{P\+FC $\ast$}]{pfc\+\_\+, }
+\item[{Big}]{order\+\_\+}
 \end{DoxyParamCaption}
-)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classSecureSelect_a88cd629de7214c05eb86683b058bacd5}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classSecureSelect_a88cd629de7214c05eb86683b058bacd5}{}\label{classSecureSelect_a88cd629de7214c05eb86683b058bacd5}
 
 
 Class constructor. 
 
-m is the number of columns per row, pfc\-\_\- is the curve, order\-\_\- its order. 
+m is the number of columns per row, pfc\+\_\+ is the curve, order\+\_\+ its order. 
 
 \subsection{Member Function Documentation}
-\hypertarget{classSecureSelect_a4b912c3407b0664ae37d2ccfce4eafc5}{\index{Secure\-Select@{Secure\-Select}!Apply\-M\-Token@{Apply\-M\-Token}}
-\index{Apply\-M\-Token@{Apply\-M\-Token}!SecureSelect@{Secure\-Select}}
-\subsubsection[{Apply\-M\-Token}]{\setlength{\rightskip}{0pt plus 5cm}vector$<$ string $>$ Secure\-Select\-::\-Apply\-M\-Token (
+\index{Secure\+Select@{Secure\+Select}!Apply\+M\+Token@{Apply\+M\+Token}}
+\index{Apply\+M\+Token@{Apply\+M\+Token}!Secure\+Select@{Secure\+Select}}
+\subsubsection[{\texorpdfstring{Apply\+M\+Token(string, string, string)}{ApplyMToken(string, string, string)}}]{\setlength{\rightskip}{0pt plus 5cm}vector$<$ string $>$ Secure\+Select\+::\+Apply\+M\+Token (
 \begin{DoxyParamCaption}
-\item[{string}]{query\-\_\-name, }
-\item[{string}]{db\-\_\-name, }
-\item[{string}]{res\-\_\-name}
+\item[{string}]{query\+\_\+name, }
+\item[{string}]{db\+\_\+name, }
+\item[{string}]{res\+\_\+name}
 \end{DoxyParamCaption}
-)}}\label{classSecureSelect_a4b912c3407b0664ae37d2ccfce4eafc5}
-Get a token file name (query\-\_\-name), the database name (db\-\_\-name) and the results name (res\-\_\-name).
+)}\hypertarget{classSecureSelect_a4b912c3407b0664ae37d2ccfce4eafc5}{}\label{classSecureSelect_a4b912c3407b0664ae37d2ccfce4eafc5}
+Get a token file name (query\+\_\+name), the database name (db\+\_\+name) and the results name (res\+\_\+name).
 
-Execute the mtoken for all the rows in res\-\_\-name and return all the founded results in a vector. \hypertarget{classSecureSelect_a168537e2cf5070fe9b137239a2d6155e}{\index{Secure\-Select@{Secure\-Select}!Apply\-M\-Token\-M\-T@{Apply\-M\-Token\-M\-T}}
-\index{Apply\-M\-Token\-M\-T@{Apply\-M\-Token\-M\-T}!SecureSelect@{Secure\-Select}}
-\subsubsection[{Apply\-M\-Token\-M\-T}]{\setlength{\rightskip}{0pt plus 5cm}vector$<$ string $>$ Secure\-Select\-::\-Apply\-M\-Token\-M\-T (
+Execute the mtoken for all the rows in res\+\_\+name and return all the founded results in a vector. \index{Secure\+Select@{Secure\+Select}!Apply\+M\+Token\+MT@{Apply\+M\+Token\+MT}}
+\index{Apply\+M\+Token\+MT@{Apply\+M\+Token\+MT}!Secure\+Select@{Secure\+Select}}
+\subsubsection[{\texorpdfstring{Apply\+M\+Token\+M\+T(string, string, string, int)}{ApplyMTokenMT(string, string, string, int)}}]{\setlength{\rightskip}{0pt plus 5cm}vector$<$ string $>$ Secure\+Select\+::\+Apply\+M\+Token\+MT (
 \begin{DoxyParamCaption}
-\item[{string}]{query\-\_\-name, }
-\item[{string}]{db\-\_\-name, }
-\item[{string}]{res\-\_\-name, }
-\item[{int}]{num\-\_\-threads}
+\item[{string}]{query\+\_\+name, }
+\item[{string}]{db\+\_\+name, }
+\item[{string}]{res\+\_\+name, }
+\item[{int}]{num\+\_\+threads}
 \end{DoxyParamCaption}
-)}}\label{classSecureSelect_a168537e2cf5070fe9b137239a2d6155e}
-Multi-\/thread version of Apply\-M\-Token.
+)}\hypertarget{classSecureSelect_a168537e2cf5070fe9b137239a2d6155e}{}\label{classSecureSelect_a168537e2cf5070fe9b137239a2d6155e}
+Multi-\/thread version of Apply\+M\+Token.
 
-num\-\_\-threads is the number of threads in which the decryption will be divided. \hypertarget{classSecureSelect_aab33712ef6fbbe6922a2d8156b88dc27}{\index{Secure\-Select@{Secure\-Select}!Apply\-P\-Token@{Apply\-P\-Token}}
-\index{Apply\-P\-Token@{Apply\-P\-Token}!SecureSelect@{Secure\-Select}}
-\subsubsection[{Apply\-P\-Token}]{\setlength{\rightskip}{0pt plus 5cm}int Secure\-Select\-::\-Apply\-P\-Token (
+num\+\_\+threads is the number of threads in which the decryption will be divided. \index{Secure\+Select@{Secure\+Select}!Apply\+P\+Token@{Apply\+P\+Token}}
+\index{Apply\+P\+Token@{Apply\+P\+Token}!Secure\+Select@{Secure\+Select}}
+\subsubsection[{\texorpdfstring{Apply\+P\+Token(string, string, string)}{ApplyPToken(string, string, string)}}]{\setlength{\rightskip}{0pt plus 5cm}int Secure\+Select\+::\+Apply\+P\+Token (
 \begin{DoxyParamCaption}
-\item[{string}]{query\-\_\-name, }
-\item[{string}]{db\-\_\-name, }
-\item[{string}]{res\-\_\-name}
+\item[{string}]{query\+\_\+name, }
+\item[{string}]{db\+\_\+name, }
+\item[{string}]{res\+\_\+name}
 \end{DoxyParamCaption}
-)}}\label{classSecureSelect_aab33712ef6fbbe6922a2d8156b88dc27}
-Get a token file name (query\-\_\-name), the database name (db\-\_\-name) and the results name (res\-\_\-name).
+)}\hypertarget{classSecureSelect_aab33712ef6fbbe6922a2d8156b88dc27}{}\label{classSecureSelect_aab33712ef6fbbe6922a2d8156b88dc27}
+Get a token file name (query\+\_\+name), the database name (db\+\_\+name) and the results name (res\+\_\+name).
 
-Execute the ptoken for the desiderd database and save the number of all the founded rows in a file (res\-\_\-name). \hypertarget{classSecureSelect_a1a556c61d392fa9d2dfd1eb6684bafc1}{\index{Secure\-Select@{Secure\-Select}!Apply\-P\-Token\-M\-T@{Apply\-P\-Token\-M\-T}}
-\index{Apply\-P\-Token\-M\-T@{Apply\-P\-Token\-M\-T}!SecureSelect@{Secure\-Select}}
-\subsubsection[{Apply\-P\-Token\-M\-T}]{\setlength{\rightskip}{0pt plus 5cm}int Secure\-Select\-::\-Apply\-P\-Token\-M\-T (
+Execute the ptoken for the desiderd database and save the number of all the founded rows in a file (res\+\_\+name). \index{Secure\+Select@{Secure\+Select}!Apply\+P\+Token\+MT@{Apply\+P\+Token\+MT}}
+\index{Apply\+P\+Token\+MT@{Apply\+P\+Token\+MT}!Secure\+Select@{Secure\+Select}}
+\subsubsection[{\texorpdfstring{Apply\+P\+Token\+M\+T(string, string, string, int)}{ApplyPTokenMT(string, string, string, int)}}]{\setlength{\rightskip}{0pt plus 5cm}int Secure\+Select\+::\+Apply\+P\+Token\+MT (
 \begin{DoxyParamCaption}
-\item[{string}]{query\-\_\-name, }
-\item[{string}]{db\-\_\-name, }
-\item[{string}]{res\-\_\-name, }
-\item[{int}]{num\-\_\-threads}
+\item[{string}]{query\+\_\+name, }
+\item[{string}]{db\+\_\+name, }
+\item[{string}]{res\+\_\+name, }
+\item[{int}]{num\+\_\+threads}
 \end{DoxyParamCaption}
-)}}\label{classSecureSelect_a1a556c61d392fa9d2dfd1eb6684bafc1}
-Multi-\/thread version of Apply\-P\-Token.
+)}\hypertarget{classSecureSelect_a1a556c61d392fa9d2dfd1eb6684bafc1}{}\label{classSecureSelect_a1a556c61d392fa9d2dfd1eb6684bafc1}
+Multi-\/thread version of Apply\+P\+Token.
 
-num\-\_\-threads is the number of threads in which the decryption will be divided. \hypertarget{classSecureSelect_a55312fbd535adba75ba328d060faff35}{\index{Secure\-Select@{Secure\-Select}!Apply\-Token@{Apply\-Token}}
-\index{Apply\-Token@{Apply\-Token}!SecureSelect@{Secure\-Select}}
-\subsubsection[{Apply\-Token}]{\setlength{\rightskip}{0pt plus 5cm}vector$<$ string $>$ Secure\-Select\-::\-Apply\-Token (
+num\+\_\+threads is the number of threads in which the decryption will be divided. \index{Secure\+Select@{Secure\+Select}!Apply\+Token@{Apply\+Token}}
+\index{Apply\+Token@{Apply\+Token}!Secure\+Select@{Secure\+Select}}
+\subsubsection[{\texorpdfstring{Apply\+Token(string, string)}{ApplyToken(string, string)}}]{\setlength{\rightskip}{0pt plus 5cm}vector$<$ string $>$ Secure\+Select\+::\+Apply\+Token (
 \begin{DoxyParamCaption}
-\item[{string}]{query\-\_\-name, }
-\item[{string}]{db\-\_\-name}
+\item[{string}]{query\+\_\+name, }
+\item[{string}]{db\+\_\+name}
 \end{DoxyParamCaption}
-)}}\label{classSecureSelect_a55312fbd535adba75ba328d060faff35}
-Get a token file name (query\-\_\-name) and the database name (db\-\_\-name).
+)}\hypertarget{classSecureSelect_a55312fbd535adba75ba328d060faff35}{}\label{classSecureSelect_a55312fbd535adba75ba328d060faff35}
+Get a token file name (query\+\_\+name) and the database name (db\+\_\+name).
 
-Execute the query for the desiderd database and return all the founded results in a vector. \hypertarget{classSecureSelect_a58b6ca8e574976a632d8f862b939b877}{\index{Secure\-Select@{Secure\-Select}!dec\-Msg@{dec\-Msg}}
-\index{dec\-Msg@{dec\-Msg}!SecureSelect@{Secure\-Select}}
-\subsubsection[{dec\-Msg}]{\setlength{\rightskip}{0pt plus 5cm}string Secure\-Select\-::dec\-Msg (
+Execute the query for the desiderd database and return all the founded results in a vector. \index{Secure\+Select@{Secure\+Select}!create\+\_\+row@{create\+\_\+row}}
+\index{create\+\_\+row@{create\+\_\+row}!Secure\+Select@{Secure\+Select}}
+\subsubsection[{\texorpdfstring{create\+\_\+row(string, int)}{create_row(string, int)}}]{\setlength{\rightskip}{0pt plus 5cm}string $\ast$ Secure\+Select\+::create\+\_\+row (
 \begin{DoxyParamCaption}
-\item[{G\-T}]{M, }
+\item[{string}]{line, }
+\item[{int}]{len}
+\end{DoxyParamCaption}
+)}\hypertarget{classSecureSelect_ad7d812d5cb93f4a0cd93754532c22fcf}{}\label{classSecureSelect_ad7d812d5cb93f4a0cd93754532c22fcf}
+Get an entire row and the number of columns. If the row has the correct length return it in array with a column in every cell. Row length check \index{Secure\+Select@{Secure\+Select}!dec\+Msg@{dec\+Msg}}
+\index{dec\+Msg@{dec\+Msg}!Secure\+Select@{Secure\+Select}}
+\subsubsection[{\texorpdfstring{dec\+Msg(\+G\+T M, string Msg)}{decMsg(GT M, string Msg)}}]{\setlength{\rightskip}{0pt plus 5cm}string Secure\+Select\+::dec\+Msg (
+\begin{DoxyParamCaption}
+\item[{GT}]{M, }
 \item[{string}]{Msg}
 \end{DoxyParamCaption}
-)}}\label{classSecureSelect_a58b6ca8e574976a632d8f862b939b877}
+)}\hypertarget{classSecureSelect_a58b6ca8e574976a632d8f862b939b877}{}\label{classSecureSelect_a58b6ca8e574976a632d8f862b939b877}
 Get an aes key (M) and a message (Msg), retrieve the real key from M and decrypt Msg.
 
 Return the decryption result if the sha256 from Msg conicide with the original one, an empty string othewise. Decrypt using openssl
 
-Check with sha256 if the decryption were good \hypertarget{classSecureSelect_ada64a34744ec0598327f8e926c7fa2d6}{\index{Secure\-Select@{Secure\-Select}!Encrypt\-Rows@{Encrypt\-Rows}}
-\index{Encrypt\-Rows@{Encrypt\-Rows}!SecureSelect@{Secure\-Select}}
-\subsubsection[{Encrypt\-Rows}]{\setlength{\rightskip}{0pt plus 5cm}void Secure\-Select\-::\-Encrypt\-Rows (
+Check with sha256 if the decryption were good \index{Secure\+Select@{Secure\+Select}!enc\+Msg@{enc\+Msg}}
+\index{enc\+Msg@{enc\+Msg}!Secure\+Select@{Secure\+Select}}
+\subsubsection[{\texorpdfstring{enc\+Msg(\+G\+T, string)}{encMsg(GT, string)}}]{\setlength{\rightskip}{0pt plus 5cm}string Secure\+Select\+::enc\+Msg (
 \begin{DoxyParamCaption}
-\item[{string}]{rows\-\_\-name, }
-\item[{string}]{enctable\-\_\-name, }
-\item[{int}]{rand\-\_\-lim}
+\item[{GT}]{M, }
+\item[{string}]{Msg}
 \end{DoxyParamCaption}
-)}}\label{classSecureSelect_ada64a34744ec0598327f8e926c7fa2d6}
-Get the name of the file that contains one or more rows (rows\-\_\-name), the name of the file in which the encrypted rows will be written (enctable\-\_\-name) and rand\-\_\-lim, that is the maximum limit for the noise parameter.
+)}\hypertarget{classSecureSelect_a9debad6f3844b3310e359437daee5289}{}\label{classSecureSelect_a9debad6f3844b3310e359437daee5289}
+Encrypt using openssl cbc
 
-Encrypt every row, write ciphertexts and encrypted cells in different files. \hypertarget{classSecureSelect_a88e8f870930dfbeae24d355412b1d0a3}{\index{Secure\-Select@{Secure\-Select}!Gen\-Token@{Gen\-Token}}
-\index{Gen\-Token@{Gen\-Token}!SecureSelect@{Secure\-Select}}
-\subsubsection[{Gen\-Token}]{\setlength{\rightskip}{0pt plus 5cm}int Secure\-Select\-::\-Gen\-Token (
+init vector
+
+Create sha256 for Msg and add first 128 bit at the end of it
+
+Execute aes-\/cbc-\/128 \index{Secure\+Select@{Secure\+Select}!Encrypt\+Rows@{Encrypt\+Rows}}
+\index{Encrypt\+Rows@{Encrypt\+Rows}!Secure\+Select@{Secure\+Select}}
+\subsubsection[{\texorpdfstring{Encrypt\+Rows(string, string, int)}{EncryptRows(string, string, int)}}]{\setlength{\rightskip}{0pt plus 5cm}void Secure\+Select\+::\+Encrypt\+Rows (
 \begin{DoxyParamCaption}
-\item[{string}]{query\-\_\-name, }
-\item[{int}]{rand\-\_\-lim}
+\item[{string}]{rows\+\_\+name, }
+\item[{string}]{enctable\+\_\+name, }
+\item[{int}]{rand\+\_\+lim}
 \end{DoxyParamCaption}
-)}}\label{classSecureSelect_a88e8f870930dfbeae24d355412b1d0a3}
-Get a query file name (query\-\_\-name) and rand\-\_\-lim.
+)}\hypertarget{classSecureSelect_ada64a34744ec0598327f8e926c7fa2d6}{}\label{classSecureSelect_ada64a34744ec0598327f8e926c7fa2d6}
+Get the name of the file that contains one or more rows (rows\+\_\+name), the name of the file in which the encrypted rows will be written (enctable\+\_\+name) and rand\+\_\+lim, that is the maximum limit for the noise parameter.
+
+Encrypt every row, write ciphertexts and encrypted cells in different files. \index{Secure\+Select@{Secure\+Select}!Encrypt\+Rows\+MT@{Encrypt\+Rows\+MT}}
+\index{Encrypt\+Rows\+MT@{Encrypt\+Rows\+MT}!Secure\+Select@{Secure\+Select}}
+\subsubsection[{\texorpdfstring{Encrypt\+Rows\+M\+T(string, string, int, int)}{EncryptRowsMT(string, string, int, int)}}]{\setlength{\rightskip}{0pt plus 5cm}void Secure\+Select\+::\+Encrypt\+Rows\+MT (
+\begin{DoxyParamCaption}
+\item[{string}]{rows\+\_\+name, }
+\item[{string}]{enctable\+\_\+name, }
+\item[{int}]{rand\+\_\+lim, }
+\item[{int}]{num\+\_\+threads}
+\end{DoxyParamCaption}
+)}\hypertarget{classSecureSelect_a8f760c424f6dc8277230be2f056dd1cc}{}\label{classSecureSelect_a8f760c424f6dc8277230be2f056dd1cc}
+Multi-\/thread version of Encrypt\+Rows.
+
+num\+\_\+threads is the number of threads in which the encryption will be divided. \index{Secure\+Select@{Secure\+Select}!Gen\+Token@{Gen\+Token}}
+\index{Gen\+Token@{Gen\+Token}!Secure\+Select@{Secure\+Select}}
+\subsubsection[{\texorpdfstring{Gen\+Token(string, int)}{GenToken(string, int)}}]{\setlength{\rightskip}{0pt plus 5cm}int Secure\+Select\+::\+Gen\+Token (
+\begin{DoxyParamCaption}
+\item[{string}]{query\+\_\+name, }
+\item[{int}]{rand\+\_\+lim}
+\end{DoxyParamCaption}
+)}\hypertarget{classSecureSelect_a88e8f870930dfbeae24d355412b1d0a3}{}\label{classSecureSelect_a88e8f870930dfbeae24d355412b1d0a3}
+Get a query file name (query\+\_\+name) and rand\+\_\+lim.
 
 Generate a predicate token and a message token for every select parameters.
 
-Save the created tokens in files. \hypertarget{classSecureSelect_a72c8b1ac19619a6eeaa722f766e53b3f}{\index{Secure\-Select@{Secure\-Select}!Key\-Gen@{Key\-Gen}}
-\index{Key\-Gen@{Key\-Gen}!SecureSelect@{Secure\-Select}}
-\subsubsection[{Key\-Gen}]{\setlength{\rightskip}{0pt plus 5cm}void Secure\-Select\-::\-Key\-Gen (
+Save the created tokens in files. \index{Secure\+Select@{Secure\+Select}!Key\+Gen@{Key\+Gen}}
+\index{Key\+Gen@{Key\+Gen}!Secure\+Select@{Secure\+Select}}
+\subsubsection[{\texorpdfstring{Key\+Gen(string)}{KeyGen(string)}}]{\setlength{\rightskip}{0pt plus 5cm}void Secure\+Select\+::\+Key\+Gen (
 \begin{DoxyParamCaption}
-\item[{string}]{key\-\_\-name}
+\item[{string}]{key\+\_\+name}
 \end{DoxyParamCaption}
-)}}\label{classSecureSelect_a72c8b1ac19619a6eeaa722f766e53b3f}
+)}\hypertarget{classSecureSelect_a72c8b1ac19619a6eeaa722f766e53b3f}{}\label{classSecureSelect_a72c8b1ac19619a6eeaa722f766e53b3f}
 Get the key file name in input.
 
-Create n+1 master keys and store them in a file called key\-\_\-name. \hypertarget{classSecureSelect_a2163cc84d91843d5ba52876cf75d9d83}{\index{Secure\-Select@{Secure\-Select}!load\-\_\-ct@{load\-\_\-ct}}
-\index{load\-\_\-ct@{load\-\_\-ct}!SecureSelect@{Secure\-Select}}
-\subsubsection[{load\-\_\-ct}]{\setlength{\rightskip}{0pt plus 5cm}O\-E\-Ct $\ast$$\ast$ Secure\-Select\-::load\-\_\-ct (
+Create n+1 master keys and store them in a file called key\+\_\+name. \index{Secure\+Select@{Secure\+Select}!load\+\_\+ct@{load\+\_\+ct}}
+\index{load\+\_\+ct@{load\+\_\+ct}!Secure\+Select@{Secure\+Select}}
+\subsubsection[{\texorpdfstring{load\+\_\+ct(ifstream $\ast$)}{load_ct(ifstream *)}}]{\setlength{\rightskip}{0pt plus 5cm}O\+E\+Ct $\ast$$\ast$ Secure\+Select\+::load\+\_\+ct (
 \begin{DoxyParamCaption}
-\item[{ifstream $\ast$}]{input\-File}
+\item[{ifstream $\ast$}]{input\+File}
 \end{DoxyParamCaption}
-)}}\label{classSecureSelect_a2163cc84d91843d5ba52876cf75d9d83}
-Load the ciphertext for a row stored in input\-File, return the loaded ciphertext. Load ciphertext of length l(+1)
+)}\hypertarget{classSecureSelect_a2163cc84d91843d5ba52876cf75d9d83}{}\label{classSecureSelect_a2163cc84d91843d5ba52876cf75d9d83}
+Load the ciphertext for a row stored in input\+File, return the loaded ciphertext. Load ciphertext of length l(+1)
 
-Load ciphertexts of length k(+1) \hypertarget{classSecureSelect_affb3955cbfae50ba7bac4c487aef0113}{\index{Secure\-Select@{Secure\-Select}!load\-\_\-ct@{load\-\_\-ct}}
-\index{load\-\_\-ct@{load\-\_\-ct}!SecureSelect@{Secure\-Select}}
-\subsubsection[{load\-\_\-ct}]{\setlength{\rightskip}{0pt plus 5cm}O\-E\-Ct $\ast$$\ast$ Secure\-Select\-::load\-\_\-ct (
+Load ciphertexts of length k(+1) \index{Secure\+Select@{Secure\+Select}!load\+\_\+ct@{load\+\_\+ct}}
+\index{load\+\_\+ct@{load\+\_\+ct}!Secure\+Select@{Secure\+Select}}
+\subsubsection[{\texorpdfstring{load\+\_\+ct(fstream $\ast$, int)}{load_ct(fstream *, int)}}]{\setlength{\rightskip}{0pt plus 5cm}O\+E\+Ct $\ast$$\ast$ Secure\+Select\+::load\+\_\+ct (
 \begin{DoxyParamCaption}
-\item[{fstream $\ast$}]{input\-File, }
-\item[{int}]{row\-\_\-num}
+\item[{fstream $\ast$}]{input\+File, }
+\item[{int}]{row\+\_\+num}
 \end{DoxyParamCaption}
-)}}\label{classSecureSelect_affb3955cbfae50ba7bac4c487aef0113}
-Load the ciphertext for the row number row\-\_\-num stored in input\-File, return the loaded ciphertext. Load ciphertext of length l(+1)
+)}\hypertarget{classSecureSelect_affb3955cbfae50ba7bac4c487aef0113}{}\label{classSecureSelect_affb3955cbfae50ba7bac4c487aef0113}
+Load the ciphertext for the row number row\+\_\+num stored in input\+File, return the loaded ciphertext. Load ciphertext of length l(+1)
 
-Load ciphertexts of length k(+1) \hypertarget{classSecureSelect_ad7a2125393de550771e4e9177a1552b3}{\index{Secure\-Select@{Secure\-Select}!Load\-Key@{Load\-Key}}
-\index{Load\-Key@{Load\-Key}!SecureSelect@{Secure\-Select}}
-\subsubsection[{Load\-Key}]{\setlength{\rightskip}{0pt plus 5cm}bool Secure\-Select\-::\-Load\-Key (
+Load ciphertexts of length k(+1) \index{Secure\+Select@{Secure\+Select}!Load\+Key@{Load\+Key}}
+\index{Load\+Key@{Load\+Key}!Secure\+Select@{Secure\+Select}}
+\subsubsection[{\texorpdfstring{Load\+Key(string)}{LoadKey(string)}}]{\setlength{\rightskip}{0pt plus 5cm}bool Secure\+Select\+::\+Load\+Key (
 \begin{DoxyParamCaption}
-\item[{string}]{key\-\_\-name}
+\item[{string}]{key\+\_\+name}
 \end{DoxyParamCaption}
-)}}\label{classSecureSelect_ad7a2125393de550771e4e9177a1552b3}
-Load a previously created key, stored in key\-\_\-name.
+)}\hypertarget{classSecureSelect_ad7a2125393de550771e4e9177a1552b3}{}\label{classSecureSelect_ad7a2125393de550771e4e9177a1552b3}
+Load a previously created key, stored in key\+\_\+name.
 
-Put it in msks variable and return true if everything is ok. \hypertarget{classSecureSelect_adf030b491e451b677f574098c9710327}{\index{Secure\-Select@{Secure\-Select}!read\-\_\-line\-\_\-from\-\_\-file@{read\-\_\-line\-\_\-from\-\_\-file}}
-\index{read\-\_\-line\-\_\-from\-\_\-file@{read\-\_\-line\-\_\-from\-\_\-file}!SecureSelect@{Secure\-Select}}
-\subsubsection[{read\-\_\-line\-\_\-from\-\_\-file}]{\setlength{\rightskip}{0pt plus 5cm}string Secure\-Select\-::read\-\_\-line\-\_\-from\-\_\-file (
+Put it in msks variable and return true if everything is ok. \index{Secure\+Select@{Secure\+Select}!read\+\_\+line\+\_\+from\+\_\+file@{read\+\_\+line\+\_\+from\+\_\+file}}
+\index{read\+\_\+line\+\_\+from\+\_\+file@{read\+\_\+line\+\_\+from\+\_\+file}!Secure\+Select@{Secure\+Select}}
+\subsubsection[{\texorpdfstring{read\+\_\+line\+\_\+from\+\_\+file(int, string)}{read_line_from_file(int, string)}}]{\setlength{\rightskip}{0pt plus 5cm}string Secure\+Select\+::read\+\_\+line\+\_\+from\+\_\+file (
 \begin{DoxyParamCaption}
 \item[{int}]{lnum, }
 \item[{string}]{fname}
 \end{DoxyParamCaption}
-)}}\label{classSecureSelect_adf030b491e451b677f574098c9710327}
-Read and return line number lnum from file fname. 
+)}\hypertarget{classSecureSelect_adf030b491e451b677f574098c9710327}{}\label{classSecureSelect_adf030b491e451b677f574098c9710327}
+Read and return line number lnum from file fname. \index{Secure\+Select@{Secure\+Select}!save\+\_\+cts@{save\+\_\+cts}}
+\index{save\+\_\+cts@{save\+\_\+cts}!Secure\+Select@{Secure\+Select}}
+\subsubsection[{\texorpdfstring{save\+\_\+cts(ofstream $\ast$, O\+E\+Ct $\ast$$\ast$)}{save_cts(ofstream *, OECt **)}}]{\setlength{\rightskip}{0pt plus 5cm}void Secure\+Select\+::save\+\_\+cts (
+\begin{DoxyParamCaption}
+\item[{ofstream $\ast$}]{output\+File, }
+\item[{O\+E\+Ct $\ast$$\ast$}]{cts}
+\end{DoxyParamCaption}
+)}\hypertarget{classSecureSelect_ac0281d1df5b3f12e05d992f684f24e01}{}\label{classSecureSelect_ac0281d1df5b3f12e05d992f684f24e01}
+Write the ciphertexts for a row in output\+File. Save ciphertext of length l(+1)
+
+Save ciphertexts of length k(+1) 
 
 \subsection{Member Data Documentation}
-\hypertarget{classSecureSelect_ace499f63f2609b19c429bee5638db42d}{\index{Secure\-Select@{Secure\-Select}!aoen@{aoen}}
-\index{aoen@{aoen}!SecureSelect@{Secure\-Select}}
-\subsubsection[{aoen}]{\setlength{\rightskip}{0pt plus 5cm}{\bf A\-O\-E\-Noise}$\ast$ Secure\-Select\-::aoen}}\label{classSecureSelect_ace499f63f2609b19c429bee5638db42d}
-This is needed to execute orthogonal encryption operations. \hypertarget{classSecureSelect_aa9172d68f4a5f9aef784703878e2c352}{\index{Secure\-Select@{Secure\-Select}!k@{k}}
-\index{k@{k}!SecureSelect@{Secure\-Select}}
-\subsubsection[{k}]{\setlength{\rightskip}{0pt plus 5cm}int Secure\-Select\-::k}}\label{classSecureSelect_aa9172d68f4a5f9aef784703878e2c352}
-Lenght of the attribute for every column. \hypertarget{classSecureSelect_a010ed62263ff19f8b07dfaa298962f24}{\index{Secure\-Select@{Secure\-Select}!l@{l}}
-\index{l@{l}!SecureSelect@{Secure\-Select}}
-\subsubsection[{l}]{\setlength{\rightskip}{0pt plus 5cm}int Secure\-Select\-::l}}\label{classSecureSelect_a010ed62263ff19f8b07dfaa298962f24}
-Length of the principal attribute. \hypertarget{classSecureSelect_a8f1233a931a2dce84a7f9588721d8301}{\index{Secure\-Select@{Secure\-Select}!msks@{msks}}
-\index{msks@{msks}!SecureSelect@{Secure\-Select}}
-\subsubsection[{msks}]{\setlength{\rightskip}{0pt plus 5cm}O\-E\-Msk$\ast$$\ast$ Secure\-Select\-::msks}}\label{classSecureSelect_a8f1233a931a2dce84a7f9588721d8301}
-Contains the n+1 master keys. \hypertarget{classSecureSelect_a0834ef0de36dad948cec8d54fc89aada}{\index{Secure\-Select@{Secure\-Select}!n@{n}}
-\index{n@{n}!SecureSelect@{Secure\-Select}}
-\subsubsection[{n}]{\setlength{\rightskip}{0pt plus 5cm}int Secure\-Select\-::n}}\label{classSecureSelect_a0834ef0de36dad948cec8d54fc89aada}
-Number of columns. \hypertarget{classSecureSelect_ac97b5a9177b47f64f49891feb67b69b2}{\index{Secure\-Select@{Secure\-Select}!order@{order}}
-\index{order@{order}!SecureSelect@{Secure\-Select}}
-\subsubsection[{order}]{\setlength{\rightskip}{0pt plus 5cm}Big Secure\-Select\-::order}}\label{classSecureSelect_ac97b5a9177b47f64f49891feb67b69b2}
-Number of elements on the curve. \hypertarget{classSecureSelect_acd8fd34bdde543ca9711ac5e266a094d}{\index{Secure\-Select@{Secure\-Select}!pfc@{pfc}}
-\index{pfc@{pfc}!SecureSelect@{Secure\-Select}}
-\subsubsection[{pfc}]{\setlength{\rightskip}{0pt plus 5cm}P\-F\-C$\ast$ Secure\-Select\-::pfc}}\label{classSecureSelect_acd8fd34bdde543ca9711ac5e266a094d}
+\index{Secure\+Select@{Secure\+Select}!aoen@{aoen}}
+\index{aoen@{aoen}!Secure\+Select@{Secure\+Select}}
+\subsubsection[{\texorpdfstring{aoen}{aoen}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf A\+O\+E\+Noise}$\ast$ Secure\+Select\+::aoen}\hypertarget{classSecureSelect_ace499f63f2609b19c429bee5638db42d}{}\label{classSecureSelect_ace499f63f2609b19c429bee5638db42d}
+This is needed to execute orthogonal encryption operations. \index{Secure\+Select@{Secure\+Select}!k@{k}}
+\index{k@{k}!Secure\+Select@{Secure\+Select}}
+\subsubsection[{\texorpdfstring{k}{k}}]{\setlength{\rightskip}{0pt plus 5cm}int Secure\+Select\+::k}\hypertarget{classSecureSelect_aa9172d68f4a5f9aef784703878e2c352}{}\label{classSecureSelect_aa9172d68f4a5f9aef784703878e2c352}
+Lenght of the attribute for every column. \index{Secure\+Select@{Secure\+Select}!l@{l}}
+\index{l@{l}!Secure\+Select@{Secure\+Select}}
+\subsubsection[{\texorpdfstring{l}{l}}]{\setlength{\rightskip}{0pt plus 5cm}int Secure\+Select\+::l}\hypertarget{classSecureSelect_a010ed62263ff19f8b07dfaa298962f24}{}\label{classSecureSelect_a010ed62263ff19f8b07dfaa298962f24}
+Length of the principal attribute. \index{Secure\+Select@{Secure\+Select}!msks@{msks}}
+\index{msks@{msks}!Secure\+Select@{Secure\+Select}}
+\subsubsection[{\texorpdfstring{msks}{msks}}]{\setlength{\rightskip}{0pt plus 5cm}O\+E\+Msk$\ast$$\ast$ Secure\+Select\+::msks}\hypertarget{classSecureSelect_a8f1233a931a2dce84a7f9588721d8301}{}\label{classSecureSelect_a8f1233a931a2dce84a7f9588721d8301}
+Contains the n+1 master keys. \index{Secure\+Select@{Secure\+Select}!n@{n}}
+\index{n@{n}!Secure\+Select@{Secure\+Select}}
+\subsubsection[{\texorpdfstring{n}{n}}]{\setlength{\rightskip}{0pt plus 5cm}int Secure\+Select\+::n}\hypertarget{classSecureSelect_a0834ef0de36dad948cec8d54fc89aada}{}\label{classSecureSelect_a0834ef0de36dad948cec8d54fc89aada}
+Number of columns. \index{Secure\+Select@{Secure\+Select}!order@{order}}
+\index{order@{order}!Secure\+Select@{Secure\+Select}}
+\subsubsection[{\texorpdfstring{order}{order}}]{\setlength{\rightskip}{0pt plus 5cm}Big Secure\+Select\+::order}\hypertarget{classSecureSelect_ac97b5a9177b47f64f49891feb67b69b2}{}\label{classSecureSelect_ac97b5a9177b47f64f49891feb67b69b2}
+Number of elements on the curve. \index{Secure\+Select@{Secure\+Select}!pfc@{pfc}}
+\index{pfc@{pfc}!Secure\+Select@{Secure\+Select}}
+\subsubsection[{\texorpdfstring{pfc}{pfc}}]{\setlength{\rightskip}{0pt plus 5cm}P\+FC$\ast$ Secure\+Select\+::pfc}\hypertarget{classSecureSelect_acd8fd34bdde543ca9711ac5e266a094d}{}\label{classSecureSelect_acd8fd34bdde543ca9711ac5e266a094d}
 Pairing-\/friendly curve object. 
 
-The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 
-aoe-\/m.\-h\item 
-aoe-\/m.\-cpp\end{DoxyCompactItemize}
+aoe-\/m.\+h\item 
+aoe-\/m.\+cpp\end{DoxyCompactItemize}

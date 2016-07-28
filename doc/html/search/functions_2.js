@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['encryptrows',['EncryptRows',['../classSecureSelect.html#ada64a34744ec0598327f8e926c7fa2d6',1,'SecureSelect']]]
+  ['decmsg',['decMsg',['../classSecureSelect.html#a58b6ca8e574976a632d8f862b939b877',1,'SecureSelect']]]
 ];

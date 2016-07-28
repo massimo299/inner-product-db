@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['secureselect',['SecureSelect',['../classSecureSelect.html#a88cd629de7214c05eb86683b058bacd5',1,'SecureSelect']]]
+  ['read_5fline_5ffrom_5ffile',['read_line_from_file',['../classSecureSelect.html#adf030b491e451b677f574098c9710327',1,'SecureSelect']]]
 ];
