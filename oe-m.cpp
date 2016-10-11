@@ -333,5 +333,8 @@ OE::MDecrypt(OECt *ct, OEKey *key){
 
 	GT res=ct->C/pfc->multi_pairing(4*len+2,left,right);
 	
+	delete[] left;
+	delete[] right;
+
 	return res;
 }

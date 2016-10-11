@@ -44,6 +44,9 @@ public:
 		mip=m;
 		order=o;
 	};
+	~AOE(){
+		delete oe;
+	};
 };
 
 /**
@@ -80,6 +83,9 @@ public:
 		pfc=p;
 		order=o;
 		aoe = new AOE(n,l,k,pfc,mi,order);
+	};
+	~AOENoise(){
+		delete aoe;
 	};
 };
 
@@ -119,6 +125,8 @@ public:
 	string decMsg(GT M, string Msg);
 	string *create_row(string, int);
 	void save_cts(ofstream *, OECt **);
+	void delete_cts(OECt **);
+	void delete_key(OEKey *, int);
 
 	/** \brief Class constructor
 	 *
@@ -145,7 +153,6 @@ private:
 	void saveMsks(string, OEMsk **);
 	vector<string> &split(const string&, char, vector<string>&);
 	vector<string> split(const string&, char);
-	
 	void encMsg(GT, string, string);
 	string stdsha256(const string);
 	void append_enc_cell_file(string, const unsigned char *, int);

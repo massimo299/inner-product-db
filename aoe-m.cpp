@@ -171,7 +171,11 @@ AOENoise::EncryptRow(OEMsk **msks, Big *A, GT *M, int rand_lim){
 	}
 	X0[l-1]=1;
 
-	return aoe->Encrypt(msks,X0,X,M);
+	OECt** ct = aoe->Encrypt(msks,X0,X,M);
+
+	for(int i=0;i<n;i++)
+		delete[] X[i];
+	return ct;
 }
 
 OEKey *
@@ -882,6 +886,7 @@ SecureSelect::decMsg(GT M, string Msg){
 
 	/** Check with sha256 if the decryption were good */
 	string sha_msg((const char *)dec_out);
+	delete dec_out;
 	int sm_size = sha_msg.size();
 	if(sm_size<16)
 		return "";
@@ -1374,8 +1379,7 @@ struct thread_data{
 void *encryptRowsThread(void *threadarg)
 {
 	PFC pfc(AES_SECURITY);
-	vector<OECt **> cts_results;
-	vector<string> enc_rows_results;
+	OECt ** ct;
 	int err = -1, ok = 1;
 	struct thread_data *my_data;
 
@@ -1403,6 +1407,13 @@ void *encryptRowsThread(void *threadarg)
 	aoen->aoe->ab2[0] = my_data->sec_sel->aoen->aoe->ab2[0]; aoen->aoe->ab2[1] = my_data->sec_sel->aoen->aoe->ab2[1];
 	aoen->aoe->g = my_data->sec_sel->aoen->aoe->g; aoen->aoe->g2 = my_data->sec_sel->aoen->aoe->g2;
 	aoen->aoe->oe = new OE(l+1,&pfc,get_mip(),pfc.order());
+
+	string ct_t = my_data->db_enc_ct;
+	string msgs_t = my_data->db_enc_msgs;
+	ct_t = ct_t+to_string(tid);
+	msgs_t = msgs_t+to_string(tid);
+	ofstream rec(ct_t);
+	ofstream rem(msgs_t);
 	/* Read file row by row */
 	for(int i=0;i<(my_data->num_lines/my_data->num_threads);i++){
 		getline(rows, line);
@@ -1419,18 +1430,21 @@ void *encryptRowsThread(void *threadarg)
 			for(int j=0;j<n;j++){
 				pfc.random(tmpg1); pfc.random(tmpg2);
 				M[j] = pfc.pairing(tmpg2,tmpg1);
-				enc_rows_results.push_back(my_data->sec_sel->encMsg(M[j],row[j]));
+				rem << my_data->sec_sel->encMsg(M[j],row[j]) << endl;
 			}
 			/* Encrypt the n keys and write them in the file */
 			#ifdef VERBOSE
 			cout << "Thread id: " << tid << " Encrypting row " << row_num+1 << " with n=" << n << endl;
 			int start = my_data->sec_sel->getMilliCount();
 			#endif
-			cts_results.push_back(aoen->EncryptRow(my_data->msks,X0,M, my_data->rand_lim));
+			ct = aoen->EncryptRow(my_data->msks,X0,M, my_data->rand_lim);
+			my_data->sec_sel->save_cts(&rec, ct);
 			#ifdef VERBOSE
 			int milliSecondsElapsed = my_data->sec_sel->getMilliSpan(start);
 			cout << "Thread id: " << tid << " Encrypting row time: " << milliSecondsElapsed << endl;
 			#endif
+			my_data->sec_sel->delete_cts(ct);
+			delete[] row;
 			row_num++;
 		}
 		else{
@@ -1439,33 +1453,32 @@ void *encryptRowsThread(void *threadarg)
 		}
 	}
 	rows.close();
-
-	/* Waiting for the previous thread to finish */
-	void *status;
-	int rc;
-	if(tid != 0){
-		rc=pthread_join(my_data->to_wait_thread, &status);
-		if (rc){
-			cout << "Error:unable to join," << rc << endl;
-			pthread_exit(&err);
-		}
-		int err = *(int *) status;
-		if(err==-1)
-			pthread_exit(&err);
-	}
-
-	/* Writing outputs to files */
-	ofstream rec(my_data->db_enc_ct,ios::app);
-	ofstream rem(my_data->db_enc_msgs,ios::app);
-	for(int j=0;j<cts_results.size();j++){
-		my_data->sec_sel->save_cts(&rec, cts_results.at(j));
-		for(int num=0;num<n;num++)
-			rem << enc_rows_results.at((j*n)+num) << endl;
-	}
 	rec.close();
 	rem.close();
 
+	delete aoen;
 	pthread_exit(&ok);
+}
+
+void
+SecureSelect::delete_cts(OECt **cts){
+	for(int i=0;i<l+1;i++){
+		delete cts[0]->ct[i][0];
+		delete cts[0]->ct[i][1];
+		delete cts[0]->ct[i];
+	}
+	delete cts[0]->ct;
+	delete cts[0];
+	for(int i=1;i<n+1;i++){
+		for(int j=0;j<k+1;j++){
+			delete cts[i]->ct[j][0];
+			delete cts[i]->ct[j][1];
+			delete cts[i]->ct[j];
+		}
+		delete cts[i]->ct;
+		delete cts[i];
+	}
+	delete cts;
 }
 
 /**
@@ -1534,17 +1547,36 @@ SecureSelect::EncryptRowsMT(string rows_name, string enctable_name, int rand_lim
 	/* Free attribute and wait for threads results */
 	pthread_attr_destroy(&attr);
 
-	rc = pthread_join(threads[num_threads-1], &status);
-	if (rc){
-		cout << "Error:unable to join," << rc << endl;
-		return ;
+	for(int i=0; i < num_threads; i++ ){
+		rc = pthread_join(threads[i], &status);
+		if (rc){
+			cout << "Error:unable to join," << rc << endl;
+			return ;
+		}
+		int err = *(int *) status;
+		if(err == -1)
+			return ;
 	}
-	int err = *(int *) status;
-	if(err == -1)
-		return ;
+
+	/* Concatenate ciphertexts and messages in one single file respectively */
+	string ct_tid, msgs_tid;
+	ofstream rec(rows_enc_ct, ios::app);
+	ofstream rem(rows_enc_msgs, ios::app);
+	for(int i=0; i<num_threads; i++){
+		ct_tid = rows_enc_ct+to_string(i);
+		msgs_tid = rows_enc_msgs+to_string(i);
+		ifstream ct_t(ct_tid);
+		ifstream msgs_t(msgs_tid);
+		rec << ct_t.rdbuf();
+		rem << msgs_t.rdbuf();
+		ct_t.close();
+		msgs_t.close();
+		remove(ct_tid.c_str());
+		remove(msgs_tid.c_str());
+	}
+	rem.close();
 
 	/* Encrypting reamining lines */
-	ofstream rec(rows_enc_ct, ios::app);
 	if(remaining_lines>0){
 		ifstream rows(rows_name);
 		GotoLine(rows, num_lines);
@@ -1586,6 +1618,8 @@ SecureSelect::EncryptRowsMT(string rows_name, string enctable_name, int rand_lim
 				#endif
 
 				save_cts(&rec, cts);
+				delete_cts(cts);
+				delete[] row;
 				row_num++;
 			}
 			else{
@@ -1647,15 +1681,26 @@ void *applyPTokenThread(void *threadarg)
 		cout << "\tPredicate decryption time: " << milliSecondsElapsed << endl;
 		#endif
 
+		my_data->sec_sel->delete_cts(cts);
 		if(dec_res==(GT)1) /* Row match query */
 			results->push_back(row_num);
 
 		row_num++;
-
 	}
 	db_cts.close();
 
 	pthread_exit(results);
+}
+
+void
+SecureSelect::delete_key(OEKey *key, int len){
+	for(int i=0;i<len;i++){
+		delete key->key[i][0];
+		delete key->key[i][1];
+		delete key->key[i];
+	}
+	delete key->key;
+	delete key;
 }
 
 /**
@@ -1735,6 +1780,7 @@ SecureSelect::ApplyPTokenMT(string query_name,string db_name, string res_name, i
 		for(int j=0;j<res_thread->size();j++)
 			results << res_thread->at(j) << endl;
 
+		delete res_thread;
 		#ifdef VERBOSE
 		cout << "Main: completed thread id :" << i ;
 		cout << "  exiting with " << res_thread->size() << " results" << endl;
@@ -1775,14 +1821,19 @@ SecureSelect::ApplyPTokenMT(string query_name,string db_name, string res_name, i
 		cout << "\tPredicate decryption time: " << milliSecondsElapsed << endl;
 		#endif
 
+		delete_cts(cts);
+
 		if(dec_res==(GT)1){ /* Row match query */
 			results << num_lines+i << endl;
 			res_num++;
 		}
+
 	}
 	db_cts.close();
 
 	results.close();
+
+	delete_key(pkey,l+1);
 
 	return res_num;
 }
@@ -1839,6 +1890,7 @@ void *applyMTokenThread(void *threadarg){
 				results->push_back(tmp);
 		}
 		line_num++;
+		my_data->sec_sel->delete_cts(cts);
 	}
 	db_cts.close();
 	res_file.close();
@@ -1950,6 +2002,7 @@ SecureSelect::ApplyMTokenMT(string query_name,string db_name, string res_name, i
 		vector<string> *res_thread = (vector<string> *) status;
 		results.insert(results.end(), res_thread->begin(), res_thread->end());
 
+		delete res_thread;
 		#ifdef VERBOSE
 		cout << "Main: completed thread id :" << i ;
 		cout << "  exiting with " << res_thread->size() << " results" << endl;
@@ -1996,7 +2049,15 @@ SecureSelect::ApplyMTokenMT(string query_name,string db_name, string res_name, i
 			if(tmp.compare("")!=0)
 				results.push_back(tmp);
 		}
+		delete_cts(cts);
 	}
+
+	for(int i=0;i<tok_num;i++){
+		delete_key(mkey[i][0], l+1);
+		delete_key(mkey[i][1], k+1);
+		delete mkey[i];
+	}
+
 	db_cts.close();
 	res_file.close();
 

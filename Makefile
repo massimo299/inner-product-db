@@ -26,28 +26,28 @@ ApplyMToken.o: ApplyMToken.cpp
 	g++ -std=gnu++11 -D MR_PAIRING_BN -D AES_SECURITY=128 -c ApplyMToken.cpp -o ApplyMToken.o
 
 GenKey: ${BNOBJB} GenKey.o
-	g++ -o GenKey ${BNOBJB} GenKey.o miracl.a -lcrypto -lssl -lpthread
+	g++ -o GenKey ${BNOBJB} GenKey.o miracl.a -lcrypto -lssl -lpthread -g
 
 EncRow: ${BNOBJB} EncRow.o
-	g++ -o EncRow ${BNOBJB} EncRow.o miracl.a -lcrypto -lssl -lpthread
+	g++ -o EncRow ${BNOBJB} EncRow.o miracl.a -lcrypto -lssl -lpthread -g
 
 GenToken: ${BNOBJB} GenToken.o
-	g++ -o GenToken ${BNOBJB} GenToken.o miracl.a -lcrypto -lssl -lpthread
+	g++ -o GenToken ${BNOBJB} GenToken.o miracl.a -lcrypto -lssl -lpthread -g
 
 ApplyToken: ${BNOBJB} ApplyToken.o
-	g++ -o ApplyToken ${BNOBJB} ApplyToken.o miracl.a -lcrypto -lssl -lpthread
+	g++ -o ApplyToken ${BNOBJB} ApplyToken.o miracl.a -lcrypto -lssl -lpthread -g
 
 ApplyPToken: ${BNOBJB} ApplyPToken.o
-	g++ -o ApplyPToken ${BNOBJB} ApplyPToken.o miracl.a -lcrypto -lssl -lpthread
+	g++ -o ApplyPToken ${BNOBJB} ApplyPToken.o miracl.a -lcrypto -lssl -lpthread -g
 
 ApplyMToken: ${BNOBJB} ApplyMToken.o
-	g++ -o ApplyMToken ${BNOBJB} ApplyMToken.o miracl.a -lcrypto -lssl -lpthread
+	g++ -o ApplyMToken ${BNOBJB} ApplyMToken.o miracl.a -lcrypto -lssl -lpthread -g
 
 oe-m.o: oe-m.cpp
-	g++ -std=gnu++11 -D MR_PAIRING_BN -D AES_SECURITY=128 -c oe-m.cpp -o oe-m.o
+	g++ -std=gnu++11 -D MR_PAIRING_BN -D AES_SECURITY=128 -c oe-m.cpp -o oe-m.o -g
 
 aoe-m.o: aoe-m.cpp
-	g++ -std=gnu++11 -D MR_PAIRING_BN -D AES_SECURITY=128 -c aoe-m.cpp -o aoe-m.o
+	g++ -std=gnu++11 -D MR_PAIRING_BN -D AES_SECURITY=128 -c aoe-m.cpp -o aoe-m.o -g
 
 all: ${EXE}
 
