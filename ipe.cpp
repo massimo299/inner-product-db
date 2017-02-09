@@ -26,6 +26,7 @@
 #include <ctime>
 
 #include <fstream>
+#include <sys/timeb.h>
 
 //********* choose just one of these pairs **********
 //#define MR_PAIRING_CP      // AES-80 security   
@@ -34,8 +35,8 @@
 //#define MR_PAIRING_MNT	// AES-80 security
 //#define AES_SECURITY 80
 
-#define MR_PAIRING_BN    // AES-128 or AES-192 security
-#define AES_SECURITY 128
+//#define MR_PAIRING_BN    // AES-128 or AES-192 security
+//#define AES_SECURITY 128
 //#define AES_SECURITY 192
 
 //#define MR_PAIRING_KSS    // AES-192 security
@@ -47,7 +48,7 @@
 
 #include "pairing_3.h"
 
-#define n 10             // number of attributes
+#define n 17             // number of attributes
 
 // generate v[i] such that x.v=0 (dot product)
 
@@ -78,8 +79,25 @@ void read_from_file(G1& g1, G2& g2, GT& gt)
 	inputFile.close();	
 }
 
+int
+getMilliCount(){
+	timeb tb;
+	ftime(&tb);
+	int nCount = tb.millitm + (tb.time & 0xfffff) * 1000;
+	return nCount;
+}
+
+int
+getMilliSpan(int nTimeStart){
+	int nSpan = getMilliCount() - nTimeStart;
+	if(nSpan < 0)
+		nSpan += 0x100000 * 1000;
+	return nSpan;
+}
+
 int main()
 {   
+	mr_init_threading();
 	PFC pfc(AES_SECURITY);  // initialise pairing-friendly curve
 	miracl* mip=get_mip();
 
@@ -110,6 +128,7 @@ int main()
 	pfc.random(g2_2);
 	pfc.random(g2);
 
+	int start = getMilliCount();
 	pfc.random(delta1);
 	pfc.random(delta2);
 	pfc.random(theta1);
@@ -128,20 +147,12 @@ int main()
 
 		W1[i]=pfc.mult(g1,w1[i]);
 		W2[i]=pfc.mult(g1,w2[i]);
-		pfc.precomp_for_mult(W1[i]);  // precompute on everything!
-		pfc.precomp_for_mult(W2[i]);
 		T1[i]=pfc.mult(g1,t1[i]);
 		T2[i]=pfc.mult(g1,t2[i]);
-		pfc.precomp_for_mult(T1[i]);
-		pfc.precomp_for_mult(T2[i]);
 		F1[i]=pfc.mult(g1,f1[i]);
 		F2[i]=pfc.mult(g1,f2[i]);
-		pfc.precomp_for_mult(F1[i]);
-		pfc.precomp_for_mult(F2[i]);
 		H1[i]=pfc.mult(g1,h1[i]);
 		H2[i]=pfc.mult(g1,h2[i]);
-		pfc.precomp_for_mult(H1[i]);
-		pfc.precomp_for_mult(H2[i]);
 	}
 
 	U1=pfc.mult(g1,delta1);
@@ -150,6 +161,8 @@ int main()
 	V2=pfc.mult(g1,theta2);
 	g1_1=pfc.mult(g1,omega);
 	alpha=pfc.pairing(g2_2,g1);
+	int milliSecondsElapsed = getMilliSpan(start);
+	cout << endl << "\texecution time... " << milliSecondsElapsed << endl;
 
 /*CODICE AGGIUNTO*/
 /*cout << "PRINT G1 " << g1 << endl;
@@ -170,17 +183,6 @@ cout << "PRINT G1 " << g1 << endl;
 cout << "PRINT G2 " << g2 << endl;
 cout << "PRINT GT " << alpha << endl;*/
 
-	pfc.precomp_for_power(alpha);
-
-	pfc.precomp_for_mult(U1);
-	pfc.precomp_for_mult(U2);
-	pfc.precomp_for_mult(V1);
-	pfc.precomp_for_mult(V2);
-
-	pfc.precomp_for_mult(g2);
-	pfc.precomp_for_mult(g1);
-	pfc.precomp_for_mult(g1_1);
-
 // Encrypt
 	cout << "Encrypt" << endl;
 	mip->IOBASE=256;
@@ -188,6 +190,12 @@ cout << "PRINT GT " << alpha << endl;*/
 	cout << "Message to be encrypted=   " << M << endl;
 	mip->IOBASE=16;
 
+	GT pt;
+	G1 tmpG1;
+	pfc.random(tmpG1);
+	pt=pfc.pairing(g2,tmpG1);
+
+	start = getMilliCount();
 	pfc.random(s1);
 	pfc.random(s2);
 	pfc.random(s3);
@@ -207,15 +215,15 @@ cout << "PRINT GT " << alpha << endl;*/
 		C3[i]=pfc.mult(T1[i],s1)+pfc.mult(H1[i],s2)+pfc.mult(V1,modmult(x[i],s4,order));
 		C4[i]=pfc.mult(T2[i],s1)+pfc.mult(H2[i],s2)+pfc.mult(V2,modmult(x[i],s4,order));
 	}
-	D=pfc.hash_to_aes_key(pfc.power(alpha,s2));
+//	D=pfc.hash_to_aes_key(pfc.power(alpha,s2));
 	GT MME=pfc.power(alpha,s2);
 	//C=lxor(M,D);   // ciphertext
 
-	GT pt;
-	G1 tmpG1;
-	pfc.random(tmpG1);
-	pt=pfc.pairing(g2,tmpG1);
+	
 	GT Mpt=pt*MME;
+
+	milliSecondsElapsed = getMilliSpan(start);
+	cout << endl << "\texecution time... " << milliSecondsElapsed << endl;
 
 // KeyGen
 	cout << "KeyGen" << endl;
@@ -225,6 +233,7 @@ cout << "PRINT GT " << alpha << endl;*/
 
 //	pfc.random(v[0]);  // Now x.v !=0, which will screw up decryption!
 
+	start = getMilliCount();
 	pfc.random(lambda1);
 	pfc.random(lambda2);
 	for (i=0;i<n;i++)
@@ -238,16 +247,12 @@ cout << "PRINT GT " << alpha << endl;*/
 		t=modmult(lambda1,v[i],order);
 		K1[i]=pfc.mult(g2,modmult(t,w2[i],order)-modmult(delta2,r[i],order));
 		K2[i]=pfc.mult(g2,modmult(delta1,r[i],order)-modmult(t,w1[i],order));
-		pfc.precomp_for_pairing(K1[i]);
-		pfc.precomp_for_pairing(K2[i]);
 	}
 	for (i=0;i<n;i++)
 	{
 		t=modmult(lambda2,v[i],order);
 		K3[i]=pfc.mult(g2,modmult(t,t2[i],order)-modmult(theta2,phi[i],order));
 		K4[i]=pfc.mult(g2,modmult(theta1,phi[i],order)-modmult(t,t1[i],order));
-		pfc.precomp_for_pairing(K3[i]);
-		pfc.precomp_for_pairing(K4[i]);
 	}
 
 	KA=g2_2;
@@ -256,8 +261,8 @@ cout << "PRINT GT " << alpha << endl;*/
 		KA=KA+pfc.mult(K1[i],-f1[i])+pfc.mult(K2[i],-f2[i])+pfc.mult(K3[i],-h1[i])+pfc.mult(K4[i],-h2[i]);
 		KB=KB+pfc.mult(g2,-(r[i]+phi[i])%order);
 	}
-	pfc.precomp_for_pairing(KA);
-	pfc.precomp_for_pairing(KB);
+	milliSecondsElapsed = getMilliSpan(start);
+	cout << endl << "\texecution time... " << milliSecondsElapsed << endl;
 
 // Decrypt
 	
@@ -265,6 +270,7 @@ cout << "PRINT GT " << alpha << endl;*/
 	G2 **left=new G2* [4*n+2];
 	G1 **right=new G1* [4*n+2];
 
+	start = getMilliCount();
 	left[0]=&KA; right[0]=&A;  // e(K,CD)
 	left[1]=&KB; right[1]=&B;  // e(L,TC)
 	j=2;
@@ -286,6 +292,9 @@ cout << "PRINT GT " << alpha << endl;*/
 	}
 
 	GT MMD=pfc.multi_pairing(4*n+2,left,right);
+	milliSecondsElapsed = getMilliSpan(start);
+	cout << endl << "\texecution time... " << milliSecondsElapsed << endl;
+
 //	M=lxor(C,pfc.hash_to_aes_key(pfc.multi_pairing(4*n+2,left,right)));
 //
 	//mip->IOBASE=256;

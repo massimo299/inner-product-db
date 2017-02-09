@@ -2,7 +2,7 @@
 #include <chrono>
 
 #include "pairing_3.h"
-#include "ipdb-m.h"
+#include "aoe-m.h"
 
 void inner_product(Big *x,Big *v,Big& order, int n){
 	Big prod=0;
@@ -14,63 +14,67 @@ void inner_product(Big *x,Big *v,Big& order, int n){
 main(){
 
 	time_t seed1,seed2;
+	mr_init_threading();
 	PFC pfc(AES_SECURITY);  // initialise pairing-friendly curve
 	miracl* mip=get_mip();
 	Big order=pfc.order();
 	time(&seed1); irand((long)seed1);
 
-	int n=120;
-	int l=80;
-	int k=3;
-	Ipdb ipdb(n,l,k,&pfc,mip,order);
+	int m=12;
+	AOENoise aoen(m,&pfc,mip,order);
 
 	cout << "Setup" << endl;
 	time(&seed1);
-	IpeMsk **msks = ipdb.Setup();
+	OEMsk **msks = aoen.RSetup();
 	time(&seed2);
 	cout << "\t" << seed2-seed1 << endl;
 
 	// Generate random attributes and elements of GT (our messagges)
-	Big X0[l+1];
-	for(int i=0;i<l;i++)
-		pfc.random(X0[i]);
-	Big *X[n];
-	for(int i=0;i<n;i++){
-		X[i] = new Big[k+1];
-		X[i][0]=0;
-		for(int j=1;j<k+1;j++)
-			pfc.random(X[i][j]);
-	}
+	Big A[m];
+	for(int i=0;i<m;i++)
+		pfc.random(A[i]);
 
-	GT M[n];
+	GT M[m];
 	G1 tmpg1;
 	G2 tmpg2;
-	for(int i=0;i<n;i++){
+	for(int i=0;i<m;i++){
 		pfc.random(tmpg1); pfc.random(tmpg2);
 		M[i] = pfc.pairing(tmpg2,tmpg1);
 	}
 
 	cout << "Encrypt" << endl;
 	time(&seed1);
-	IpeCt **cts = ipdb.Encrypt(msks,X0,X,M);
+	OECt **cts = aoen.EncryptRow(msks,A,M,10);
 	time(&seed2);
 	cout << "\t" << seed2-seed1 << endl;
 
 	// Key generation and decryption for the predicate
-	Big Y[l+1];
-	for(int i=0;i<l;i++)
-		pfc.random(Y[i]);
-	inner_product(X0,Y,order,l);
+	Big Q[m];
+	bool S[m];
 
+	for(int i=0;i<m;i++){
+		Q[i]=0;
+		S[i]=false;
+	}
+	S[3]=true;
+	Q[9]=A[9];
+
+	cout << "parametric KeyGen predicate" << endl;
+	time(&seed1);
+	OEParKey *pparkey = aoen.PParKeyGen(msks,Q,10,S);
+	time(&seed2);
+	cout << "\t" << seed2-seed1 << endl;
+
+	Q[3]=A[3];
 	cout << "KeyGen predicate" << endl;
 	time(&seed1);
-	IpeKey *pkey = ipdb.PKeyGen(msks,Y);
+	OEKey *pkey = aoen.PKeyGen(pparkey,Q,S);
 	time(&seed2);
 	cout << "\t" << seed2-seed1 << endl;
 
 	cout << "Decrypt predicate" << endl;
 	time(&seed1);
-	GT res = ipdb.PDecrypt(cts[0],pkey);
+	GT res = aoen.aoe->PDecrypt(cts[0],pkey);
 	time(&seed2);
 	cout << "\t" << seed2-seed1 << endl;
 
@@ -81,28 +85,22 @@ main(){
 
 	// Key generation and decryption for element j
 	int j;
-	cout << "Insert cell number to select (from 1 to " << n << ")" << endl;
+	cout << "Insert cell number to select (from 1 to " << m << ")" << endl;
 	cin >> j;
-	if(j<1 || j>n){
+	if(j<1 || j>m){
 		cout << "Wrong number inserted" << endl;
 		return 0;
 	}
 
-	Big Yj[k+1];
-	Yj[0]=0;
-	for(int i=1;i<k+1;i++)
-		pfc.random(Yj[i]);
-	inner_product(X[j-1],Yj,order,k+1);
-
 	cout << "KeyGen message" << endl;
 	time(&seed1);
-	IpeKey **mkey = ipdb.MKeyGen(msks,Y,Yj,j);
+	OEKey **mkey = aoen.MKeyGen(msks,Q,j,10);
 	time(&seed2);
 	cout << "\t" << seed2-seed1 << endl;
 
 	cout<< "Decrypt message" << endl;
 	time(&seed1);
-	res = ipdb.MDecrypt(cts,mkey,j);
+	res = aoen.aoe->MDecrypt(cts,mkey,j);
 	time(&seed2);
 	cout << "\t" << seed2-seed1 << endl;
 

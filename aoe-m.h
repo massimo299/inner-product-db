@@ -26,7 +26,11 @@ public:
 	OEMsk **Setup();
 	OECt **Encrypt(OEMsk **, Big *, Big **,GT *);
 	OEKey *PKeyGen(OEMsk **, Big *);
+	OEParKey *PParKeyGen(OEMsk **, Big *, bool *);
+	OEKey *PKeyGen(OEParKey *, Big *, bool *);
 	OEKey **MKeyGen(OEMsk **, Big *, Big *, int);
+	OEKey **MParKeyGen(OEMsk **, Big *, Big *, int, bool *);
+	OEKey **MKeyGen(OEKey **, Big *, bool *);
 	OEKey **MKeyGen(OEMsk **, Big *, Big **, vector<string>);
 	GT PDecrypt(OECt *, OEKey *);
 	GT MDecrypt(OECt **, OEKey **, int);
@@ -68,6 +72,8 @@ public:
 	OEMsk **RSetup();
 	OECt **EncryptRow(OEMsk **, Big *, GT *, int);
 	OEKey *PKeyGen(OEMsk **, Big *, int);
+	OEParKey *PParKeyGen(OEMsk **, Big *, int, bool *);
+	OEKey *PKeyGen(OEParKey *, Big *, bool *);
 	OEKey **MKeyGen(OEMsk **, Big *, int, int);
 	OEKey **MKeyGen(OEMsk **, Big *, vector<string>, int);
 	/** \brief Class constructor

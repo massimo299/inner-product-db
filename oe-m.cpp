@@ -242,6 +242,79 @@ OE::MKeyGen(OEMsk *msk, Big *Y){
 	return k;
 }
 
+OEParKey *
+OE::MParKeyGen(OEMsk *msk, Big *Y, bool *S){
+	
+	OEParKey *k;
+	OEBKey ***bk = new OEBKey**[len];
+	Big lambda1,lambda2,r[len],phi[len],kb=0;
+	G2 KA, KB, *KAi, *KBi;
+	KAi = new G2[len]; KBi = new G2[len];
+	KA=msk->g2;
+
+	pfc->random(lambda1);
+	pfc->random(lambda2);
+
+	OEBMsk *bmsk1, *bmsk2;
+	Big kbi;
+	for(int i=0;i<len;i++){
+		bk[i] = new OEBKey*[2];
+		pfc->random(r[i]);
+		pfc->random(phi[i]);
+		bmsk1 = msk->bmsk[i][0];
+		bmsk2 = msk->bmsk[i][1];
+
+		bk[i][0] = BasicKeyGen(bmsk1,msk->Delta1,Y[i],lambda1,r[i],msk->g2);
+		bk[i][1] = BasicKeyGen(bmsk2,msk->Delta2,Y[i],lambda2,phi[i],msk->g2);
+		if(S[i]){
+			KAi[i] = KAi[i]+pfc->mult(bk[i][0]->k1,-bmsk1->f1);
+			KAi[i] = KAi[i]+pfc->mult(bk[i][0]->k2,-bmsk1->f2);
+			KAi[i] = KAi[i]+pfc->mult(bk[i][1]->k1,-bmsk2->f1);
+			KAi[i] = KAi[i]+pfc->mult(bk[i][1]->k2,-bmsk2->f2);
+			kbi = -(r[i]+phi[i])%order;
+			KBi[i] = pfc->mult(msk->g2,kbi);
+		}
+		else{
+			KA = KA+pfc->mult(bk[i][0]->k1,-bmsk1->f1);
+			KA = KA+pfc->mult(bk[i][0]->k2,-bmsk1->f2);
+			KA = KA+pfc->mult(bk[i][1]->k1,-bmsk2->f1);
+			KA = KA+pfc->mult(bk[i][1]->k2,-bmsk2->f2);
+			kb += -(r[i]+phi[i])%order;
+		}
+	}
+	KB = pfc->mult(msk->g2,kb);
+
+	k = new OEParKey(KA,KB,KAi,KBi,bk);
+	return k;
+}
+
+OEKey *
+OE::MKeyGen(OEParKey *pparkey, Big *Y, bool *S){
+	OEKey *k;
+	G2 KA = pparkey->KA, KB = pparkey->KB;
+	OEBKey ***bk = pparkey->key;
+	for(int i=0;i<len;i++){
+		if(S[i]){
+			if(!pparkey->KAi[i].g.iszero())
+				KA = KA+pfc->mult(pparkey->KAi[i],Y[i]);
+			if(!pparkey->KBi[i].g.iszero())
+				KB = KB+pfc->mult(pparkey->KBi[i],Y[i]);
+			if(!bk[i][0]->k1.g.iszero())
+				bk[i][0]->k1 = pfc->mult(bk[i][0]->k1,Y[i]);
+			if(!bk[i][0]->k2.g.iszero())
+				bk[i][0]->k2 = pfc->mult(bk[i][0]->k2,Y[i]);
+			if(!bk[i][1]->k1.g.iszero())
+				bk[i][1]->k1 = pfc->mult(bk[i][1]->k1,Y[i]);
+			if(!bk[i][1]->k2.g.iszero())
+				bk[i][1]->k2 = pfc->mult(bk[i][1]->k2,Y[i]);
+		}
+	}
+
+	k = new OEKey(KA,KB,bk);
+	return k;
+				
+}
+
 OEKey *
 OE::MKeyGen(OEMsk *msk, Big *Y, Big lambda1, Big lambda2){
 	
@@ -272,6 +345,50 @@ OE::MKeyGen(OEMsk *msk, Big *Y, Big lambda1, Big lambda2){
 	k = new OEKey(KA,KB,bk);
 	return k;
 }
+
+OEParKey *
+OE::MParKeyGen(OEMsk *msk, Big *Y, Big lambda1, Big lambda2, bool *S){
+	
+	OEParKey *k;
+	OEBKey ***bk = new OEBKey**[len];
+	Big r[len],phi[len],kb=0;
+	G2 KA, KB, *KAi, *KBi;
+	KAi = new G2[len]; KBi = new G2[len];
+	KA=msk->g2;
+
+	OEBMsk *bmsk1, *bmsk2;
+	Big kbi;
+	for(int i=0;i<len;i++){
+		bk[i] = new OEBKey*[2];
+		pfc->random(r[i]);
+		pfc->random(phi[i]);
+		bmsk1 = msk->bmsk[i][0];
+		bmsk2 = msk->bmsk[i][1];
+
+		bk[i][0] = BasicKeyGen(bmsk1,msk->Delta1,Y[i],lambda1,r[i],msk->g2);
+		bk[i][1] = BasicKeyGen(bmsk2,msk->Delta2,Y[i],lambda2,phi[i],msk->g2);
+		if(S[i]){
+			KAi[i] = KAi[i]+pfc->mult(bk[i][0]->k1,-bmsk1->f1);
+			KAi[i] = KAi[i]+pfc->mult(bk[i][0]->k2,-bmsk1->f2);
+			KAi[i] = KAi[i]+pfc->mult(bk[i][1]->k1,-bmsk2->f1);
+			KAi[i] = KAi[i]+pfc->mult(bk[i][1]->k2,-bmsk2->f2);
+			kbi = -(r[i]+phi[i])%order;
+			KBi[i] = pfc->mult(msk->g2,kbi);
+		}
+		else{
+			KA = KA+pfc->mult(bk[i][0]->k1,-bmsk1->f1);
+			KA = KA+pfc->mult(bk[i][0]->k2,-bmsk1->f2);
+			KA = KA+pfc->mult(bk[i][1]->k1,-bmsk2->f1);
+			KA = KA+pfc->mult(bk[i][1]->k2,-bmsk2->f2);
+			kb += -(r[i]+phi[i])%order;
+		}
+	}
+	KB = pfc->mult(msk->g2,kb);
+
+	k = new OEParKey(KA,KB,KAi,KBi,bk);
+	return k;
+}
+
 
 bool
 OE::PDecrypt(OECt *ct, OEKey *key){

@@ -82,6 +82,27 @@ AOE::PKeyGen(OEMsk **msks, Big *Y){
 	return oe->MKeyGen(msks[0],Y);
 }
 
+OEParKey *
+AOE::PParKeyGen(OEMsk **msks, Big *Y, bool *S){
+
+	Y[l]=0;
+	oe->len=l+1;
+
+	for(int i=0;i<l+1;i++)
+		if(S[i])
+			Y[i]=1;
+
+	return oe->MParKeyGen(msks[0],Y,S);
+}
+
+OEKey *
+AOE::PKeyGen(OEParKey *pparkey, Big *Y, bool *S){
+
+	oe->len=l+1;
+
+	return oe->MKeyGen(pparkey,Y,S);
+}
+
 GT
 AOE::PDecrypt(OECt *C0, OEKey *pkey){
 
@@ -108,6 +129,39 @@ AOE::MKeyGen(OEMsk **msks, Big *Y, Big *Yj, int j){
 	keys[1] = oe->MKeyGen(msks[j],Yj,lambda1,lambda2);
 
 	return keys;
+}
+
+OEKey **
+AOE::MParKeyGen(OEMsk **msks, Big *Y, Big *Yj, int j, bool *S){
+
+	OEKey **keys = new OEKey*[2];
+	Big lambda1, lambda2;
+
+	pfc->random(lambda1);
+	pfc->random(lambda2);
+
+	for(int i=0;i<l+1;i++)
+		if(S[i])
+			Y[i]=1;
+	Y[l]=1;
+	oe->len=l+1;
+	keys[0] = oe->MParKeyGen(msks[0],Y,lambda1,lambda2, S);
+
+	Yj[0]=-1;
+	oe->len=k+1;
+	keys[1] = oe->MKeyGen(msks[j],Yj,lambda1,lambda2);
+
+	return keys;
+}
+
+OEKey **
+AOE::MKeyGen(OEKey **mparkey, Big *Y, bool *S){
+
+	Y[l]=0;
+	oe->len=l+1;
+
+	mparkey[0] = oe->MKeyGen((OEParKey *)mparkey[0],Y,S);
+	return mparkey;
 }
 
 OEKey **
@@ -200,7 +254,66 @@ AOENoise::PKeyGen(OEMsk **msks, Big *Q, int rand_lim){
 
 	return aoe->PKeyGen(msks,Y0);
 }
+/* EXPERIMENTAL */
+OEParKey *
+AOENoise::PParKeyGen(OEMsk **msks, Big *Q, int rand_lim, bool *S){
 
+	Big Y0[l+1], R[n];
+	Big r = rand()%rand_lim+1;
+
+	for(int i=0;i<n;i++)
+		if(S[i])
+			Q[i]=1;
+
+	Y0[l-1] = 0;
+	Y0[n]=0;
+	for(int i=0;i<n;i++){
+		if(Q[i]==0)
+			R[i] = 0;
+		else
+			pfc->random(R[i]);
+		Y0[i] = -modmult(r,R[i],order);
+		Y0[n] = Y0[n] - modmult(R[i],Q[i],order);
+		Y0[n+i+1] = R[i];
+		Y0[l-1] = Y0[l-1] + modmult(R[i],Q[i],order);
+	}
+	Y0[l-1] = modmult(r,Y0[l-1],order);
+
+	Y0[l]=0;
+	aoe->oe->len=l+1;
+
+	return aoe->oe->MParKeyGen(msks[0],Y0,S);
+}
+
+OEKey *
+AOENoise::PKeyGen(OEParKey *pparkey, Big *Q, bool *S){
+	Big Y0[l+1];
+	bool T[l+1];
+
+	for(int i=0;i<l+1;i++){
+		Y0[i]=1;
+		T[i]=false;
+	}
+	for(int i=0;i<n;i++){
+		if(S[i]){
+			Y0[n] = modmult(Y0[n],Q[i],order);
+			Y0[l-1] = modmult(Y0[l-1],Q[i],order);
+			T[n]=true;
+			T[l-1]=true;
+			for(int j=0;j<n;j++){
+				if(j!=i){
+					Y0[j] = modmult(Y0[j],Q[i],order);
+					Y0[j+n+1] = modmult(Y0[j+n+1],Q[i],order);
+					T[j] = true;
+					T[j+n+1] = true;
+				}
+			}
+		}
+	}
+
+	return aoe->PKeyGen(pparkey,Y0,T);
+}
+/* END EXPERIMENTAL */
 OEKey **
 AOENoise::MKeyGen(OEMsk **msks, Big *Q, int j, int rand_lim){
 

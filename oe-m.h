@@ -83,6 +83,18 @@ public:
 	};
 };
 
+class OEParKey: public OEKey{
+public:
+	G2 *KAi, *KBi;
+public:
+	OEParKey(G2 A, G2 B, G2 *Ai, G2 *Bi, OEBKey ***k)
+	: OEKey(A,B,k)
+	{
+		KAi = Ai;
+		KBi = Bi;
+	};
+};
+
 class OE{
 public:
 	int len;
@@ -97,7 +109,10 @@ public:
 	OECt *MEncrypt(OEMsk *, Big *, Big, Big, GT);
 	OEKey *PKeyGen(OEMsk *, Big *);
 	OEKey *MKeyGen(OEMsk *, Big *);
+	OEParKey *MParKeyGen(OEMsk *, Big *, bool *);
+	OEKey *MKeyGen(OEParKey *, Big *, bool *);
 	OEKey *MKeyGen(OEMsk *, Big *, Big, Big);
+	OEParKey *MParKeyGen(OEMsk *, Big *, Big, Big, bool *);
 	bool PDecrypt(OECt *, OEKey *);
 	GT MDecrypt(OECt *, OEKey *);
 	OE(int l, PFC *p, miracl * m, Big o){
