@@ -2115,11 +2115,11 @@ SecureSelect::ApplyMTokenMT(string query_name,string db_name, string res_name, i
 		vector<string> *res_thread = (vector<string> *) status;
 		results.insert(results.end(), res_thread->begin(), res_thread->end());
 
-		delete res_thread;
 		#ifdef VERBOSE
 		cout << "Main: completed thread id :" << i ;
 		cout << "  exiting with " << res_thread->size() << " results" << endl;
 		#endif
+		delete res_thread;
 	}
 
 	/* Apply mtoken on remaining lines */
@@ -2165,8 +2165,8 @@ SecureSelect::ApplyMTokenMT(string query_name,string db_name, string res_name, i
 		delete_cts(cts);
 	}
 
+	delete_key(mkey_l, l+1);
 	for(int i=0;i<tok_num;i++){
-		delete_key(mkey[i][0], l+1);
 		delete_key(mkey[i][1], k+1);
 		delete mkey[i];
 	}
