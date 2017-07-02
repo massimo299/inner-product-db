@@ -2,10 +2,20 @@
 CXXFLAGS=-g
 CXXFLAGS= -std=gnu++11 -D_REENTRANT
 BNOBJB=  bn_pair.o  zzn2.o zzn12a.o       zzn4.o ecn2.o big.o zzn.o ecn.o base64.o oe-m.o aoe-m.o
+BNOBJB2= bn_pair.o  zzn2.o zzn12a.o       zzn4.o ecn2.o big.o zzn.o ecn.o base64.o aoe-const.o
 
-EXE= GenKey EncRow GenToken ApplyToken ApplyPToken ApplyMToken
+EXE= aoe-m-driver aoen-m-driver aoe-const-driver GenKey EncRow GenToken ApplyToken ApplyPToken ApplyMToken
 
 EXE: ${EXE}
+
+aoe-m-driver.o: aoe-m-driver.cpp
+	g++ -std=gnu++11 -D MR_PAIRING_BN -D AES_SECURITY=128 -c aoe-m-driver.cpp -o aoe-m-driver.o
+
+aoen-m-driver.o: aoen-m-driver.cpp
+	g++ -std=gnu++11 -D MR_PAIRING_BN -D AES_SECURITY=128 -c aoen-m-driver.cpp -o aoen-m-driver.o
+
+aoe-const-driver.o: aoe-const-driver.cpp
+	g++ -std=gnu++11 -D MR_PAIRING_BN -D AES_SECURITY=128 -c aoe-const-driver.cpp -o aoe-const-driver.o
 
 GenKey.o: GenKey.cpp
 	g++ -std=gnu++11 -D MR_PAIRING_BN -D AES_SECURITY=128 -c GenKey.cpp -o GenKey.o
@@ -24,6 +34,15 @@ ApplyPToken.o: ApplyPToken.cpp
 
 ApplyMToken.o: ApplyMToken.cpp
 	g++ -std=gnu++11 -D MR_PAIRING_BN -D AES_SECURITY=128 -c ApplyMToken.cpp -o ApplyMToken.o
+
+aoe-m-driver: ${BNOBJB} aoe-m-driver.o
+	g++ -o aoe-m-driver ${BNOBJB} aoe-m-driver.o miracl.a -lcrypto -lssl -lpthread -g
+
+aoen-m-driver: ${BNOBJB} aoen-m-driver.o
+	g++ -o aoen-m-driver ${BNOBJB} aoen-m-driver.o miracl.a -lcrypto -lssl -lpthread -g
+
+aoe-const-driver: ${BNOBJB2} aoe-const-driver.o
+	g++ -o aoe-const-driver ${BNOBJB2} aoe-const-driver.o miracl.a -lcrypto -lssl -lpthread -g
 
 GenKey: ${BNOBJB} GenKey.o
 	g++ -o GenKey ${BNOBJB} GenKey.o miracl.a -lcrypto -lssl -lpthread -g
@@ -49,7 +68,10 @@ oe-m.o: oe-m.cpp
 aoe-m.o: aoe-m.cpp
 	g++ -std=gnu++11 -D MR_PAIRING_BN -D AES_SECURITY=128 -c aoe-m.cpp -o aoe-m.o -g
 
+aoe-const.o: aoe-const.cpp
+	g++ -std=gnu++11 -D MR_PAIRING_BN -D AES_SECURITY=128 -c aoe-const.cpp -o aoe-const.o -g
+
 all: ${EXE}
 
 clean:
-	rm -f ${BNOBJB} ${EXE} GenKey.o EncRow.o GenToken.o ApplyToken.o ApplyPToken.o ApplyMToken.o
+	rm -f ${BNOBJB} ${EXE} GenKey.o EncRow.o GenToken.o ApplyToken.o ApplyPToken.o ApplyMToken.o aoe-m-driver.o aoen-m-driver.o aoe-const-driver.o aoe-const.o

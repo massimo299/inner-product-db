@@ -1688,9 +1688,11 @@ SecureSelect::EncryptRowsMT(string rows_name, string enctable_name, int rand_lim
 		remove(msgs_tid.c_str());
 	}
 	rem.close();
+	rec.close();
 
 	/* Encrypting reamining lines */
 	if(remaining_lines>0){
+		ofstream rec(rows_enc_ct, ios::app);
 		ifstream rows(rows_name);
 		GotoLine(rows, num_lines);
 		string *row, cell;
