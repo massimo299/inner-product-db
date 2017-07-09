@@ -64,15 +64,14 @@ public:
 	AOECCt **Encrypt(AOECMkey *, Big *, Big **, GT *);
 	AOECCt **EncryptRow(AOECMkey *, Big *, GT *, int);
 	AOECPtkey *PKeyGen(AOECMkey *, Big *);
-	AOECPtkey *PKeyGen(AOECMkey *, Big *, int);
+	AOECPtkey *PKeyGen(AOECMkey *, Big *, int, string);
 	AOECMtkey *MKeyGen(AOECMkey *, Big *, Big *, int);
 	AOECMtkey **MKeyGen(AOECMkey *, Big *, Big **, vector<string>);
-	AOECMtkey **MKeyGen(AOECMkey *, Big *, vector<string>, int);
-	/*OEKey **MKeyGen(OEMsk **, Big *, Big *, int);
-	OEKey **MKeyGen(OEKey **, Big *, bool *);
-	OEKey **MKeyGen(OEMsk **, Big *, Big **, vector<string>);
-	GT PDecrypt(OECt *, OEKey *);
-	GT MDecrypt(OECt **, OEKey **, int);*/
+	AOECMtkey **MKeyGen(AOECMkey *, Big *, vector<string>, int, string);
+	GT PDecrypt(AOECCt *, AOECPtkey *, Big *);
+	Big *load_Y0(string);
+	GT MDecrypt(AOECCt **, AOECMtkey *, Big *, int);
+	GT MDecrypt(AOECCt *, AOECCt *, AOECMtkey *, Big *, Big *);
 	/** \brief Class constructor
 	 *
 	 * n_,l_ and k_ are the values of the three parameters for the amortized technique,
@@ -89,6 +88,8 @@ public:
 	};
 	~AOEConst(){
 	};
+private:
+	void save_Y0(Big *,string);
 };
 
 /*
@@ -142,13 +143,12 @@ public:
 	ifstream &GotoLine(ifstream&, unsigned int);
 	string encMsg(GT, string);
 	int GenToken(string, int);
-	/*int ApplyPTokenMT(string, string, string, int);
+	int ApplyPTokenMT(string, string, string, int);
+	AOECCt **load_ct(ifstream *);
 	vector<string> ApplyMTokenMT(string, string, string, int);
-	OECt **load_ct(ifstream *);
-	OECt **load_ct(fstream *, int);
+	AOECCt **load_ct(fstream *, int);
 	string read_line_from_file(int, string);
 	string decMsg(GT M, string Msg);
-	void delete_key(OEKey *, int);*/
 
 	SecureSelectConst(int m, PFC *pfc_, Big order_){
 		n=m;
@@ -178,8 +178,9 @@ private:
 	Big *create_query_attribute(string);
 	void save_ptoken(AOECPtkey *, string);
 	void save_mtoken(AOECMtkey *, string, int);
-	/*void set_parameters(string);
-	OEKey *load_token(string, int);
-	OEKey *load_token(string, int, vector<int>&);*/
+	void set_parameters(string);
+	AOECPtkey *load_ptoken(string);
+	AOECMtkey *load_mtoken(string, vector<int> &);
+	/*OEKey *load_token(string, int, vector<int>&);*/
 };
 

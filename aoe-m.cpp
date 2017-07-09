@@ -1895,11 +1895,11 @@ SecureSelect::ApplyPTokenMT(string query_name,string db_name, string res_name, i
 		for(int j=0;j<res_thread->size();j++)
 			results << res_thread->at(j) << endl;
 
-		delete res_thread;
 		#ifdef VERBOSE
 		cout << "Main: completed thread id :" << i ;
 		cout << "  exiting with " << res_thread->size() << " results" << endl;
 		#endif
+		delete res_thread;
 	}
 
 	/* Apply ptoken on remaining lines */

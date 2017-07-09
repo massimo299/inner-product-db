@@ -75,12 +75,25 @@ main(){
 	cout << "ApplyPToken" << endl;
 	string results_name("data/results");
 	start = getMilliCount();
-	//int res_num = db->ApplyPTokenMT(query_name, enctable_name, results_name, num_threads);
+	int res_num = db->ApplyPTokenMT(query_name, enctable_name, results_name, num_threads);
 	milliSecondsElapsed = getMilliSpan(start);
 	cout << "\texec time " << milliSecondsElapsed << endl;
 
-	/*if(res_num >=0){
+	if(res_num >=0){
 		cout << res_num << " result(s) found" << endl;
-	}*/
+	}
+
+	cout << "ApplyMToken" << endl;
+	start = getMilliCount();
+	vector<string> query_results = db->ApplyMTokenMT(query_name, enctable_name, results_name, num_threads);
+	milliSecondsElapsed = getMilliSpan(start);
+	cout << "\texec time " << milliSecondsElapsed << endl;
+
+	if(query_results.size()==0){
+		cout << "No result found" << endl;
+		return 1;
+	}
+	for(int i=0;i<query_results.size();i++)
+		cout << "Result " << i+1 << ": " << query_results.at(i) << endl;
 
 }
