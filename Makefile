@@ -4,7 +4,7 @@ CXXFLAGS= -std=gnu++11 -D_REENTRANT
 BNOBJB=  bn_pair.o  zzn2.o zzn12a.o       zzn4.o ecn2.o big.o zzn.o ecn.o base64.o oe-m.o aoe-m.o
 BNOBJB2= bn_pair.o  zzn2.o zzn12a.o       zzn4.o ecn2.o big.o zzn.o ecn.o base64.o aoe-const.o
 
-EXE= aoe-m-driver aoen-m-driver aoe-const-driver GenKey EncRow GenToken ApplyToken ApplyPToken ApplyMToken
+EXE= aoe-m-driver aoen-m-driver aoe-const-driver GenKey EncRow GenToken ApplyToken ApplyPToken ApplyMToken GenKey_c EncRow_c GenToken_c ApplyPToken_c ApplyMToken_c
 
 EXE: ${EXE}
 
@@ -35,6 +35,21 @@ ApplyPToken.o: ApplyPToken.cpp
 ApplyMToken.o: ApplyMToken.cpp
 	g++ -std=gnu++11 -D MR_PAIRING_BN -D AES_SECURITY=128 -c ApplyMToken.cpp -o ApplyMToken.o
 
+GenKey_c.o: GenKey_c.cpp
+	g++ -std=gnu++11 -D MR_PAIRING_BN -D AES_SECURITY=128 -c GenKey_c.cpp -o GenKey_c.o
+
+EncRow_c.o: EncRow_c.cpp
+	g++ -std=gnu++11 -D MR_PAIRING_BN -D AES_SECURITY=128 -c EncRow_c.cpp -o EncRow_c.o
+
+GenToken_c.o: GenToken_c.cpp
+	g++ -std=gnu++11 -D MR_PAIRING_BN -D AES_SECURITY=128 -c GenToken_c.cpp -o GenToken_c.o
+
+ApplyPToken_c.o: ApplyPToken_c.cpp
+	g++ -std=gnu++11 -D MR_PAIRING_BN -D AES_SECURITY=128 -c ApplyPToken_c.cpp -o ApplyPToken_c.o
+
+ApplyMToken_c.o: ApplyMToken_c.cpp
+	g++ -std=gnu++11 -D MR_PAIRING_BN -D AES_SECURITY=128 -c ApplyMToken_c.cpp -o ApplyMToken_c.o
+
 aoe-m-driver: ${BNOBJB} aoe-m-driver.o
 	g++ -o aoe-m-driver ${BNOBJB} aoe-m-driver.o miracl.a -lcrypto -lssl -lpthread -g
 
@@ -62,6 +77,21 @@ ApplyPToken: ${BNOBJB} ApplyPToken.o
 ApplyMToken: ${BNOBJB} ApplyMToken.o
 	g++ -o ApplyMToken ${BNOBJB} ApplyMToken.o miracl.a -lcrypto -lssl -lpthread -g
 
+GenKey_c: ${BNOBJB2} GenKey_c.o
+	g++ -o GenKey_c ${BNOBJB2} GenKey_c.o miracl.a -lcrypto -lssl -lpthread -g
+
+EncRow_c: ${BNOBJB2} EncRow_c.o
+	g++ -o EncRow_c ${BNOBJB2} EncRow_c.o miracl.a -lcrypto -lssl -lpthread -g
+
+GenToken_c: ${BNOBJB2} GenToken_c.o
+	g++ -o GenToken_c ${BNOBJB2} GenToken_c.o miracl.a -lcrypto -lssl -lpthread -g
+
+ApplyPToken_c: ${BNOBJB2} ApplyPToken_c.o
+	g++ -o ApplyPToken_c ${BNOBJB2} ApplyPToken_c.o miracl.a -lcrypto -lssl -lpthread -g
+
+ApplyMToken_c: ${BNOBJB2} ApplyMToken_c.o
+	g++ -o ApplyMToken_c ${BNOBJB2} ApplyMToken_c.o miracl.a -lcrypto -lssl -lpthread -g
+
 oe-m.o: oe-m.cpp
 	g++ -std=gnu++11 -D MR_PAIRING_BN -D AES_SECURITY=128 -c oe-m.cpp -o oe-m.o -g
 
@@ -74,4 +104,4 @@ aoe-const.o: aoe-const.cpp
 all: ${EXE}
 
 clean:
-	rm -f ${BNOBJB} ${EXE} GenKey.o EncRow.o GenToken.o ApplyToken.o ApplyPToken.o ApplyMToken.o aoe-m-driver.o aoen-m-driver.o aoe-const-driver.o aoe-const.o
+	rm -f ${BNOBJB} ${EXE} GenKey.o EncRow.o GenToken.o ApplyToken.o ApplyPToken.o ApplyMToken.o GenKey_c.o EncRow_c.o GenToken_c.o ApplyPToken_c.o ApplyMToken_c.o aoe-m-driver.o aoen-m-driver.o aoe-const-driver.o aoe-const.o

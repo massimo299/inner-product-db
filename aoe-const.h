@@ -92,36 +92,12 @@ private:
 	void save_Y0(Big *,string);
 };
 
-/*
-class AOENoise{
-public:
-	int n,l,k;
-	AOE *aoe;
-	PFC *pfc;
-	Big order;
-public:
-	OEMsk **RSetup();
-	OECt **EncryptRow(OEMsk **, Big *, GT *, int);
-	OEKey *PKeyGen(OEMsk **, Big *, int);
-	OEParKey *PParKeyGen(OEMsk **, Big *, int, bool *);
-	OEKey *PKeyGen(OEParKey *, Big *, bool *);
-	OEKey **MKeyGen(OEMsk **, Big *, int, int);
-	OEKey **MKeyGen(OEMsk **, Big *, vector<string>, int);
-
-	AOENoise(int m, PFC *p, miracl *mi, Big o){
-		n=m;
-		l=2*m+2;
-		k=2;
-		pfc=p;
-		order=o;
-		aoe = new AOE(n,l,k,pfc,mi,order);
-	};
-	~AOENoise(){
-		delete aoe;
-	};
-};
-*/
-
+/**
+ * \brief The secure select main class.
+ *
+ * It is useful for data owners and readers, to easily access the AOEConst methods.
+ * This class can be used to generate a master keys, encrypt tables and execute queries on them.
+ */
 class SecureSelectConst{
 public:
 	AOEConst *aoec;
@@ -150,6 +126,11 @@ public:
 	string read_line_from_file(int, string);
 	string decMsg(GT M, string Msg);
 
+	/** \brief Class constructor
+	 *
+	 * m is the number of columns per row,
+	 * pfc_ is the curve, order_ its order.
+	 */
 	SecureSelectConst(int m, PFC *pfc_, Big order_){
 		n=m;
 		l=2*m+2;

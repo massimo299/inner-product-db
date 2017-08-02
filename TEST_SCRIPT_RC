@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# FluSymptoms
+./GenKey_c 8 data/FluSymptoms/key_fs > results/GenKey_c_FS
+./EncRow_c data/FluSymptoms/key_fs data/FluSymptoms/FluSymptoms.csv data/FluSymptoms/FluSymptoms 100 4 > results/EncRow_c_FS
+./GenToken_c data/FluSymptoms/key_fs data/FluSymptoms/query 100 > results/GenToken_c_FS
+./ApplyPToken_c data/FluSymptoms/query data/FluSymptoms/FluSymptoms data/FluSymptoms/ptok_results 4 > results/ApplyPToken_c_FS
+./ApplyMToken_c data/FluSymptoms/query data/FluSymptoms/FluSymptoms data/FluSymptoms/ptok_results 4 > results/ApplyMToken_c_FS
+
+# SurveyBig5
+./GenKey_c 45 data/SurveyBig5/key_sb5 > results/GenKey_c_SB5
+./EncRow_c data/SurveyBig5/key_sb5 data/SurveyBig5/SurveyBig5.csv data/SurveyBig5/SurveyBig5 100 4 > results/EncRow_c_SB5
+./GenToken_c data/SurveyBig5/key_sb5 data/SurveyBig5/query 100 > results/GenToken_c_SB5
+./ApplyPToken_c data/SurveyBig5/query data/SurveyBig5/SurveyBig5 data/SurveyBig5/ptok_results 4 > results/ApplyPToken_c_SB5
+./ApplyMToken_c data/SurveyBig5/query data/SurveyBig5/SurveyBig5 data/SurveyBig5/ptok_results 4 > results/ApplyMToken_c_SB5
+
